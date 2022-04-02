@@ -12,6 +12,7 @@ cd ..
 
 clojure -X:depstar-membrane
 
+mkdir -p library
 pushd library
 
 rm -rf ./tmp
