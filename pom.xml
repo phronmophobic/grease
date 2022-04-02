@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.phronemophobic.mobiletest</groupId>
-  <artifactId>membrane</artifactId>
+  <groupId>com.phronemophobic</groupId>
+  <artifactId>grease</artifactId>
   <version>1.00-beta-1</version>
-  <name>com.phronmophobic/mobiletest</name>
+  <name>com.phronmophobic/grease</name>
   <description>FIXME: my new library.</description>
-  <url>https://github.com/com.phronmophobic/mobiletest</url>
+  <url>https://github.com/com.phronmophobic/grease</url>
   <licenses>
     <license>
       <name>Eclipse Public License</name>
@@ -19,36 +19,56 @@
     </developer>
   </developers>
   <scm>
-    <url>https://github.com/com.phronmophobic/mobiletest</url>
-    <connection>scm:git:git://github.com/com.phronmophobic/mobiletest.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/com.phronmophobic/mobiletest.git</developerConnection>
+    <url>https://github.com/com.phronmophobic/grease</url>
+    <connection>scm:git:git://github.com/com.phronmophobic/grease.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/com.phronmophobic/grease.git</developerConnection>
     <tag>v1.00-beta-1</tag>
   </scm>
   <dependencies>
     <dependency>
+      <groupId>com.phronemophobic</groupId>
+      <artifactId>scify</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>data.json</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.10.3</version>
+      <version>1.11.0</version>
     </dependency>
     <dependency>
-      <groupId>borkdude</groupId>
-      <artifactId>sci</artifactId>
-      <version>0.2.5</version>
-    </dependency>
-    <dependency>
-      <groupId>babashka</groupId>
-      <artifactId>babashka</artifactId>
-      <version>0.4.4</version>
+      <groupId>com.phronemophobic</groupId>
+      <artifactId>membrane</artifactId>
+      <version>0.9.31.8-beta</version>
     </dependency>
     <dependency>
       <groupId>cnuernber</groupId>
       <artifactId>dtype-next</artifactId>
-      <version>8.09</version>
+      <version>9.021</version>
+    </dependency>
+    <dependency>
+      <groupId>babashka</groupId>
+      <artifactId>babashka</artifactId>
+      <version>0.7.8</version>
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
-      <version>5.8.0</version>
+      <version>5.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>borkdude</groupId>
+      <artifactId>sci</artifactId>
+      <version>0.2.7</version>
+    </dependency>
+    <dependency>
+      <groupId>babashka</groupId>
+      <artifactId>babashka.nrepl</artifactId>
+      <version>0.0.6</version>
     </dependency>
   </dependencies>
   <build>

@@ -1,4 +1,4 @@
-(ns com.phronemophobic.mobiletest.membrane
+(ns com.phronemophobic.grease.membrane
   (:require membrane.ios
             [membrane.ui :as ui]
             membrane.component
@@ -10,7 +10,7 @@
             [sci.addons :as addons]
 
             [com.phronemophobic.scify :as scify]
-            [com.phronemophobic.mobiletest.objc :as objc]
+            [com.phronemophobic.grease.objc :as objc]
             [com.phronemophobic.clj-objc :as clj-objc]
 
             [tech.v3.datatype.ffi :as dt-ffi]
@@ -48,7 +48,7 @@
             {:classes
              {'java.net.URL java.net.URL}
              :namespaces
-             (merge (let [ns-name 'com.phronemophobic.mobiletest.membrane
+             (merge (let [ns-name 'com.phronemophobic.grease.membrane
                           fns (sci/create-ns ns-name nil)]
                       {ns-name {'main-view (sci/copy-var main-view fns)
                                 'debug-view (sci/copy-var debug-view fns)
@@ -304,7 +304,7 @@
     #'clj_insert_text {:rettype :void
                        :argtypes [['s :pointer]]}}
 
-   'com.phronemophobic.mobiletest.membrane.interface nil)
+   'com.phronemophobic.grease.membrane.interface nil)
   )
 
 (when *compile-files*

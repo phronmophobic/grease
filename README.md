@@ -1,4 +1,4 @@
-# mobiletest
+# grease
 
 An example of building a clojure library for iOS with graalvm native-image.
 
@@ -72,7 +72,7 @@ Hello World!
 
 ```clojure
 (require '[membrane.ui :as ui])
-(require '[com.phronemophobic.mobiletest.membrane :refer
+(require '[com.phronemophobic.grease.membrane :refer
            [main-view]])
 
 (def red [1 0 0])
@@ -88,7 +88,7 @@ Simple Counter
 
 ```clojure
 (require '[membrane.ui :as ui])
-(require '[com.phronemophobic.mobiletest.membrane :refer
+(require '[com.phronemophobic.grease.membrane :refer
            [main-view]])
 
 
@@ -117,7 +117,7 @@ Basic Drawing
 ```clojure
 
 (require '[membrane.ui :as ui])
-(require '[com.phronemophobic.mobiletest.membrane :refer
+(require '[com.phronemophobic.grease.membrane :refer
            [main-view]])
 
 

@@ -1,4 +1,4 @@
-(ns com.phronemophobic.mobiletest.objc
+(ns com.phronemophobic.grease.objc
   (:require [tech.v3.datatype.ffi :as dt-ffi]
             [tech.v3.datatype :as dtype]
             tech.v3.datatype.ffi.graalvm-runtime

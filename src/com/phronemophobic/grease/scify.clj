@@ -1,4 +1,4 @@
-(ns com.phronemophobic.mobiletest.scify
+(ns com.phronemophobic.grease.scify
   (:require [sci.core :as sci]
             [sci.impl.types :as types]))
 

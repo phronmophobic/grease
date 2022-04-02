@@ -12,6 +12,7 @@ cd ..
 
 clojure -X:depstar
 
+mkdir -p library
 pushd library
 
 rm -rf ./tmp
@@ -46,13 +47,13 @@ $GRAALVM_HOME/bin/native-image \
     -H:CAPCacheDir="${PROJECT_DIR}"/conf/capcache \
     -H:CompilerBackend=lir \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ../target/mobiletest-uber.jar
+    -jar ../target/grease-uber.jar
 
 rm -rf ./build/out
 mkdir -p build/out
 
 
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
-# find ./tmp -name 'mobiletest-uber.o' -exec cp {} build/out \;
+# find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
 popd

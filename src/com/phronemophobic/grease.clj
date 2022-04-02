@@ -1,4 +1,4 @@
-(ns com.phronemophobic.mobiletest
+(ns com.phronemophobic.grease
   (:require [tech.v3.datatype.ffi :as dt-ffi]
             [sci.core :as sci]
             [sci.addons :as addons]
@@ -91,7 +91,7 @@
 
      #'clj_callback_fn {:rettype :void
                         :argtypes []}}
-    'com.phronemophobic.mobiletest.interface nil))
+    'com.phronemophobic.grease.interface nil))
   )
 
 (when *compile-files*

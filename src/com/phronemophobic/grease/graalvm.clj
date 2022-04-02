@@ -1,4 +1,4 @@
-(ns com.phronemophobic.mobiletest.graalvm
+(ns com.phronemophobic.grease.graalvm
   "Helper functions for listing clojure classes to pass to --initialize-at-build-time"
   (:require [clojure.string :as str]))
 

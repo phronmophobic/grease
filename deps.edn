@@ -47,13 +47,13 @@
    :aliases [:graal-compile]
    :exec-fn hf.depstar/uberjar
    :exec-args {:group-id "com.phronemophobic"
-               :artifact-id "mobiletest"
+               :artifact-id "grease"
                :version "1.00-beta-1"
                :sync-pom true
                :aot true
-               :compile-ns [com.phronemophobic.mobiletest]
-               :main-class com.phronemophobic.mobiletest
-               :jar "target/mobiletest-uber.jar"
+               :compile-ns [com.phronemophobic.grease]
+               :main-class com.phronemophobic.grease
+               :jar "target/grease-uber.jar"
                ;;Disable tensor code generation and ensure direct linking.
                :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
                           "-Dclojure.compiler.direct-linking=true"
@@ -64,16 +64,16 @@
    :ns-default hf.depstar
    :aliases [:graal-compile]
    :exec-fn hf.depstar/uberjar
-   :exec-args {:group-id "com.phronemophobic.mobiletest"
+   :exec-args {:group-id "com.phronemophobic.grease"
                :artifact-id "membrane"
                :version "1.00-beta-1"
                :sync-pom true
                :aot true
                :compile-ns [;;avclj.main avclj.libavclj
-                            com.phronemophobic.mobiletest.membrane
+                            com.phronemophobic.grease.membrane
                             ]
-               :main-class com.phronemophobic.mobiletest.membrane
-               :jar "target/mobiletest-uber.jar"
+               :main-class com.phronemophobic.grease.membrane
+               :jar "target/grease-uber.jar"
                ;;Disable tensor code generation and ensure direct linking.
                :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
                           "-Dclojure.compiler.direct-linking=true"
@@ -87,10 +87,10 @@
                "-d" "test"]}
   :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
         :exec-fn hf.depstar/jar
-        :exec-args {:jar "mobiletest.jar" :sync-pom true}}
+        :exec-args {:jar "grease.jar" :sync-pom true}}
   :install {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
             :exec-fn deps-deploy.deps-deploy/deploy
-            :exec-args {:installer :local :artifact "mobiletest.jar"}}
+            :exec-args {:installer :local :artifact "grease.jar"}}
   :deploy {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
            :exec-fn deps-deploy.deps-deploy/deploy
-           :exec-args {:installer :remote :artifact "mobiletest.jar"}}}}
+           :exec-args {:installer :remote :artifact "grease.jar"}}}}
