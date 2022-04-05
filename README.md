@@ -1,4 +1,4 @@
-# grease
+# Grease
 
 An example of building a clojure library for iOS with graalvm native-image.
 
