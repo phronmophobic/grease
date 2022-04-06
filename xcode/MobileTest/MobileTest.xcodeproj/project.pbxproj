@@ -395,10 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"$(PROJECT_DIR)/../../library",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../library";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -408,8 +405,8 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/",
+					"\"$(SRCROOT)/../../build/graalvm/include/\"",
+					"\"$(SRCROOT)/../../build/graalvm/include/darwin\"",
 				);
 			};
 			name = Debug;
@@ -461,10 +458,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"$(PROJECT_DIR)/../../library",
-				);
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../library";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -473,8 +467,8 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/",
+					"\"$(SRCROOT)/../../build/graalvm/include/\"",
+					"\"$(SRCROOT)/../../build/graalvm/include/darwin\"",
 				);
 				VALIDATE_PRODUCT = YES;
 			};
@@ -539,8 +533,8 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L/Users/adrian/workspace/graalvm/graalvm-ce-java17-22.0.0.2/Contents/Home/lib/svm/clibraries/26/ios-arm64",
-					"-L/Users/adrian/.gluon/substrate/javaStaticSdk/18-ea+prep18-8/ios-arm64/staticjdk/lib/static",
+					"-L\"$(SRCROOT)/../../build/graalvm/lib/svm/clibraries/26/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -610,8 +604,8 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L/Users/adrian/workspace/graalvm/graalvm-ce-java17-22.0.0.2/Contents/Home/lib/svm/clibraries/26/ios-arm64",
-					"-L/Users/adrian/.gluon/substrate/javaStaticSdk/18-ea+prep18-8/ios-arm64/staticjdk/lib/static",
+					"-L\"$(SRCROOT)/../../build/graalvm/lib/svm/clibraries/26/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
