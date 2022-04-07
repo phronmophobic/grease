@@ -73,6 +73,11 @@ jobs:
           export PATH=$JAVA_HOME/bin:$PATH
           scripts/compile-shared
 
+
+      - name: Build app
+        run: |
+          scripts/build-shared
+
       # - uses: actions/upload-artifact@v1
       #   with:
       #     path: bb

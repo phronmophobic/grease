@@ -56,9 +56,7 @@ mkdir -p build/out
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
-# xcodebuild  -project xcode/MobileTest/MobileTest.xcodeproj -scheme MobileTest -configuration Debug -destination platform=iOS build
+popd
 
 # This is where xcode will look for headers
 ln -s "$GRAALVM_HOME" build/graalvm
-
-popd
