@@ -60,3 +60,6 @@ popd
 
 # This is where xcode will look for headers
 ln -s "$GRAALVM_HOME" build/graalvm
+
+find build/graalvm
+ls -ld build/graalvm
