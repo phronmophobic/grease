@@ -10,7 +10,7 @@ PROJECT_DIR="$DIR/.."
 
 cd ..
 
-find build/graalvm/
+ls build/ios-arm64
 
 xcodebuild -project xcode/MobileTest/MobileTest.xcodeproj -scheme MobileTest -configuration Debug -destination generic/platform=iOS build \
            CODE_SIGN_IDENTITY="" \

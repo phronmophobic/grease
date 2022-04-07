@@ -58,6 +58,4 @@ find ./tmp -name 'bb.o' -exec cp {} build/out \;
 
 popd
 
-# This is where xcode will look for headers
-ln -s "$GRAALVM_HOME" build/graalvm
 
