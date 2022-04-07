@@ -1,0 +1,85 @@
+name: build
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+          submodules: 'true'
+
+      # - uses: actions/download-artifact@v1
+      #   with:
+      #     name: jar
+      #     path: .
+
+      - name: Cache GraalVM
+        uses: actions/cache@v1
+        id: cache-graalvm
+        with:
+          path: ~/graalvm-ce-java17-22.0.0.2
+          key: ${{ runner.os }}-graalvm-22.0.0.2
+          restore-keys: |
+                ${{ runner.os }}-graalvm-22.0.0.2
+
+      - name: Setup Clojure
+        # You may pin to the exact commit or the version.
+        # uses: DeLaGuardo/setup-clojure@5042876523f30f5efcf1d6feaa48bd1498d7814f
+        uses: DeLaGuardo/setup-clojure@3.5
+        with:
+          # Clojure CLI version to make available on the path.
+          cli: 1.10.3.1058
+
+      - name: Install dependencies
+        run: clojure -P
+
+      - name: Download GraalVM
+        run: |
+          cd ~
+          if ! [ -d graalvm-ce-java17-22.0.0.2 ]; then
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java17-darwin-amd64-22.0.0.2.tar.gz
+            tar xzf graalvm-ce-java17-darwin-amd64-22.0.0.2.tar.gz
+          fi
+
+      - name: Install Graalvm components
+        run: |
+          export GRAALVM_HOME="$HOME/graalvm-ce-java17-22.0.0.2/Contents/Home"
+          $GRAALVM_HOME/bin/gu install llvm-toolchain
+          $GRAALVM_HOME/bin/gu install native-image
+
+      # - name: Cache Static JDK
+      #   uses: actions/cache@v3
+      #   with:
+      #     key: staticjdk
+      #     path: |
+      #       build/staticjdk
+      #       build/
+
+      - name: Download Static JDK
+        run: |
+          scripts/download-deps
+
+      - name: Build macOS native image
+        run: |
+          export GRAALVM_HOME="$HOME/graalvm-ce-java17-22.0.0.2/Contents/Home"
+          export JAVA_HOME="$GRAALVM_HOME"
+          export PATH=$JAVA_HOME/bin:$PATH
+          scripts/compile-membrane
+
+
+      - name: Build app
+        run: |
+          scripts/build-membrane
+
+      # - uses: actions/upload-artifact@v1
+      #   with:
+      #     path: bb
+      #     name: babashka-${{ steps.babashka-version.outputs.version }}-macos-amd64.zip
+
+
