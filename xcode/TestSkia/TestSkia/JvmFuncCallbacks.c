@@ -508,10 +508,10 @@ JNIEXPORT jobject JNICALL JVM_GetSystemPackages(JNIEnv *env) {
     return NULL;
 }
 
-JNIEXPORT jobject JNICALL JVM_GetTemporaryDirectory(JNIEnv *env) {
-    (*env)->FatalError(env, "JVM_GetTemporaryDirectory called:  Unimplemented");
-    return NULL;
-}
+//JNIEXPORT jobject JNICALL JVM_GetTemporaryDirectory(JNIEnv *env) {
+//    (*env)->FatalError(env, "JVM_GetTemporaryDirectory called:  Unimplemented");
+//    return NULL;
+//}
 
 JNIEXPORT jobject JNICALL JVM_GetVmArguments(JNIEnv *env) {
     (*env)->FatalError(env, "JVM_GetVmArguments called:  Unimplemented");

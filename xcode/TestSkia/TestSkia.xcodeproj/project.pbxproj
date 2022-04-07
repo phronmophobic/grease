@@ -335,8 +335,8 @@
 				);
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/",
+					"\"$(SRCROOT)/../../build/graalvm/include/\"",
+					"\"$(SRCROOT)/../../build/graalvm/include/darwin\"",
 				);
 				USER_HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../third_party/skia/include/gpu/gl\"",
@@ -423,8 +423,8 @@
 				);
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/darwin/",
-					"/Library/Java/JavaVirtualMachines/graalvm-ce-java11-21.1.0/Contents/Home/include/",
+					"\"$(SRCROOT)/../../build/graalvm/include/\"",
+					"\"$(SRCROOT)/../../build/graalvm/include/darwin\"",
 				);
 				USER_HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../third_party/skia/include/gpu/gl\"",
@@ -504,8 +504,8 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L/Users/adrian/workspace/graalvm/graalvm-ce-java17-22.0.0.2/Contents/Home/lib/svm/clibraries/26/ios-arm64",
-					"-L/Users/adrian/.gluon/substrate/javaStaticSdk/18-ea+prep18-8/ios-arm64/staticjdk/lib/static",
+					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -577,8 +577,8 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L/Users/adrian/workspace/graalvm/graalvm-ce-java17-22.0.0.2/Contents/Home/lib/svm/clibraries/26/ios-arm64",
-					"-L/Users/adrian/.gluon/substrate/javaStaticSdk/18-ea+prep18-8/ios-arm64/staticjdk/lib/static",
+					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
