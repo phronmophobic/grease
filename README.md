@@ -39,6 +39,7 @@ $ gu install llvm-toolchain
 
 ## Usage
 
+0. [prerequisites](#prerequisites)
 1. Compile your clojure project
 
 ```sh
@@ -60,6 +61,7 @@ An example project that uses [membrane](https://github.com/phronmophobic/membran
 
 ### Usage
 
+0. [prerequisites](#prerequisites)
 1. Compile `./scripts/compile-membrane`
 2. Open xcode/TestSkia/TestSkia.xcodeproj
 3. Build and run
