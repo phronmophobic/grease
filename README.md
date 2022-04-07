@@ -32,7 +32,7 @@ $ scripts/download-deps
 Make sure `GRAALVM_HOME` is set and is on your path before starting.
 
 ```
-export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java11-VERSION/Contents/Home
+export GRAALVM_HOME=<path-to-graalvm>/Contents/Home
 export PATH=$GRAALVM_HOME/bin:$PATH
 ```
 
