@@ -49,6 +49,7 @@ jobs:
 
       - name: Cache Static JDK
         uses: actions/cache@v3
+        key: staticjdk
         with:
           path: |
             build/staticjdk
