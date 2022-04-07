@@ -47,6 +47,12 @@ jobs:
             tar xzf graalvm-ce-java11-darwin-amd64-22.0.0.2.tar.gz
           fi
 
+      - name: Install Graalvm components
+        run: |
+          export GRAALVM_HOME="$HOME/graalvm-ce-java11-22.0.0.2/Contents/Home"
+          $GRAALVM_HOME/bin/gu install llvm-toolchain
+          $GRAALVM_HOME/bin/gu install native-image
+
       - name: Cache Static JDK
         uses: actions/cache@v3
         with:
