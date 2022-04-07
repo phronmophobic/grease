@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v1
         id: cache-graalvm
         with:
-          path: ~/graalvm-ce-java11-22.0.0.2
+          path: ~/graalvm-ce-java17-22.0.0.2
           key: ${{ runner.os }}-graalvm-22.0.0.2
           restore-keys: |
                 ${{ runner.os }}-graalvm-22.0.0.2
@@ -42,14 +42,14 @@ jobs:
       - name: Download GraalVM
         run: |
           cd ~
-          if ! [ -d graalvm-ce-java11-22.0.0.2 ]; then
-            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-darwin-amd64-22.0.0.2.tar.gz
-            tar xzf graalvm-ce-java11-darwin-amd64-22.0.0.2.tar.gz
+          if ! [ -d graalvm-ce-java17-22.0.0.2 ]; then
+            curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java17-darwin-amd64-22.0.0.2.tar.gz
+            tar xzf graalvm-ce-java17-darwin-amd64-22.0.0.2.tar.gz
           fi
 
       - name: Install Graalvm components
         run: |
-          export GRAALVM_HOME="$HOME/graalvm-ce-java11-22.0.0.2/Contents/Home"
+          export GRAALVM_HOME="$HOME/graalvm-ce-java17-22.0.0.2/Contents/Home"
           $GRAALVM_HOME/bin/gu install llvm-toolchain
           $GRAALVM_HOME/bin/gu install native-image
 
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build macOS native image
         run: |
-          export GRAALVM_HOME="$HOME/graalvm-ce-java11-22.0.0.2/Contents/Home"
+          export GRAALVM_HOME="$HOME/graalvm-ce-java17-22.0.0.2/Contents/Home"
           export JAVA_HOME="$GRAALVM_HOME"
           export PATH=$JAVA_HOME/bin:$PATH
           scripts/compile-shared
