@@ -13,6 +13,11 @@ See `examples/gol`
 
 Try the public beta iOS app through test flight https://testflight.apple.com/join/GLOKMgFX
 
+## Media
+
+Watch the project in action on the [Apropos Clojure Podcast](https://apropos-site.vercel.app/episode/54).  
+[Show Notes](https://gist.github.com/ericnormand/aefbaace9b3731b26dd4dff770565271)
+
 ## Prerequisites
 
 1. Download java's arm64 static libraries built for ios. They can be downloaded using `download-deps`
