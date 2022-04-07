@@ -23,4 +23,13 @@ if [ ! -f "$fname" ]; then
    unzip "$fname"
 fi
 
+fname=ios-arm64.zip
+
+if [ ! -f "$fname" ]; then
+   curl -O https://download2.gluonhq.com/substrate/clibs/ios-arm64.zip
+   unzip -d "ios-arm64" "$fname"
+fi
+
+
+
 popd

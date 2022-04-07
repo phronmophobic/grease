@@ -533,7 +533,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../build/graalvm/lib/svm/clibraries/26/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
@@ -604,7 +604,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../build/graalvm/lib/svm/clibraries/26/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
