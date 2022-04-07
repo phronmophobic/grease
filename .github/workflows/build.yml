@@ -63,6 +63,8 @@ jobs:
       - name: Build macOS native image
         run: |
           export GRAALVM_HOME="$HOME/graalvm-ce-java11-22.0.0.2/Contents/Home"
+          export JAVA_HOME="$GRAALVM_HOME"
+          export PATH=$JAVA_HOME/bin:$PATH
           scripts/compile-shared
 
       # - uses: actions/upload-artifact@v1
