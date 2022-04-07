@@ -53,18 +53,17 @@ jobs:
           $GRAALVM_HOME/bin/gu install llvm-toolchain
           $GRAALVM_HOME/bin/gu install native-image
 
-      - name: Cache Static JDK
-        uses: actions/cache@v3
-        with:
-          key: staticjdk
-          path: |
-            build/staticjdk
+      # - name: Cache Static JDK
+      #   uses: actions/cache@v3
+      #   with:
+      #     key: staticjdk
+      #     path: |
+      #       build/staticjdk
+      #       build/
 
       - name: Download Static JDK
         run: |
-          if ! [ -d build/staticjdk ]; then
-            scripts/download-deps
-          fi
+          scripts/download-deps
 
       - name: Build macOS native image
         run: |
