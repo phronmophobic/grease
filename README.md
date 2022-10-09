@@ -2,6 +2,7 @@
 
 An example of building a clojure library for iOS with graalvm native-image.
 
+Built with [membrane](https://github.com/phronmophobic/membrane).
 
 ## Game of Life Example
 
