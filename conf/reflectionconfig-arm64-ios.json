@@ -38,7 +38,9 @@
     "name":"java.lang.StringConcatHelper"
   },
   {
-    "name":"java.lang.System"
+    "name":"java.lang.System",
+    "allPublicMethods" : true,
+    "allPublicFields" : true
   }
 ,
   {

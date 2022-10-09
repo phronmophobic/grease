@@ -14,6 +14,11 @@ See `examples/gol`
 
 Try the public beta iOS app through test flight https://testflight.apple.com/join/GLOKMgFX
 
+## Media
+
+Watch the project in action on the [Apropos Clojure Podcast](https://apropos-site.vercel.app/episode/54).  
+[Show Notes](https://gist.github.com/ericnormand/aefbaace9b3731b26dd4dff770565271)
+
 ## Prerequisites
 
 1. Download java's arm64 static libraries built for ios. They can be downloaded using `download-deps`
@@ -28,7 +33,7 @@ $ scripts/download-deps
 Make sure `GRAALVM_HOME` is set and is on your path before starting.
 
 ```
-export GRAALVM_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java11-VERSION/Contents/Home
+export GRAALVM_HOME=<path-to-graalvm>/Contents/Home
 export PATH=$GRAALVM_HOME/bin:$PATH
 ```
 
@@ -40,6 +45,7 @@ $ gu install llvm-toolchain
 
 ## Usage
 
+0. [prerequisites](#prerequisites)
 1. Compile your clojure project
 
 ```sh
@@ -61,6 +67,7 @@ An example project that uses [membrane](https://github.com/phronmophobic/membran
 
 ### Usage
 
+0. [prerequisites](#prerequisites)
 1. Compile `./scripts/compile-membrane`
 2. Open xcode/TestSkia/TestSkia.xcodeproj
 3. Build and run

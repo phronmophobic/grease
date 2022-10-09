@@ -49,8 +49,8 @@
 (defn clj_print_hi []
   (println "hi"))
 
-
-(def opts (-> {:namespaces {'foo.bar {'x 1}}}
+(def opts (-> {:classes {'System java.lang.System}
+               :namespaces {'foo.bar {'x 1}}}
               addons/future))
 (def sci-ctx (sci/init opts))
 
