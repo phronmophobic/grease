@@ -24,17 +24,17 @@ if [ ! -f "$fname" ]; then
 fi
 
 
-fname="ios-arm64"
-if [ ! -d "$fname" ]; then
+# fname="ios-arm64"
+# if [ ! -d "$fname" ]; then
 
-   IOS_LIBS_DIR="$GRAALVM_HOME/lib/svm/clibraries/27/ios-arm64/"
+#    IOS_LIBS_DIR="$GRAALVM_HOME/lib/svm/clibraries/27/ios-arm64/"
 
-   if [ -d "$IOS_LIBS_DIR" ]; then
-       ln -s "$IOS_LIBS_DIR" "$fname"
-   else
-       echo "IOS libs not found: $IOS_LIBS_DIR"
-       exit 1
-   fi
-fi
+#    if [ -d "$IOS_LIBS_DIR" ]; then
+#        ln -s "$IOS_LIBS_DIR" "$fname"
+#    else
+#        echo "IOS libs not found: $IOS_LIBS_DIR"
+#        exit 1
+#    fi
+# fi
 
 popd
