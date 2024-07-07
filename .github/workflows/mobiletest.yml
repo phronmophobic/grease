@@ -6,7 +6,7 @@ on:
 jobs:
 
   mac:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Git checkout
         uses: actions/checkout@v1
@@ -23,10 +23,10 @@ jobs:
         uses: actions/cache@v1
         id: cache-graalvm
         with:
-          path: ~/graalvm-svm-java17-darwin-gluon-22.1.0.1-Final
-          key: ${{ runner.os }}-graalvm-svm-java17-darwin-gluon-22.1.0.1-Final
+          path: ~/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
+          key: ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
           restore-keys: |
-                ${{ runner.os }}-graalvm-svm-java17-darwin-gluon-22.1.0.1-Final
+                ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
 
       - name: Setup Clojure
         # You may pin to the exact commit or the version.
@@ -43,13 +43,13 @@ jobs:
         run: |
           cd ~
           if ! [ -d graalvm-ce-java17-22.0.0.2 ]; then
-            curl -O -sL "https://github.com/gluonhq/graal/releases/download/gluon-22.1.0.1-Final/graalvm-svm-java17-darwin-gluon-22.1.0.1-Final.tar.gz"
-            tar xzf graalvm-svm-java17-darwin-gluon-22.1.0.1-Final.tar.gz
+            curl -O -sL "https://github.com/gluonhq/graal/releases/download/gluon-22.1.0.1-Final/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz"
+            tar xzf graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz
           fi
 
       # - name: Install Graalvm components
       #   run: |
-          # export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-gluon-22.1.0.1-Final/Contents/Home"
+          # export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home"
           # $GRAALVM_HOME/bin/gu install llvm-toolchain
           # $GRAALVM_HOME/bin/gu install native-image
 
@@ -67,7 +67,7 @@ jobs:
 
       - name: Build macOS native image
         run: |
-          export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-gluon-22.1.0.1-Final/Contents/Home"
+          export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home"
           export JAVA_HOME="$GRAALVM_HOME"
           export PATH=$JAVA_HOME/bin:$PATH
           scripts/compile-shared
