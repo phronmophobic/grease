@@ -56,6 +56,8 @@ mkdir -p build/out
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
+file ./build/out/bb.o
+
 popd
 
 # This is where xcode will look for headers
