@@ -56,6 +56,7 @@ mkdir -p build/out
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
+ls -lh ./build/out/bb.o
 file ./build/out/bb.o
 
 popd
