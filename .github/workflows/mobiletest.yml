@@ -63,6 +63,7 @@ jobs:
 
       - name: Download Static JDK
         run: |
+          export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-gluon-22.1.0.1-Final/Contents/Home"
           scripts/download-deps
 
       - name: Build macOS native image
