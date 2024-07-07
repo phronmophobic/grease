@@ -21,7 +21,7 @@ jobs:
 
       - name: Cache GraalVM
         uses: actions/cache@v1
-        id: cache-graalvm
+        id: cache-graalvm-m1
         with:
           path: ~/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
           key: ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
