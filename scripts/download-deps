@@ -23,13 +23,18 @@ if [ ! -f "$fname" ]; then
    unzip "$fname"
 fi
 
-fname=ios-arm64.zip
 
-if [ ! -f "$fname" ]; then
-   curl -O https://download2.gluonhq.com/substrate/clibs/ios-arm64.zip
-   unzip -d "ios-arm64" "$fname"
+fname="ios-arm64"
+if [ ! -d "$fname" ]; then
+
+   IOS_LIBS_DIR="$GRAALVM_HOME/lib/svm/clibraries/27/ios-arm64/"
+
+   if [ -d "$IOS_LIBS_DIR" ]; then
+       ln -s "$IOS_LIBS_DIR" "$fname"
+   else
+       echo "IOS libs not found: $IOS_LIBS_DIR"
+       exit 1
+   fi
 fi
-
-
 
 popd
