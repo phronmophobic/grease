@@ -44,6 +44,7 @@ jobs:
           cd ~
           if ! [ -d graalvm-ce-java17-22.0.0.2 ]; then
             curl -O -sL "https://github.com/gluonhq/graal/releases/download/gluon-22.1.0.1-Final/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz"
+            sudo xattr -r -d com.apple.quarantine graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz
             tar xzf graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz
           fi
 
