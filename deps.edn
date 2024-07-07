@@ -7,7 +7,7 @@
         com.phronemophobic/membrane {:mvn/version "0.9.31.8-beta"
                                      ;; :sha "e5d3723a94108dbc0784f07dc423f449a869f8b7"
                                      ;; :git/url "https://github.com/phronmophobic/membrane"
-                                     ;; :local/root "../membrane2"
+                                     ;; :local/root "../membrane"
                                      }
 
         borkdude/sci {:mvn/version "0.2.7"
