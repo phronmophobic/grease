@@ -1,0 +1,1 @@
+The ios-arm64 libs were extracted from "https://github.com/gluonhq/graal/releases/download/gluon-22.1.0.1-Final/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final.tar.gz" at graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home/lib/svm/clibraries/27/ios-arm64.
