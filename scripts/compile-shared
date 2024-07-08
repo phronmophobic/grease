@@ -60,6 +60,7 @@ uname -m
 find ./tmp
 df -h
 clang --version
+hexdump -C bb.o | head
 
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
