@@ -37,8 +37,6 @@ $GRAALVM_HOME/bin/native-image \
     -H:JNIConfigurationFiles="${PROJECT_DIR}"/conf/jniconfig-arm64-ios.json \
     -H:ResourceConfigurationFiles="${PROJECT_DIR}"/conf/resourceconfig-arm64-ios.json \
     -J-Dclojure.spec.skip-macros=true \
-    -J-Xmx20G \
-    -J-XX:MaxDirectMemorySize=8G \
     -J-Dclojure.compiler.direct-linking=true \
     -J-Dtech.v3.datatype.graal-native=true \
     -Dsvm.targetName=iOS \
@@ -48,6 +46,10 @@ $GRAALVM_HOME/bin/native-image \
     -H:CompilerBackend=lir \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
     -jar ../target/grease-uber.jar
+
+
+    # -J-Xmx20G \
+    # -J-XX:MaxDirectMemorySize=8G \
 
 rm -rf ./build/out
 mkdir -p build/out
