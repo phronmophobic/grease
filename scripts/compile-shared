@@ -58,9 +58,8 @@ find ./tmp
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
-ls -lh ./build/out/bb.o
+ls -l ./build/out/bb.o
 file ./build/out/bb.o
-md5sum ./build/out/bb.o
 
 popd
 
