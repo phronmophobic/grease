@@ -157,6 +157,16 @@ Found in `examples/` directory.
 Questions? Comments? Connect with us on clojurians slack in [#graalvm-mobile](https://clojurians.slack.com/archives/C0260KHN0Q0) (join [here](http://clojurians.net/)).
 
 
+## Notes
+
+The key ingredients for creating binaries for iOS using native-image are:
+- static jdk libraries build for iOS
+- static native image libraries built for ios (see ./lib/ios-arm64)
+- various configs (see ./conf/).
+
+In addition to gluon, there have also been some other forks that have tried to make building the static jdk and native libs easier. See https://graalvm.slack.com/archives/CN9KSFB40/p1714544531823089 on the graalvm slack.
+
+
 ## License
 
 Copyright © 2024 Adrian
