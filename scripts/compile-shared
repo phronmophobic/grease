@@ -66,8 +66,9 @@ find ./tmp -name 'bb.o' -exec cp {} build/out \;
 
 ls -l ./build/out/bb.o
 file ./build/out/bb.o
-hexdump -C ./build/out/bb.o | head
+nm -gU ./build/out/bb.o
 
+hexdump -C ./build/out/bb.o | head
 
 popd
 
