@@ -4,27 +4,27 @@
  :deps {org.clojure/clojure {:mvn/version "1.11.0"}
 
 
-        com.phronemophobic/membrane {:mvn/version "0.9.31.8-beta"
+        #_#_com.phronemophobic/membrane {:mvn/version "0.9.31.8-beta"
                                      ;; :sha "e5d3723a94108dbc0784f07dc423f449a869f8b7"
                                      ;; :git/url "https://github.com/phronmophobic/membrane"
                                      ;; :local/root "../membrane"
                                      }
 
-        borkdude/sci {:mvn/version "0.2.7"
+        #_#_borkdude/sci {:mvn/version "0.2.7"
                       ;; :local/root "../sci"
                       }
         com.phronemophobic/scify {:mvn/version "1.0"}
 
         org.clojure/data.json {:mvn/version "2.4.0"}
 
-        babashka/babashka.nrepl {:mvn/version "0.0.6"}
-        babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"
+        #_#_babashka/babashka.nrepl {:mvn/version "0.0.6"}
+        #_#_babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"
                            ;; :git/url "https://github.com/phronmophobic/babashka"
                            ;; :local/root "../babashka"
                            :mvn/version "0.7.8"
                            }
 
-        com.phronemophobic/clj-objc { ;; :local/root "../clj-objc"
+        #_#_com.phronemophobic/clj-objc { ;; :local/root "../clj-objc"
                                      :sha "76efd79cd741a65b5d2ebe92453d482e4eb39703"
                                      :git/url "https://github.com/phronmophobic/clj-objc.git"
                                      }
