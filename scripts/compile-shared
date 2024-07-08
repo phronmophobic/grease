@@ -51,13 +51,15 @@ $GRAALVM_HOME/bin/native-image \
     # -J-Xmx20G \
     # -J-XX:MaxDirectMemorySize=8G \
 
-df -h
+
 
 rm -rf ./build/out
 mkdir -p build/out
 
 uname -m
 find ./tmp
+df -h
+clang --version
 
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;

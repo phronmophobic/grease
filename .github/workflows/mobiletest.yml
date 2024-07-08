@@ -19,14 +19,14 @@ jobs:
       #     name: jar
       #     path: .
 
-      - name: Cache GraalVM
-        uses: actions/cache@v1
-        id: cache-graalvm-m1
-        with:
-          path: ~/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
-          key: ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
-          restore-keys: |
-                ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
+      # - name: Cache GraalVM
+      #   uses: actions/cache@v1
+      #   id: cache-graalvm-m1
+      #   with:
+      #     path: ~/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
+      #     key: ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
+      #     restore-keys: |
+      #           ${{ runner.os }}-graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final
 
       - name: Setup Clojure
         # You may pin to the exact commit or the version.
@@ -76,6 +76,9 @@ jobs:
 
       - name: Build app
         run: |
+          export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home"
+          export JAVA_HOME="$GRAALVM_HOME"
+          export PATH=$JAVA_HOME/bin:$PATH
           scripts/build-shared
 
       # - uses: actions/upload-artifact@v1
