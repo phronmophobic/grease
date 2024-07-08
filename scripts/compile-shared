@@ -4,8 +4,6 @@ set -x
 set -e
 
 
-env
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR"
 
@@ -23,7 +21,6 @@ rm -rf ./tmp
 $GRAALVM_HOME/bin/native-image \
     --report-unsupported-elements-at-runtime \
     --no-fallback \
-    --no-server \
     -H:+ExitAfterRelocatableImageWrite \
     -H:+SharedLibrary \
     -H:+AddAllCharsets \
@@ -48,13 +45,10 @@ $GRAALVM_HOME/bin/native-image \
     -H:CAPCacheDir="${PROJECT_DIR}"/conf/capcache \
     -H:CompilerBackend=lir \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ../target/grease-uber.jar
-
+    -jar ../target/grease-uber.jar && echo 'done!'
 
     # -J-Xmx20G \
     # -J-XX:MaxDirectMemorySize=8G \
-
-
 
 rm -rf ./build/out
 mkdir -p build/out
