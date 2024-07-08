@@ -10,10 +10,6 @@ See `examples/gol`
 
 ![game-of-life](/game-of-life.gif?raw=true)
 
-## Public Beta
-
-Try the public beta iOS app through test flight https://testflight.apple.com/join/GLOKMgFX
-
 ## Media
 
 Watch the project in action on the [Apropos Clojure Podcast](https://apropos-site.vercel.app/episode/54).  
@@ -24,23 +20,17 @@ Watch the project in action on the [Apropos Clojure Podcast](https://apropos-sit
 1. Download java's arm64 static libraries built for ios. They can be downloaded using `download-deps`
 
 ```sh
-
 $ scripts/download-deps
 ```
 
-2. Setup graalvm and make sure your clojure project is graalvm compatible. https://github.com/BrunoBonacci/graalvm-clojure
+2. Setup graalvm and make sure your clojure project is graalvm compatible. https://github.com/BrunoBonacci/graalvm-clojure. These examples were tested using https://github.com/gluonhq/graal/releases/tag/gluon-22.1.0.1-Final. Other versions may or may not work.
 
 Make sure `GRAALVM_HOME` is set and is on your path before starting.
 
 ```
-export GRAALVM_HOME=<path-to-graalvm>/Contents/Home
-export PATH=$GRAALVM_HOME/bin:$PATH
-```
-
-3. Install [Graalvm LLVM Backend](https://www.graalvm.org/reference-manual/native-image/LLVMBackend/)
-
-```sh
-$ gu install llvm-toolchain
+exportJAVA_HOME=<path-to-graalvm>/Contents/Home
+export GRAALVM_HOME="$JAVA_HOME"
+export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 ## Usage
@@ -62,6 +52,8 @@ This can take a while.
 
 
 ## Membrane Example
+
+_Note: this example has not been updated and may not work_
 
 An example project that uses [membrane](https://github.com/phronmophobic/membrane) for UI can be found under xcode/TestSkia/TestSkia.xcodeproj. It also starts a sci repl that can be used for interactive development. Simply connect to the repl and start hacking! To update the UI, just `reset!` the main view atom. Example scripts below.
 
@@ -169,6 +161,6 @@ Questions? Comments? Connect with us on clojurians slack in [#graalvm-mobile](ht
 
 ## License
 
-Copyright © 2021 Adrian
+Copyright © 2024 Adrian
 
 Distributed under the GPLv2 License. See LICENSE.
