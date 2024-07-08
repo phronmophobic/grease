@@ -53,8 +53,6 @@ This can take a while.
 
 ## Membrane Example
 
-_Note: this example has not been updated and may not work_
-
 An example project that uses [membrane](https://github.com/phronmophobic/membrane) for UI can be found under xcode/TestSkia/TestSkia.xcodeproj. It also starts a sci repl that can be used for interactive development. Simply connect to the repl and start hacking! To update the UI, just `reset!` the main view atom. Example scripts below.
 
 ### Usage

@@ -504,7 +504,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
@@ -577,7 +577,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../build/ios-arm64\"",
+					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
