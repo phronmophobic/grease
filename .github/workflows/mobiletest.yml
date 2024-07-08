@@ -73,6 +73,10 @@ jobs:
           export PATH="$JAVA_HOME/bin:$PATH"
           scripts/compile-shared
 
+      - uses: actions/upload-artifact@v1
+        with:
+          path: library/build/out/bb.o
+          name: bb.o
 
       - name: Build app
         run: |
@@ -81,9 +85,6 @@ jobs:
           export PATH="$JAVA_HOME/bin:$PATH"
           scripts/build-shared
 
-      # - uses: actions/upload-artifact@v1
-      #   with:
-      #     path: bb
-      #     name: babashka-${{ steps.babashka-version.outputs.version }}-macos-amd64.zip
+
 
 
