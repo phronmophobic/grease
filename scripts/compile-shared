@@ -56,20 +56,8 @@ $GRAALVM_HOME/bin/native-image \
 rm -rf ./build/out
 mkdir -p build/out
 
-uname -m
-find ./tmp
-df -h
-top -l 1 | grep PhysMem
-clang --version
-
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
-
-ls -l ./build/out/bb.o
-file ./build/out/bb.o
-nm -gU ./build/out/bb.o
-
-hexdump -C ./build/out/bb.o | head
 
 popd
 
