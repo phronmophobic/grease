@@ -31,10 +31,10 @@ jobs:
       - name: Setup Clojure
         # You may pin to the exact commit or the version.
         # uses: DeLaGuardo/setup-clojure@5042876523f30f5efcf1d6feaa48bd1498d7814f
-        uses: DeLaGuardo/setup-clojure@3.5
+        uses: DeLaGuardo/setup-clojure@12.5
         with:
           # Clojure CLI version to make available on the path.
-          cli: 1.10.3.1058
+          cli: 1.11.1.1435
 
       - name: Install dependencies
         run: clojure -P
