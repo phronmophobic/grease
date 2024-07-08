@@ -70,7 +70,7 @@ jobs:
         run: |
           export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home"
           export JAVA_HOME="$GRAALVM_HOME"
-          export PATH=$JAVA_HOME/bin:$PATH
+          export PATH="$JAVA_HOME/bin:$PATH"
           scripts/compile-shared
 
 
@@ -78,7 +78,7 @@ jobs:
         run: |
           export GRAALVM_HOME="$HOME/graalvm-svm-java17-darwin-m1-gluon-22.1.0.1-Final/Contents/Home"
           export JAVA_HOME="$GRAALVM_HOME"
-          export PATH=$JAVA_HOME/bin:$PATH
+          export PATH="$JAVA_HOME/bin:$PATH"
           scripts/build-shared
 
       # - uses: actions/upload-artifact@v1
