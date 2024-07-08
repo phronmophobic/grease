@@ -53,7 +53,7 @@
                :aot true
                :compile-ns [com.phronemophobic.grease]
                :main-class com.phronemophobic.grease
-               :jar "target/grease-uber.jar"
+               :jar "target/bb.jar"
                ;;Disable tensor code generation and ensure direct linking.
                :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
                           "-Dclojure.compiler.direct-linking=true"

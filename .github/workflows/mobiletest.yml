@@ -79,8 +79,8 @@ jobs:
           name: bb.o
       - uses: actions/upload-artifact@v1
         with:
-          path: target/grease-uber.jar
-          name: grease-uber.jar
+          path: target/bb.jar
+          name: bb.jar
 
       - name: Build app
         run: |

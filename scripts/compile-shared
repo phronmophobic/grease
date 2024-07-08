@@ -47,7 +47,8 @@ $GRAALVM_HOME/bin/native-image \
     -H:CAPCacheDir="${PROJECT_DIR}"/conf/capcache \
     -H:CompilerBackend=lir \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ../target/grease-uber.jar && echo 'done!'
+    -jar ../target/bb.jar \
+
 
     # -J-Xmx20G \
     # -J-XX:MaxDirectMemorySize=8G \
@@ -61,9 +62,8 @@ df -h
 top -l 1 | grep PhysMem
 clang --version
 
-# find ./tmp -name 'bb.o' -exec cp {} build/out \;
-find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
-mv build/out/grease-uber.o build/out/bb.o
+find ./tmp -name 'bb.o' -exec cp {} build/out \;
+# find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
 ls -l ./build/out/bb.o
 file ./build/out/bb.o
