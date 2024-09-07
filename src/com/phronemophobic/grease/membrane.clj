@@ -145,7 +145,7 @@
                        (filter (fn [interface]
                                  (.startsWith (.getName ^NetworkInterface interface)
                                               "en")))
-                       (map
+                       (keep
                         (fn [interface]
                           (let [ip4 (->> (.getInetAddresses ^NetworkInterface interface)
                                          enumeration-seq
