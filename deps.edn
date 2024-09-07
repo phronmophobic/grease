@@ -2,37 +2,14 @@
          ;; "classes" "generated_classes" "library/classes"
 ]
  :deps {org.clojure/clojure {:mvn/version "1.11.0"}
-
-
-        #_#_com.phronemophobic/membrane {:mvn/version "0.9.31.8-beta"
-                                     ;; :sha "e5d3723a94108dbc0784f07dc423f449a869f8b7"
-                                     ;; :git/url "https://github.com/phronmophobic/membrane"
-                                     ;; :local/root "../membrane"
-                                     }
-
-        #_#_borkdude/sci {:mvn/version "0.2.7"
-                      ;; :local/root "../sci"
-                      }
         com.phronemophobic/scify {:mvn/version "1.0"}
-
         org.clojure/data.json {:mvn/version "2.4.0"}
-
-        #_#_babashka/babashka.nrepl {:mvn/version "0.0.6"}
-        #_#_babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"
-                           ;; :git/url "https://github.com/phronmophobic/babashka"
-                           ;; :local/root "../babashka"
-                           :mvn/version "0.7.8"
-                           }
-
-        #_#_com.phronemophobic/clj-objc { ;; :local/root "../clj-objc"
-                                     :sha "76efd79cd741a65b5d2ebe92453d482e4eb39703"
-                                     :git/url "https://github.com/phronmophobic/clj-objc.git"
-                                     }
-
-
-        cnuernber/dtype-next           {:mvn/version "9.021"
-                                        ;; :local/root "../dtype-next"
-                                        }
+        cnuernber/dtype-next {;; :mvn/version "10.113"
+                              :local/root "../dtype-next"
+                              }
+        ;; cnuernber/dtype-next           {:mvn/version "9.021"
+        ;;                                 ;; :local/root "../dtype-next"
+        ;;                                 }
         net.java.dev.jna/jna           {:mvn/version "5.11.0"}
         }
  
@@ -40,6 +17,39 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}
+
+  :native-image
+  {:jvm-opts ["-Dtech.v3.datatype.graal-native=true"
+              "-Dclojure.compiler.direct-linking=true"
+              "-Dclojure.spec.skip-macros=true"]
+   :extra-deps {com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}}}
+
+  :build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.0"}
+                 org.clojure/data.json {:mvn/version "2.5.0"}
+                 slipset/deps-deploy {:mvn/version "RELEASE"}}
+          :ns-default build}
+  :membrane {:extra-deps
+             {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
+                                           :local/root "../membrane"
+                                           }
+              babashka/babashka.nrepl {:mvn/version "0.0.6"}
+              babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"
+                                 ;; :git/url "https://github.com/phronmophobic/babashka"
+                                 ;; :local/root "../babashka"
+                                 :mvn/version "0.7.8"
+                                 }
+              borkdude/sci {:mvn/version "0.2.7"
+                            ;; :local/root "../sci"
+                            }
+
+              com.phronemophobic/objcjure {:local/root "../objcjure"
+                                           ;;:git/url "https://github.com/phronmophobic/objcjure.git"
+                                           ;;:git/sha "f06b2395a20b44fc626a317a497d1eca815de328"
+                                           }
+              com.phronemophobic/clong {;; :git/sha "945d9a71c6436938b3bdf11de2e7bf1f1c4c978c"
+                                        :local/root "../clong"
+                                        ;; :mvn/version "1.4.1"
+                                        }}}
 
   :depstar
   {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
@@ -59,6 +69,8 @@
                           "-Dclojure.compiler.direct-linking=true"
                           "-Dclojure.spec.skip-macros=true"]}}
 
+
+  ;; no longer used
   :depstar-membrane
   {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
    :ns-default hf.depstar
@@ -79,18 +91,4 @@
                           "-Dclojure.compiler.direct-linking=true"
                           "-Dclojure.spec.skip-macros=true"]}}
   
-  :runner
-  {:extra-deps {com.cognitect/test-runner
-                {:git/url "https://github.com/cognitect-labs/test-runner"
-                 :sha "b6b3193fcc42659d7e46ecd1884a228993441182"}}
-   :main-opts ["-m" "cognitect.test-runner"
-               "-d" "test"]}
-  :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
-        :exec-fn hf.depstar/jar
-        :exec-args {:jar "grease.jar" :sync-pom true}}
-  :install {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
-            :exec-fn deps-deploy.deps-deploy/deploy
-            :exec-args {:installer :local :artifact "grease.jar"}}
-  :deploy {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
-           :exec-fn deps-deploy.deps-deploy/deploy
-           :exec-args {:installer :remote :artifact "grease.jar"}}}}
+  }}

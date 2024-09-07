@@ -11,11 +11,12 @@
 
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.objc :as objc]
-            [com.phronemophobic.clj-objc :as clj-objc]
+            [com.phronemophobic.objcjure :as objcjure]
 
             [tech.v3.datatype.ffi :as dt-ffi]
             [tech.v3.datatype :as dtype]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            clojure.stacktrace)
    ;; babashka extras
   #_(:require ;;babashka.impl.async
             ;;babashka.impl.hiccup
@@ -34,7 +35,7 @@
 (defonce debug-log (atom []))
 
 (defn sleep [msecs]
-  (Thread/sleep msecs))
+  (Thread/sleep (long msecs)))
 
 (defn url->image [s]
   (ui/image (java.net.URL. s)))
@@ -69,9 +70,12 @@
                     (scify/ns->ns-map 'membrane.component)
                     (scify/ns->ns-map 'membrane.basic-components)
                     (scify/ns->ns-map 'membrane.ios)
-                    (scify/ns->ns-map 'com.phronemophobic.clj-objc)
                     (scify/ns->ns-map 'clojure.java.io)
                     (scify/ns->ns-map 'clojure.data.json)
+                    (scify/ns->ns-map 'clojure.stacktrace)
+                    (scify/ns->ns-map 'com.phronemophobic.objcjure)
+                    (scify/ns->ns-map 'tech.v3.datatype.ffi)
+                    (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
 
                     ;; extras
                     { ;; 'clojure.core.async babashka.impl.async/async-namespace

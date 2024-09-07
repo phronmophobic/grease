@@ -3,8 +3,6 @@
             [tech.v3.datatype :as dtype]
             tech.v3.datatype.ffi.graalvm-runtime
             [tech.v3.datatype.native-buffer :as native-buffer])
-  
-  (:import org.graalvm.nativeimage.c.function.CEntryPointLiteral)
   (:gen-class))
 
 ;; https://developer.apple.com/documentation/objectivec/objective-c_runtime?language=objc

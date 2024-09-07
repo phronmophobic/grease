@@ -10,19 +10,17 @@ PROJECT_DIR="$DIR/.."
 
 cd ..
 
-clojure -X:depstar-membrane
+clojure -T:build uberjar-native-image
 
 mkdir -p library
-pushd library
 
-rm -rf ./tmp
+rm -rf ./library/tmp
 
 time \
     $GRAALVM_HOME/bin/native-image \
     --report-unsupported-elements-at-runtime \
     '--initialize-at-run-time=org.httpkit.client.ClientSslEngineFactory$SSLHolder' \
     --no-fallback \
-    --no-server \
     -H:+ExitAfterRelocatableImageWrite \
     -H:+SharedLibrary \
     -H:+AddAllCharsets \
@@ -39,6 +37,8 @@ time \
     -H:ReflectionConfigurationFiles="${PROJECT_DIR}"/conf/reflectionconfig-arm64-ios.json \
     -H:JNIConfigurationFiles="${PROJECT_DIR}"/conf/jniconfig-arm64-ios.json \
     -H:ResourceConfigurationFiles="${PROJECT_DIR}"/conf/resourceconfig-arm64-ios.json \
+    --features=clj_easy.graal_build_time.InitClojureClasses \
+    --initialize-at-run-time=riddley.Util \
     -J-Dclojure.spec.skip-macros=true \
     -J-Xmx20G \
     -J-XX:MaxDirectMemorySize=8G \
@@ -49,16 +49,16 @@ time \
     -H:+UseCAPCache \
     -H:CAPCacheDir="${PROJECT_DIR}"/conf/capcache \
     -H:CompilerBackend=lir \
+    -H:Name=bb \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ../target/grease-uber.jar
+    -jar ./target/grease-uber.jar
 
-rm -rf ./build/out
-mkdir -p build/out
+rm -rf ./library/build/out
+mkdir -p ./library/build/out
 
-find ./tmp -name 'bb.o' -exec cp {} build/out \;
+mv bb.h library/bb.h
+find ./library/tmp -name 'bb.o' -exec cp {} ./library/build/out \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
-popd
-
 # This is where xcode will look for headers
-ln -s "$GRAALVM_HOME" build/graalvm
+# ln -s "$GRAALVM_HOME" build/graalvm

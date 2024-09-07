@@ -34,12 +34,6 @@ graal_isolate_t *isolate = NULL;
 graal_isolatethread_t *thread = NULL;
 static const NSUInteger MaxBuffersInFlight = 3;
 
-// clj_objc
-extern "C" {
-    void set_graal_isolate(graal_isolate_t *isolate);
-}
-
-
 sk_sp<SkSurface> SkMtkViewToSurface(MTKView* mtkView, GrRecordingContext* rContext) {
     if (!rContext ||
         MTLPixelFormatDepth32Float_Stencil8 != [mtkView depthStencilPixelFormat] ||
@@ -122,7 +116,6 @@ void testDraw(SkCanvas* canvas){
         if (graal_create_isolate(NULL, &isolate, &thread) != 0) {
           fprintf(stderr, "initialization error\n");
         }
-        set_graal_isolate(isolate);
         
         ((MembraneView*)view).isolate = isolate;
         ((MembraneView*)view).thread = thread;
