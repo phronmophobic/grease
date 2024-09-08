@@ -221,6 +221,16 @@
          #'display-evals)))
 
 (defn clj_init []
+  (let [documents-dir
+        (objcjure/nsstring->str
+         (objcjure/objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
+                           ;; (int 14) ;; application support
+                           (int 9) ;; documents
+                           (int 1)
+                           ]
+                          :objectAtIndex 0]
+                         description]))]
+    (prn "documents dir" documents-dir))
   (let [path-str (dt-ffi/c->string
                   (objc/clj_app_dir))
         path (io/file path-str "gol.clj")]
