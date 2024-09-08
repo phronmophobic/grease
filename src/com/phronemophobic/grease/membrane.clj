@@ -45,6 +45,11 @@
    :y (objc/yAcceleration data)
    :z (objc/zAcceleration data)})
 
+(declare sci-ctx)
+(defmacro objc-wrapper [form]
+  (binding [objcjure/*sci-ctx* sci-ctx]
+    (objcjure/objc-syntax &env form)))
+
 (def opts (addons/future
             {:classes
              {'java.net.URL java.net.URL}
@@ -73,7 +78,20 @@
                     (scify/ns->ns-map 'clojure.java.io)
                     (scify/ns->ns-map 'clojure.data.json)
                     (scify/ns->ns-map 'clojure.stacktrace)
-                    (scify/ns->ns-map 'com.phronemophobic.objcjure)
+                    (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
+                          sci-ns-var (-> ns-map
+                                         first
+                                         val
+                                         first
+                                         val
+                                         meta
+                                         :ns)]
+                      (assoc-in ns-map
+                                '[com.phronemophobic.objcjure
+                                  objc]
+                                (sci/new-var 'objc @#'objc-wrapper
+                                             (assoc (meta #'objcjure/objc)
+                                                    :ns sci-ns-var))))
                     (scify/ns->ns-map 'tech.v3.datatype.ffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
 
