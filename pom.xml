@@ -26,6 +26,11 @@
   </scm>
   <dependencies>
     <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+      <version>1.11.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.phronemophobic</groupId>
       <artifactId>scify</artifactId>
       <version>1.0</version>
@@ -36,39 +41,14 @@
       <version>2.4.0</version>
     </dependency>
     <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>clojure</artifactId>
-      <version>1.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.phronemophobic</groupId>
-      <artifactId>membrane</artifactId>
-      <version>0.9.31.8-beta</version>
-    </dependency>
-    <dependency>
       <groupId>cnuernber</groupId>
       <artifactId>dtype-next</artifactId>
       <version>9.021</version>
     </dependency>
     <dependency>
-      <groupId>babashka</groupId>
-      <artifactId>babashka</artifactId>
-      <version>0.7.8</version>
-    </dependency>
-    <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
       <version>5.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>borkdude</groupId>
-      <artifactId>sci</artifactId>
-      <version>0.2.7</version>
-    </dependency>
-    <dependency>
-      <groupId>babashka</groupId>
-      <artifactId>babashka.nrepl</artifactId>
-      <version>0.0.6</version>
     </dependency>
   </dependencies>
   <build>

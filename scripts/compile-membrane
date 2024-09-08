@@ -51,7 +51,8 @@ time \
     -H:CompilerBackend=lir \
     -H:Name=bb \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ./target/grease-uber.jar
+    -jar ./target/grease-uber.jar \
+    bb
 
 rm -rf ./library/build/out
 mkdir -p ./library/build/out
