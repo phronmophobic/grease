@@ -12,6 +12,11 @@
 		3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A512676B06200C5D250 /* MetalKit.framework */; };
 		3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A532676B0BD00C5D250 /* ModelIO.framework */; };
 		3A1A88DA26A79B420005E9C7 /* gol.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3A1A88D926A79B410005E9C7 /* gol.clj */; };
+		3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED02C8E31E4008D67EB /* libskparagraph.a */; };
+		3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED12C8E31E4008D67EB /* libskresources.a */; };
+		3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED22C8E31E4008D67EB /* libskshaper.a */; };
+		3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED32C8E31E4008D67EB /* libskunicode.a */; };
+		3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED42C8E31E4008D67EB /* libsvg.a */; };
 		3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */; };
 		3A75F289267445BC0015D82C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F288267445BC0015D82C /* AppDelegate.m */; };
 		3A75F28C267445BC0015D82C /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28B267445BC0015D82C /* Renderer.mm */; };
@@ -42,6 +47,11 @@
 		3A110A512676B06200C5D250 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A110A532676B0BD00C5D250 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 		3A1A88D926A79B410005E9C7 /* gol.clj */ = {isa = PBXFileReference; lastKnownFileType = text; name = gol.clj; path = ../../examples/gol/gol.clj; sourceTree = "<group>"; };
+		3A43FED02C8E31E4008D67EB /* libskparagraph.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskparagraph.a; sourceTree = "<group>"; };
+		3A43FED12C8E31E4008D67EB /* libskresources.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskresources.a; sourceTree = "<group>"; };
+		3A43FED22C8E31E4008D67EB /* libskshaper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskshaper.a; sourceTree = "<group>"; };
+		3A43FED32C8E31E4008D67EB /* libskunicode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskunicode.a; sourceTree = "<group>"; };
+		3A43FED42C8E31E4008D67EB /* libsvg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsvg.a; sourceTree = "<group>"; };
 		3A6C99A326B0CB7C000479D4 /* clj_objc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clj_objc.o; sourceTree = "<group>"; };
 		3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		3A75F284267445BC0015D82C /* TestSkia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestSkia.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +95,11 @@
 				3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */,
 				3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */,
 				3A75F2D52675C7FA0015D82C /* CoreServices.framework in Frameworks */,
+				3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */,
+				3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */,
+				3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */,
+				3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */,
+				3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */,
 				3A75F2D32675C7F40015D82C /* Foundation.framework in Frameworks */,
 				3A7759AC26A649E70014EA55 /* libskia.a in Frameworks */,
 				3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */,
@@ -144,6 +159,11 @@
 		3A75F2A72674696C0015D82C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A43FED02C8E31E4008D67EB /* libskparagraph.a */,
+				3A43FED12C8E31E4008D67EB /* libskresources.a */,
+				3A43FED22C8E31E4008D67EB /* libskshaper.a */,
+				3A43FED32C8E31E4008D67EB /* libskunicode.a */,
+				3A43FED42C8E31E4008D67EB /* libsvg.a */,
 				3AC80E7D27F7FFAA006D165F /* bb.o */,
 				3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */,
 				3A6C99A326B0CB7C000479D4 /* clj_objc.o */,
