@@ -1,7 +1,7 @@
 {:paths ["src"
          ;; "classes" "generated_classes" "library/classes"
 ]
- :deps {org.clojure/clojure {:mvn/version "1.11.0"}
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}
         com.phronemophobic/scify {:mvn/version "1.0"}
         org.clojure/data.json {:mvn/version "2.5.0"}
         cnuernber/dtype-next {;; :mvn/version "10.113"
@@ -43,6 +43,8 @@
               ;;                    }
 
               org.babashka/sci {:mvn/version "0.8.43"}
+              babashka/fs {:mvn/version "0.5.22"}
+              mogenslund/liquid {:mvn/version "2.0.3"}
 
               com.phronemophobic/objcjure {:local/root "../objcjure"
                                            ;;:git/url "https://github.com/phronmophobic/objcjure.git"
