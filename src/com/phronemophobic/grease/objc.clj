@@ -42,8 +42,11 @@
 
    ;; :call_clj_fn {:rettype :void
    ;;               :argtypes [['fptr :pointer]]}
-   :clj_app_dir {:rettype :pointer
-                 :argtypes []}
+  :clj_main_view {:rettype :pointer
+                  :argtypes []}
+
+  :clj_app_dir {:rettype :pointer
+                :argtypes []}
    ,})
 
 (comment

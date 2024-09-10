@@ -13,6 +13,7 @@
 
 extern "C" {
 const char* _Nullable clj_app_dir();
+void* clj_main_view();
 
 double xAcceleration(CMAccelerometerData* _Nonnull data);
 double yAcceleration(CMAccelerometerData* _Nonnull data);

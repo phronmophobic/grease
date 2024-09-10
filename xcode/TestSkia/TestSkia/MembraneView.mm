@@ -8,10 +8,16 @@
 #import "MembraneView.h"
 #include "bb.h"
 
+static void* _clj_main_view;
+
 const char* clj_app_dir(){
     NSBundle* mb = [NSBundle mainBundle];
     return [[mb bundlePath] UTF8String];
 }
+void* clj_main_view(){
+    return _clj_main_view;
+}
+
 
 double xAcceleration(CMAccelerometerData* data){
     return data.acceleration.x;
@@ -61,6 +67,16 @@ double zAcceleration(CMAccelerometerData* data){
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches
                withEvent:(UIEvent *)event{}
+
+- (void) didMoveToSuperview{
+    [super didMoveToSuperview];
+    _clj_main_view = (__bridge void*)self;
+}
+
+- (void) didMoveToWindow{
+    [super didMoveToWindow];
+    _clj_main_view = (__bridge void*)self;
+}
 
 - (void)deleteBackward{
     clj_delete_backward(self.thread);
