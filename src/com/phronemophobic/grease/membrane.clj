@@ -2,7 +2,10 @@
   (:require membrane.ios
             [membrane.ui :as ui]
             membrane.component
+            membrane.components.code-editor.code-editor
+            liq.buffer
             membrane.basic-components
+            babashka.fs
             babashka.nrepl.server
             [babashka.nrepl.server.middleware :as middleware]
             clojure.data.json
@@ -52,7 +55,7 @@
 
 (def opts (addons/future
             {:classes
-             {'java.net.URL java.net.URL}
+             {:allow :all}
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
                           fns (sci/create-ns ns-name nil)]
@@ -74,10 +77,13 @@
                       (scify/ns->ns-map 'membrane.ui))
                     (scify/ns->ns-map 'membrane.component)
                     (scify/ns->ns-map 'membrane.basic-components)
+                    (scify/ns->ns-map 'membrane.components.code-editor.code-editor)
+                    (scify/ns->ns-map 'liq.buffer)
                     (scify/ns->ns-map 'membrane.ios)
                     (scify/ns->ns-map 'clojure.java.io)
                     (scify/ns->ns-map 'clojure.data.json)
                     (scify/ns->ns-map 'clojure.stacktrace)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.objc)
                     (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
                           sci-ns-var (-> ns-map
                                          first
@@ -94,6 +100,7 @@
                                                     :ns sci-ns-var))))
                     (scify/ns->ns-map 'tech.v3.datatype.ffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
+                    (scify/ns->ns-map 'babashka.fs)
 
                     ;; extras
                     { ;; 'clojure.core.async babashka.impl.async/async-namespace
@@ -114,6 +121,8 @@
 
 
 (def sci-ctx (sci/init opts))
+(sci/alter-var-root sci/out (constantly *out*))
+(sci/alter-var-root sci/err (constantly *err*))
 (alter-var-root
  #'membrane.component/*sci-ctx*
  (constantly sci-ctx))
