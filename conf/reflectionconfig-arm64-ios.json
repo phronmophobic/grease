@@ -29,10 +29,9 @@
   },
   {
     "name":"java.lang.String",
-    "fields":[
-      {"name":"coder"},
-      {"name":"value"}
-    ]
+    "allPublicMethods" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
   },
   {
     "name":"java.lang.StringConcatHelper"
@@ -136,4 +135,13 @@
     "name":"java.net.InetSocketAddress",
     "fields":[{"name":"holder", "allowUnsafeAccess":true}]
   }
+
+  ,
+  {
+    "name" : "java.io.InputStream",
+    "allPublicMethods" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
+  }
+
 ]
