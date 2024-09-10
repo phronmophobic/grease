@@ -14,7 +14,7 @@ pushd build
 
 staticjdk='staticjdk'
 target='ios-arm64'
-version='18-ea+prep18-9'
+version='18-ea+prep18-8'
 
 fname="${staticjdk}-${target}-gvm-${version}.zip"
 
