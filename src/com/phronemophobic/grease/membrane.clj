@@ -50,8 +50,11 @@
 
 (declare sci-ctx)
 (defmacro objc-wrapper [form]
-  (binding [objcjure/*sci-ctx* sci-ctx]
+  (binding [objcjure/*sci-ctx* @sci-ctx]
     (objcjure/objc-syntax &env form)))
+
+(defn get-sci-ctx []
+  @sci-ctx)
 
 (def opts (addons/future
             {:classes
@@ -69,6 +72,7 @@
                                 'main-view (sci/copy-var main-view fns)
                                 'url->image (sci/copy-var url->image fns)
                                 'debug-view (sci/copy-var debug-view fns)
+                                'get-sci-ctx (sci/copy-var get-sci-ctx fns)
                                 'acceleration->map (sci/copy-var acceleration->map fns)
                                 'debug-log (sci/copy-var debug-log fns)}})
 
@@ -120,12 +124,16 @@
                                     '[[clojure.repl :refer [dir doc]]]}})}))
 
 
-(def sci-ctx (sci/init opts))
-(sci/alter-var-root sci/out (constantly *out*))
-(sci/alter-var-root sci/err (constantly *err*))
-(alter-var-root
- #'membrane.component/*sci-ctx*
- (constantly sci-ctx))
+(def sci-ctx (delay
+               (let [sci-ctx (sci/init opts)]
+                 (sci/alter-var-root sci/out (constantly *out*))
+                 (sci/alter-var-root sci/err (constantly *err*))
+                 (alter-var-root
+                  #'membrane.component/*sci-ctx*
+                  (constantly sci-ctx))
+
+                 sci-ctx)))
+
 
 (defonce old-eval-msg babashka.nrepl.impl.server/eval-msg)
 
@@ -247,7 +255,7 @@
          path-str
          path
          (.exists path))
-    (sci/eval-string (slurp path) sci-ctx))
+    (sci/eval-string* @sci-ctx (slurp path)))
   (let [local-address (get-local-address)
         host-address (when local-address
                        (.getHostAddress ^InetAddress local-address))
@@ -258,7 +266,8 @@
                                      (with-background
                                        (ui/label address-str))))
     (println (str "address: \n" address-str))
-    (babashka.nrepl.server/start-server! sci-ctx
+
+    (babashka.nrepl.server/start-server! @sci-ctx
                                          {:host host-address :port 23456
                                           :xform xform})))
 
