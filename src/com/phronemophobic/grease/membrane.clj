@@ -21,7 +21,7 @@
             [clojure.java.io :as io]
             clojure.stacktrace)
    ;; babashka extras
-  #_(:require ;;babashka.impl.async
+  (:require ;;babashka.impl.async
             ;;babashka.impl.hiccup
             babashka.impl.httpkit-client
             ;;babashka.impl.httpkit-server
@@ -110,7 +110,7 @@
                     { ;; 'clojure.core.async babashka.impl.async/async-namespace
                      ;; 'clojure.core.async.impl.protocols babashka.impl.async/async-protocols-namespace
 
-                     ;; 'org.httpkit.client babashka.impl.httpkit-client/httpkit-client-namespace
+                     'org.httpkit.client babashka.impl.httpkit-client/httpkit-client-namespace
                      ;; 'org.httpkit.sni-client babashka.impl.httpkit-client/sni-client-namespace
                      ;; 'org.httpkit.server babashka.impl.httpkit-server/httpkit-server-namespace
 

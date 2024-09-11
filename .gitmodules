@@ -4,3 +4,6 @@
 [submodule "examples/snake"]
 	path = examples/snake
 	url = https://github.com/phronmophobic/programming-clojure.git
+[submodule "third-party/babashka"]
+	path = third-party/babashka
+	url = https://github.com/babashka/babashka.git
