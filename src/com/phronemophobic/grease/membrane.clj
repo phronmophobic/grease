@@ -15,6 +15,8 @@
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.objc :as objc]
             [com.phronemophobic.objcjure :as objcjure]
+            com.phronemophobic.clj-libffi.callback
+            com.phronemophobic.clj-libffi
 
             [tech.v3.datatype.ffi :as dt-ffi]
             [tech.v3.datatype :as dtype]
