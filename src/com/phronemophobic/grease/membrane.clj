@@ -20,6 +20,7 @@
 
             [tech.v3.datatype.ffi :as dt-ffi]
             [tech.v3.datatype :as dtype]
+            [tech.v3.datatype.native-buffer :as native-buffer]
             [clojure.java.io :as io]
             clojure.stacktrace)
    ;; babashka extras
@@ -105,6 +106,8 @@
                                              (assoc (meta #'objcjure/objc)
                                                     :ns sci-ns-var))))
                     (scify/ns->ns-map 'tech.v3.datatype.ffi)
+                    (scify/ns->ns-map 'tech.v3.datatype.native-buffer)
+                    (scify/ns->ns-map 'tech.v3.datatype)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi.callback)
                     (scify/ns->ns-map 'babashka.fs)
