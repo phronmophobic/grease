@@ -469,6 +469,7 @@
 					"\"$(SRCROOT)/../../library\"",
 					"\"$(SRCROOT)/../../third_party/ffi\"",
 				);
+				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};
 			name = Debug;
 		};
@@ -558,6 +559,7 @@
 					"\"$(SRCROOT)/../../third_party/ffi\"",
 				);
 				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};
 			name = Release;
 		};
