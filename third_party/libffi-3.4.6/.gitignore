@@ -1,0 +1,7 @@
+aarch64-apple-darwin23.0.0/
+build_iphoneos-arm64/
+build_iphoneos-armv7/
+build_iphonesimulator-arm64/
+build_iphonesimulator-i386
+build_iphonesimulator-x86_64
+libffi.xcodeproj/project.xcworkspace/
