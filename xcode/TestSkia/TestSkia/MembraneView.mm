@@ -8,16 +8,33 @@
 #import "MembraneView.h"
 #include "bb.h"
 
-static void* _clj_main_view;
+
+static MembraneView* _clj_main_view;
+
+void set_main_view(MembraneView* view){
+    _clj_main_view = view;
+}
 
 const char* clj_app_dir(){
     NSBundle* mb = [NSBundle mainBundle];
     return [[mb bundlePath] UTF8String];
 }
 void* clj_main_view(){
-    return _clj_main_view;
+    return (__bridge void*)_clj_main_view;
 }
 
+void clj_generic_callback(void *cif, void *ret, void* args,
+                    void *userdata)
+{
+    long long int key = *((long long int *)userdata);
+    graal_isolatethread_t* thread =_clj_main_view.thread;
+    com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
+}
+
+
+operation_t clj_get_generic_callback_address(){
+    return &clj_generic_callback;
+}
 
 double xAcceleration(CMAccelerometerData* data){
     return data.acceleration.x;
@@ -70,12 +87,12 @@ double zAcceleration(CMAccelerometerData* data){
 
 - (void) didMoveToSuperview{
     [super didMoveToSuperview];
-    _clj_main_view = (__bridge void*)self;
+//    _clj_main_view = (__bridge void*)self;
 }
 
 - (void) didMoveToWindow{
     [super didMoveToWindow];
-    _clj_main_view = (__bridge void*)self;
+//    _clj_main_view = (__bridge void*)self;
 }
 
 - (void)deleteBackward{

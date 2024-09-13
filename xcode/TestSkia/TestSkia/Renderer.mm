@@ -119,6 +119,8 @@ void testDraw(SkCanvas* canvas){
         
         ((MembraneView*)view).isolate = isolate;
         ((MembraneView*)view).thread = thread;
+        set_main_view(((MembraneView*)view));
+
         clj_init(thread);
         
 
