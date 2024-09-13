@@ -26,7 +26,7 @@
   (:require ;;babashka.impl.async
             ;;babashka.impl.hiccup
             babashka.impl.httpkit-client
-            ;;babashka.impl.httpkit-server
+            babashka.impl.httpkit-server
             )
   (:import java.net.NetworkInterface
            java.net.URL
@@ -106,6 +106,7 @@
                                                     :ns sci-ns-var))))
                     (scify/ns->ns-map 'tech.v3.datatype.ffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
+                    (scify/ns->ns-map 'com.phronemophobic.clj-libffi.callback)
                     (scify/ns->ns-map 'babashka.fs)
 
                     ;; extras
@@ -113,8 +114,8 @@
                      ;; 'clojure.core.async.impl.protocols babashka.impl.async/async-protocols-namespace
 
                      'org.httpkit.client babashka.impl.httpkit-client/httpkit-client-namespace
-                     ;; 'org.httpkit.sni-client babashka.impl.httpkit-client/sni-client-namespace
-                     ;; 'org.httpkit.server babashka.impl.httpkit-server/httpkit-server-namespace
+                     'org.httpkit.sni-client babashka.impl.httpkit-client/sni-client-namespace
+                     'org.httpkit.server babashka.impl.httpkit-server/httpkit-server-namespace
 
                      ;; 'hiccup.core babashka.impl.hiccup/hiccup-namespace
                      ;; 'hiccup2.core babashka.impl.hiccup/hiccup2-namespace

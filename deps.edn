@@ -28,7 +28,8 @@
                  org.clojure/data.json {:mvn/version "2.5.0"}
                  slipset/deps-deploy {:mvn/version "RELEASE"}}
           :ns-default build}
-  :membrane {:extra-paths ["third-party/babashka/feature-httpkit-client/"]
+  :membrane {:extra-paths ["third_party/babashka/feature-httpkit-client/"
+                           "third_party/babashka/feature-httpkit-server/"]
              :extra-deps
              {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
                                            :local/root "../membrane"
@@ -49,7 +50,7 @@
               babashka/fs {:mvn/version "0.5.22"}
               mogenslund/liquid {:mvn/version "2.0.3"}
 
-              http-kit/http-kit {:mvn/version "2.5.3"}
+              http-kit/http-kit {:mvn/version "2.8.0"}
 
               com.phronemophobic/objcjure {:local/root "../objcjure"
                                            ;;:git/url "https://github.com/phronmophobic/objcjure.git"
