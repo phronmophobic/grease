@@ -27,7 +27,11 @@ void clj_generic_callback(void *cif, void *ret, void* args,
                     void *userdata)
 {
     long long int key = *((long long int *)userdata);
-    graal_isolatethread_t* thread =_clj_main_view.thread;
+    
+    graal_isolate_t *isolate = _clj_main_view.isolate;
+    
+    graal_isolatethread_t* thread;
+    graal_attach_thread(isolate, &thread);
     com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
 }
 
