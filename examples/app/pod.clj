@@ -188,7 +188,7 @@
 (defn ->url [url]
   (assert (string? url))
   (objc/arc!
-   (objc [[NSURL :URLWithString ~(objc/str->nsstring url)]])))
+   (objc [NSURL :URLWithString ~(objc/str->nsstring url)])))
 
 (defn documents-dir []
   ;; fileSystemRepresentation
