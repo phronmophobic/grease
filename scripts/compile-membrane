@@ -20,6 +20,7 @@ time \
     $GRAALVM_HOME/bin/native-image \
     --report-unsupported-elements-at-runtime \
     '--initialize-at-run-time=org.httpkit.client.ClientSslEngineFactory$SSLHolder' \
+    --initialize-at-build-time=java.sql.SQLException \
     --no-fallback \
     -H:+ExitAfterRelocatableImageWrite \
     -H:+SharedLibrary \

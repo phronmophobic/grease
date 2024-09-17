@@ -37,6 +37,7 @@
 		3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759A726A646A20014EA55 /* SwiftUI.framework */; };
 		3A7759AA26A649810014EA55 /* libmembraneiosskia.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759A926A649810014EA55 /* libmembraneiosskia.o */; };
 		3A7759AC26A649E70014EA55 /* libskia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759AB26A649E70014EA55 /* libskia.a */; };
+		3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */; };
 		3AC59C93269A422B00E9D1B8 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2D42675C7FA0015D82C /* CoreServices.framework */; };
 		3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC80E7D27F7FFAA006D165F /* bb.o */; };
 /* End PBXBuildFile section */
@@ -120,6 +121,8 @@
 		3A7759A726A646A20014EA55 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		3A7759A926A649810014EA55 /* libmembraneiosskia.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = libmembraneiosskia.o; sourceTree = "<group>"; };
 		3A7759AB26A649E70014EA55 /* libskia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskia.a; sourceTree = "<group>"; };
+		3AA59F742C964CAE000CF11F /* TestSkia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestSkia.entitlements; sourceTree = "<group>"; };
+		3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		3AC80E7D27F7FFAA006D165F /* bb.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bb.o; path = ../../library/build/out/bb.o; sourceTree = "<group>"; };
 		3AD3FEA22C935686007A5155 /* libffi-trampolines.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libffi-trampolines.tbd"; path = "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.5.sdk/usr/lib/libffi-trampolines.tbd"; sourceTree = DEVELOPER_DIR; };
 		3AD3FEA32C935686007A5155 /* libffi.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libffi.tbd; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.5.sdk/usr/lib/libffi.tbd; sourceTree = DEVELOPER_DIR; };
@@ -130,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */,
 				3A2C43762C93CD30009D8338 /* libffi.a in Frameworks */,
 				3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */,
 				3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */,
@@ -191,6 +195,7 @@
 		3A75F286267445BC0015D82C /* TestSkia */ = {
 			isa = PBXGroup;
 			children = (
+				3AA59F742C964CAE000CF11F /* TestSkia.entitlements */,
 				3A75F2B0267535460015D82C /* skia.h */,
 				3A75F287267445BC0015D82C /* AppDelegate.h */,
 				3A75F288267445BC0015D82C /* AppDelegate.m */,
@@ -214,6 +219,7 @@
 		3A75F2A72674696C0015D82C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */,
 				3AD3FEA22C935686007A5155 /* libffi-trampolines.tbd */,
 				3AD3FEA32C935686007A5155 /* libffi.tbd */,
 				3A43FED02C8E31E4008D67EB /* libskparagraph.a */,
@@ -568,6 +574,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TestSkia/TestSkia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 4HTP8553GU;
@@ -641,6 +648,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TestSkia/TestSkia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 4HTP8553GU;

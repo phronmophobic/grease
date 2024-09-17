@@ -47,6 +47,9 @@
 
   :clj_app_dir {:rettype :pointer
                 :argtypes []}
+
+  :clj_debug {:rettype :pointer
+              :argtypes [['data :pointer]]}
    ,})
 
 (comment

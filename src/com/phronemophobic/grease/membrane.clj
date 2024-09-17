@@ -5,15 +5,24 @@
             membrane.components.code-editor.code-editor
             liq.buffer
             membrane.basic-components
-            babashka.fs
+            [babashka.fs :as fs]
             babashka.nrepl.server
             [babashka.nrepl.server.middleware :as middleware]
             clojure.data.json
             [sci.core :as sci]
             [sci.addons :as addons]
 
+            clojure.zip
+            clojure.instant
+
+            honey.sql
+            honey.sql.protocols
+            honey.sql.helpers
+
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.objc :as objc]
+            [com.phronemophobic.grease.replog :as replog]
+            com.phronemophobic.grease.component
             [com.phronemophobic.objcjure :as objcjure]
             com.phronemophobic.clj-libffi.callback
             com.phronemophobic.clj-libffi
@@ -26,10 +35,14 @@
             [clojure.java.io :as io]
             clojure.stacktrace)
    ;; babashka extras
-  (:require ;;babashka.impl.async
+  (:require babashka.impl.clojure.core.async
+
             ;;babashka.impl.hiccup
             babashka.impl.httpkit-client
             babashka.impl.httpkit-server
+            babashka.impl.xml
+            babashka.impl.jdbc
+            babashka.impl.clojure.instant
             )
   (:import java.net.NetworkInterface
            java.net.URL
@@ -48,11 +61,6 @@
 (defn url->image [s]
   (ui/image (java.net.URL. s)))
 
-(defn acceleration->map [data]
-  {:x (objc/xAcceleration data)
-   :y (objc/yAcceleration data)
-   :z (objc/zAcceleration data)})
-
 (declare sci-ctx)
 (defmacro objc-wrapper [form]
   (binding [objcjure/*sci-ctx* @sci-ctx]
@@ -63,7 +71,11 @@
 
 (def opts (addons/future
             {:classes
-             {:allow :all}
+             {:allow :all
+              'java.lang.System System
+              'java.lang.Long Long
+              'java.util.Date java.util.Date
+              }
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
                           fns (sci/create-ns ns-name nil)]
@@ -78,7 +90,6 @@
                                 'url->image (sci/copy-var url->image fns)
                                 'debug-view (sci/copy-var debug-view fns)
                                 'get-sci-ctx (sci/copy-var get-sci-ctx fns)
-                                'acceleration->map (sci/copy-var acceleration->map fns)
                                 'debug-log (sci/copy-var debug-log fns)}})
 
                     (do
@@ -93,6 +104,7 @@
                     (scify/ns->ns-map 'clojure.data.json)
                     (scify/ns->ns-map 'clojure.stacktrace)
                     (scify/ns->ns-map 'com.phronemophobic.grease.objc)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.component)
                     (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
                           sci-ns-var (-> ns-map
                                          first
@@ -116,18 +128,36 @@
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi.callback)
                     (scify/ns->ns-map 'babashka.fs)
 
+                    (scify/ns->ns-map 'babashka.fs)
+                    (scify/ns->ns-map 'honey.sql)
+                    (scify/ns->ns-map 'honey.sql.protocols)
+                    (scify/ns->ns-map 'honey.sql.helpers)
+
+                    (scify/ns->ns-map 'clojure.zip)
+
                     ;; extras
-                    { ;; 'clojure.core.async babashka.impl.async/async-namespace
-                     ;; 'clojure.core.async.impl.protocols babashka.impl.async/async-protocols-namespace
+                    { 'clojure.core.async babashka.impl.clojure.core.async/async-namespace
+                     'clojure.core.async.impl.protocols babashka.impl.clojure.core.async/async-protocols-namespace
+                     
 
                      'org.httpkit.client babashka.impl.httpkit-client/httpkit-client-namespace
                      'org.httpkit.sni-client babashka.impl.httpkit-client/sni-client-namespace
                      'org.httpkit.server babashka.impl.httpkit-server/httpkit-server-namespace
 
+                     'clojure.data.xml babashka.impl.xml/xml-namespace
+                     'clojure.data.xml.event babashka.impl.xml/xml-event-namespace
+                     'clojure.data.xml.tree babashka.impl.xml/xml-tree-namespace
+
+                     'next.jdbc babashka.impl.jdbc/njdbc-namespace
+                     'next.jdbc.sql babashka.impl.jdbc/next-sql-namespace
+                     'next.jdbc.result-set babashka.impl.jdbc/result-set-namespace
+                     
                      ;; 'hiccup.core babashka.impl.hiccup/hiccup-namespace
                      ;; 'hiccup2.core babashka.impl.hiccup/hiccup2-namespace
                      ;; 'hiccup.util babashka.impl.hiccup/hiccup-util-namespace
                      ;; 'hiccup.compiler babashka.impl.hiccup/hiccup-compiler-namespace
+
+                     'clojure.instant babashka.impl.clojure.instant/instant-namespace
                      }
 
                     {'clojure.main {'repl-requires
@@ -171,9 +201,9 @@
             (reset! debug-view nil))))
 
 (comment
-  (def server (babashka.nrepl.server/start-server! sci-ctx {:host "0.0.0.0" :port 23456
+  (def server (babashka.nrepl.server/start-server! @sci-ctx {:host "0.0.0.0" :port 23456
                                                             :debug true
-
+                                                            :xform xform
                                                             #_#_ :xform
                                                             (comp babashka.nrepl.impl.middleware/wrap-read-msg
                                                                   babashka.nrepl.impl.server/wrap-process-message)}))
@@ -241,24 +271,41 @@
              nil))
          request)))
 
+(def
+  ^{::middleware/requires #{#'middleware/wrap-read-msg}
+    ::middleware/expects #{#'middleware/wrap-process-message}}
+  replog-evals
+  (map (fn [request]
+         ;; (clojure.pprint/pprint request)
+         (replog/append-nrepl-op (:msg request))
+         request)))
+
 ;; Add cross cutting middleware
 (def xform
   (middleware/middleware->xform
    (conj middleware/default-middleware
-         #'display-evals)))
+         #'display-evals
+         #'replog-evals)))
 
 (defn clj_init []
   (let [documents-dir
-        (objcjure/nsstring->str
-         (objcjure/objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
-                           ;; (int 14) ;; application support
-                           (int 9) ;; documents
-                           (int 1)
-                           ]
-                          :objectAtIndex 0]
-                         description]))]
-    (prn "documents dir" documents-dir))
-  (let [path-str (dt-ffi/c->string
+        (io/file
+         (dt-ffi/c->string
+          (objcjure/objc
+           [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
+              ;; (int 14) ;; application support
+              (int 9) ;; documents
+              (int 1)
+              ]
+             :objectAtIndex 0]
+            fileSystemRepresentation])))
+        app-path (fs/file documents-dir
+                          "scripts"
+                          "app.clj")]
+    (prn "documents dir" documents-dir)
+    (when (fs/exists? app-path)
+      (sci/eval-string* @sci-ctx (slurp app-path))))
+  #_(let [path-str (dt-ffi/c->string
                   (objc/clj_app_dir))
         path (io/file path-str "gol.clj")]
     (prn "file path:"

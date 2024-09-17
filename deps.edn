@@ -29,12 +29,21 @@
                  slipset/deps-deploy {:mvn/version "RELEASE"}}
           :ns-default build}
   :membrane {:extra-paths ["third_party/babashka/feature-httpkit-client/"
-                           "third_party/babashka/feature-httpkit-server/"]
+                           "third_party/babashka/feature-httpkit-server/"
+                           "third_party/babashka/feature-xml/"
+                           "third_party/babashka/feature-jdbc/"
+                           "third_party/babashka/src"
+                           ]
              :extra-deps
              {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
                                            :local/root "../membrane"
                                            }
               babashka/babashka.nrepl {:mvn/version "0.0.7"}
+              org.clojure/data.xml {:mvn/version "0.2.0-alpha8"}
+              com.h2database/h2 {:mvn/version "2.2.224"}
+              seancorfield/next.jdbc {:mvn/version "1.1.610"}
+
+              com.github.seancorfield/honeysql {:mvn/version "2.6.1161"}
 
               ;; latest version fails to compile
               ;; needed for extras?
