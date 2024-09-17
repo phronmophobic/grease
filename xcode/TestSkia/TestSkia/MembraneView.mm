@@ -8,6 +8,12 @@
 #import "MembraneView.h"
 #include "bb.h"
 
+// These are here as a convenience for looking up
+// objc enums and types.
+#import <AVFoundation/AVFoundation.h>
+#import <CoreMedia/CoreMedia.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <HealthKit/HealthKit.h>
 
 static MembraneView* _clj_main_view;
 
