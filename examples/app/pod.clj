@@ -678,7 +678,8 @@
 (defop init []
   (configure-audio)
   
-  (let [player (objc [[AVPlayer :alloc] :init])]
+  (let [player (objc/arc!
+                (objc [[[AVPlayer :alloc] :init] :autorelease]))]
 
     (swap! pod-state assoc
            :player player)
