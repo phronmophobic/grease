@@ -31,7 +31,6 @@
 #import <CoreMotion/CoreMotion.h>
 
 graal_isolate_t *isolate = NULL;
-graal_isolatethread_t *thread = NULL;
 static const NSUInteger MaxBuffersInFlight = 3;
 
 sk_sp<SkSurface> SkMtkViewToSurface(MTKView* mtkView, GrRecordingContext* rContext) {
@@ -113,15 +112,17 @@ void testDraw(SkCanvas* canvas){
         [self _loadMetalWithView:view];
         
 
+		graal_isolatethread_t* thread;
         if (graal_create_isolate(NULL, &isolate, &thread) != 0) {
           fprintf(stderr, "initialization error\n");
         }
         
         ((MembraneView*)view).isolate = isolate;
-        ((MembraneView*)view).thread = thread;
         set_main_view(((MembraneView*)view));
 
+
         clj_init(thread);
+		graal_detach_thread(thread);
         
 
     }
@@ -297,6 +298,9 @@ void testDraw(SkCanvas* canvas){
 //     }];
 
 //    [self _updateGameState];
+
+    graal_isolatethread_t* thread;
+    graal_attach_thread(isolate, &thread);
     if (!clj_needs_redraw(thread)){
         return;
     }
@@ -317,6 +321,8 @@ void testDraw(SkCanvas* canvas){
 //    testDraw(surface->getCanvas());
     
     clj_draw(thread,&resource);
+
+	graal_detach_thread(thread);
 
     // Must flush *and* present for this to work!
     surface->flushAndSubmit();

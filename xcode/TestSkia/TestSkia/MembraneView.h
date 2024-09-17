@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 @property (assign, atomic) graal_isolate_t *isolate;
-@property (assign, atomic) graal_isolatethread_t *thread;
 
 @end
 

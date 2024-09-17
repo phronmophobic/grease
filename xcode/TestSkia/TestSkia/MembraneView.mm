@@ -33,6 +33,7 @@ void clj_generic_callback(void *cif, void *ret, void* args,
     graal_isolatethread_t* thread;
     graal_attach_thread(isolate, &thread);
     com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
+	graal_detach_thread(thread);
 }
 
 
@@ -64,26 +65,36 @@ double zAcceleration(CMAccelerometerData* data){
 */
 
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    graal_isolatethread_t* thread;
+    graal_attach_thread(self.isolate, &thread);
     for (UITouch* t: [event allTouches]){
         CGPoint pt = [t locationInView:self];
-        clj_touch_ended(self.thread, pt.x, pt.y);
+        clj_touch_ended(thread, pt.x, pt.y);
     }
+	graal_detach_thread(thread);
+    
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches
            withEvent:(UIEvent *)event{
+    graal_isolatethread_t* thread;
+    graal_attach_thread(self.isolate, &thread);
     for (UITouch* t: [event allTouches]){
         CGPoint pt = [t locationInView:self];
-        clj_touch_began(self.thread, pt.x, pt.y);
+        clj_touch_began(thread, pt.x, pt.y);
     }
+	graal_detach_thread(thread);
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches
            withEvent:(UIEvent *)event{
+    graal_isolatethread_t* thread;
+    graal_attach_thread(self.isolate, &thread);
     for (UITouch* t: [event allTouches]){
         CGPoint pt = [t locationInView:self];
-        clj_touch_moved(self.thread, pt.x, pt.y);
+        clj_touch_moved(thread, pt.x, pt.y);
     }
+	graal_detach_thread(thread);
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches
@@ -100,11 +111,17 @@ double zAcceleration(CMAccelerometerData* data){
 }
 
 - (void)deleteBackward{
-    clj_delete_backward(self.thread);
+    graal_isolatethread_t* thread;
+    graal_attach_thread(self.isolate, &thread);
+    clj_delete_backward(thread);
+	graal_detach_thread(thread);
 }
 
 - (void)insertText:(NSString *)text{
-    clj_insert_text(self.thread, (void*)[text UTF8String]);
+    graal_isolatethread_t* thread;
+    graal_attach_thread(self.isolate, &thread);
+    clj_insert_text(thread, (void*)[text UTF8String]);
+	graal_detach_thread(thread);
 }
 
 - (BOOL) hasText{
