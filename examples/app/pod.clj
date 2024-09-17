@@ -737,6 +737,12 @@
    (button "<back"
            (fn []
              [[::back]]))
+   (button ">>"
+           (fn []
+             [[::skip-forward]]))
+   (button "<<"
+           (fn []
+             [[::skip-backward]]))
    (ui/label (:EPISODE/TRACKNAME episode))
    (ui/label (:EPISODE/DESCRIPTION episode))
    (button "play"
@@ -747,30 +753,17 @@
 (defui pod-ui [{:keys [playing? episodes selected-episode]}]
   (ui/translate
    10 50
-   (ui/vertical-layout
-    (basic/button {:text (if playing?
-                           "pause"
-                           "play")
-                   :on-click
-                   (fn []
-                     [[::toggle]])})
-    (button ">>"
-            (fn []
-              [[::skip-forward]]))
-    (button "<<"
-            (fn []
-              [[::skip-backward]]))
-    (if selected-episode
-      (ui/on
-       ::back
-       (fn []
-         [[:set $selected-episode nil]])
-       (episode-view {:episode selected-episode}))
-      (ui/on
-       ::select-episode
-       (fn [{:keys [episode]}]
-         [[:set $selected-episode episode]])
-       (episode-viewer {:episodes episodes}))))))
+   (if selected-episode
+     (ui/on
+      ::back
+      (fn []
+        [[:set $selected-episode nil]])
+      (episode-view {:episode selected-episode}))
+     (ui/on
+      ::select-episode
+      (fn [{:keys [episode]}]
+        [[:set $selected-episode episode]])
+      (episode-viewer {:episodes episodes})))))
 
 (def app (membrane.component/make-app #'pod-ui pod-state))
 
