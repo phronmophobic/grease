@@ -615,9 +615,7 @@
            :activateWithOptions:completionHandler
            ~(long 0)
            (fn ^void [^byte activated error]
-             (println "activated" activated error)
-             (deliver p (not (zero? activated)))
-             )])
+             (deliver p (not (zero? activated))))])
     @p))
 
 (defn configure-controls
@@ -628,7 +626,6 @@
      [[commandCenter :playCommand]
       :addTargetWithHandler
       (fn ^long [event]
-        (println "play Command")
         (if (zero? (objc ^float [player rate]))
           (do
             (play)
@@ -650,19 +647,15 @@
      [[commandCenter :stopCommand]
       :addTargetWithHandler
       (fn ^long [event]
-        (prn "stopping")
-
         (if (pos? (objc ^float [player rate]))
           (do (pause)
               MPRemoteCommandHandlerStatusSuccess)
           (do
-            MPRemoteCommandHandlerStatusCommandFailed)
-          ))])
+            MPRemoteCommandHandlerStatusCommandFailed)))])
     (objc
      [[commandCenter :togglePlayPauseCommand]
       :addTargetWithHandler
       (fn ^long [event]
-        (println "toggling")
         (toggle)
         MPRemoteCommandHandlerStatusSuccess)])
 
@@ -670,9 +663,7 @@
      [[commandCenter :skipForwardCommand]
       :addTargetWithHandler
       (fn ^long [event]
-
         (let [interval (objc ^double [event :interval])]
-          (prn "skip forward" interval)
           (skip-forward interval))
         MPRemoteCommandHandlerStatusSuccess)])
     (objc
