@@ -187,7 +187,8 @@
 
 (defn ->url [url]
   (assert (string? url))
-  (objc [[NSURL :URLWithString ~(objc/str->nsstring url)] :retain]))
+  (objc/arc!
+   (objc [[NSURL :URLWithString ~(objc/str->nsstring url)]])))
 
 (defn documents-dir []
   ;; fileSystemRepresentation
@@ -431,8 +432,8 @@
 
         old-info (objc [center nowPlayingInfo])
         info (if (zero? (.address old-info))
-               (objc [[NSMutableDictionary :dictionary] :retain])
-               (objc [[NSMutableDictionary :dictionaryWithDictionary old-info] :retain]))
+               (objc/arc! (objc [NSMutableDictionary :dictionary]))
+               (objc/arc! (objc [NSMutableDictionary :dictionaryWithDictionary old-info])))
 
         {:keys [current-asset]
          episode :playing-episode} @pod-state]
@@ -576,9 +577,9 @@
                      (str (episode-file episode))
                      false)
             
-            asset (objc [[AVURLAsset :URLAssetWithURL:options pod-url
-                          @{@AVURLAssetPreferPreciseDurationAndTimingKey
-                            [NSNumber :numberWithBool ~(byte 1)]}] :retain])
+            asset (objc [AVURLAsset :URLAssetWithURL:options pod-url
+                         @{@AVURLAssetPreferPreciseDurationAndTimingKey
+                           [NSNumber :numberWithBool ~(byte 1)]}])
 
             player (get-player)
             player-item (objc/arc! (objc [AVPlayerItem :playerItemWithAsset asset] ))]
