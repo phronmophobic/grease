@@ -19,6 +19,7 @@ void* _Nullable clj_main_view();
 void clj_generic_callback(void * _Nullable cif, void * _Nullable ret, void* _Nullable args,
                           void * _Nullable userdata);
 operation_t clj_get_generic_callback_address();
+void clj_debug(void* p);
 
 double xAcceleration(CMAccelerometerData* _Nonnull data);
 double yAcceleration(CMAccelerometerData* _Nonnull data);

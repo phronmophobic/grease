@@ -23,6 +23,13 @@ void* clj_main_view(){
     return (__bridge void*)_clj_main_view;
 }
 
+void clj_debug(void* p){
+//    AVPlayer* player = (__bridge AVPlayer*)p;
+////    CMTime t = [[player currentItem] duration];
+//    CMTime t =
+//    NSLog(@"got time %f" ,((double)t.value /  t.timescale));
+}
+
 void clj_generic_callback(void *cif, void *ret, void* args,
                     void *userdata)
 {
