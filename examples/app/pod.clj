@@ -472,8 +472,7 @@
                  trackName})))
 
 
-    (objc [center :setNowPlayingInfo info])
-    (objc [center :setValue:forKey info @"nowPlayingInfo"])))
+    (objc [center :setNowPlayingInfo info])))
 
 (defop update-queue [trackId collectionId timestamp]
   ;; don't set queue below 5 seconds.
