@@ -505,11 +505,8 @@
                   nil
                   (fn ^void [^cm_time time]
                     (let [{:EPISODE/keys [TRACKID COLLECTIONID]} (:playing-episode @pod-state)]
-                      
                       (update-queue TRACKID COLLECTIONID (double (/ (:value time)
-                                                                    (:timescale time)))))
-                    )]))]
-      (log observer)
+                                                                    (:timescale time))))))]))]
       (swap! pod-state assoc :player-observer observer))))
 
 (defop pause []
@@ -530,8 +527,7 @@
                  (fn ^void [^byte finished]
                    (set-playback-info MPNowPlayingPlaybackStatePlaying)
                    (deliver p true))])
-    @p)
-  )
+    @p))
 
 (defop skip-forward [interval]
   (let [player (get-player)
@@ -540,8 +536,7 @@
         tt (:timescale current-time)
         duration-seconds (if (pos? tt)
                            (double (/ tv tt))
-                           0.0)
-        ]
+                           0.0)]
     (.put current-time :value (+ tv (long (* interval tt))))
     (seek-to-time-impl player current-time))
   )
@@ -590,8 +585,7 @@
                                        :from [:queue]
                                        :where [:and
                                                [:= :TRACKID TRACKID]
-                                               [:= :COLLECTIONID COLLECTIONID]
-                                               ]}))
+                                               [:= :COLLECTIONID COLLECTIONID]]}))
               timestamp (:QUEUE/TIMESTAMP row)]
           (when timestamp
             (log [:starting-at timestamp])
