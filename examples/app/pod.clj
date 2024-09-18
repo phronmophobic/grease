@@ -13,6 +13,7 @@
             [com.phronemophobic.grease.objc :as grease]
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]
+            [com.phronemophobic.grease.objc :as grease]
             [clojure.core.async :as async ]
             [clojure.data.json :as json]
             [clojure.data.xml :as xml]
@@ -57,6 +58,20 @@
   (doseq [[k v] m]
     (objc [nsdict :setObject:forKey @v @k]))
   nsdict)
+
+(defn show-keyboard []
+  (objc ^void
+        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
+         ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
+         nil
+         ~(byte 0)]))
+
+(defn hide-keyboard []
+  (objc ^void
+        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
+         ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
+         nil
+         ~(byte 0)]))
 
 (honey.sql/register-clause!
  :merge-into
@@ -237,8 +252,9 @@
                            {:query-params
                             {:term term
                              :media "podcast"
-                             }})]
-    (json/read-str (:body @response))))
+                             :limit 10}})]
+    (-> (json/read-str (:body @response))
+        (get "results"))))
 
 (defn get-episodes [collectionId & {:keys [limit]}]
   (let [response (http/get "https://itunes.apple.com/lookup"
@@ -247,7 +263,8 @@
                              :media "podcast"
                              :entity "podcastEpisode"
                              :limit (or limit 200)}})]
-    (json/read-str (:body @response))))
+    (-> (json/read-str (:body @response))
+        (get "results"))))
 
 
 ;; Database
@@ -273,8 +290,8 @@
 
                 (-> {:create-table [:episode :if-not-exists]
                      :with-columns
-                     [[:description [:varchar 255] ]
-                      [:episodeUrl [:VARCHAR 255]]
+                     [[:description [:varchar 1024] ]
+                      [:episodeUrl [:VARCHAR 1024]]
                       [:episodeGuid [:VARCHAR 255]]
                       [:collectionId :bigint]
                       [:trackId :bigint]
@@ -354,7 +371,6 @@
   ([podcast]
    (when-let [collection-id (get podcast "collectionId")]
      (let [episodes (-> (get-episodes collection-id)
-                        (get "results")
                         (->> (filter #(get % "episodeUrl"))))]
        (add-podcast! podcast episodes))))
   ([podcast episodes]
@@ -369,7 +385,7 @@
 (comment
   (def podcasts (search-podcasts "defn"))
   (def episodes (get-episodes 1114899563))
-  (add-podcast! (-> podcasts (get "results") first) )
+  (add-podcast! (first podcasts) )
 
   (fs/list-dir scripts-dir)
   (fs/delete (fs/file scripts-dir
@@ -675,6 +691,7 @@
                 (objc [[[AVPlayer :alloc] :init] :autorelease]))]
 
     (swap! pod-state assoc
+           :view :main
            :player player)
     (configure-controls player))
 
@@ -698,16 +715,6 @@
 (defeffect ::skip-backward []
   (skip-backward 5))
 
-(defui episode-viewer [{:keys [page episodes]}]
-  (apply ui/vertical-layout
-         (for [episode (take 10 episodes)]
-           (ui/on
-            :mouse-down
-            (fn [_]
-              [[::select-episode {:episode episode}]])
-            (ui/bordered [5 20]
-                         (ui/label (:EPISODE/TRACKNAME episode)))))))
-
 (defn button [text on-click]
   (ui/on
    :mouse-down
@@ -717,6 +724,16 @@
    (ui/bordered
     [20 20]
     (ui/label text (ui/font nil 33)))))
+
+(defui episode-viewer [{:keys [page episodes]}]
+  (apply ui/vertical-layout
+         (for [episode (take 10 episodes)]
+           (ui/on
+            :mouse-down
+            (fn [_]
+              [[::select-episode {:episode episode}]])
+            (ui/bordered [5 20]
+                         (ui/label (:EPISODE/TRACKNAME episode)))))))
 
 (defui episode-view [{:keys [episode]}]
   (ui/vertical-layout
@@ -736,20 +753,84 @@
              [[::load-episode {:episode episode}]
               [::toggle]]))))
 
-(defui pod-ui [{:keys [playing? episodes selected-episode]}]
+(defeffect ::search-podcasts [{:keys [$podcasts
+                                      query]}]
+  (log query)
+  (future
+    (try
+      (let [podcasts (search-podcasts query)]
+        (log podcasts)
+        (dispatch! :set $podcasts podcasts))
+      (catch Exception e
+        (log e)))))
+
+(defeffect ::add-podcast [{:keys [podcast]}]
+  (future
+    (try
+      (log :adding-podcast)
+      (add-podcast! podcast)
+      (log :done-adding-podcast)
+      (catch Exception e
+        (log e)))))
+
+(defui search-view [{:keys []}]
+  (let [search-text (get extra :search-text "")
+        podcasts (get extra :podcasts [])]
+    (apply
+     ui/vertical-layout
+     (ui/horizontal-layout
+      (button "Search"
+              (fn []
+                [[::search-podcasts {:$podcasts $podcasts
+                                     :query search-text}]]))
+      (basic/textarea {:text search-text}))
+     (for [podcast podcasts]
+       (ui/on
+        :mouse-down
+        (fn [_]
+          [[::add-podcast {:podcast podcast}]
+           [:set $podcasts []]])
+        (ui/bordered
+         20
+         (ui/label (get podcast "collectionName"))))))))
+
+(defeffect ::clear-podcasts [{}]
+  (future
+    (run!
+     fs/delete
+     (fs/list-dir episodes-dir))))
+
+(defui util-view [{:keys []}]
+  (button "clear podcasts"
+          (fn []
+            [[::clear-podcasts {}]])))
+
+(defui pod-ui [{:keys [playing? episodes selected-episode
+                       view]}]
   (ui/translate
    10 50
-   (if selected-episode
-     (ui/on
-      ::back
-      (fn []
-        [[:set $selected-episode nil]])
-      (episode-view {:episode selected-episode}))
-     (ui/on
-      ::select-episode
-      (fn [{:keys [episode]}]
-        [[:set $selected-episode episode]])
-      (episode-viewer {:episodes episodes})))))
+   (ui/vertical-layout
+    (basic/dropdown {:options [[:main "main"]
+                               [:search "search "]
+                               [:util "util"]]
+                     :selected view})
+    (case view
+      :util (util-view {})
+
+      :search
+      (search-view {})
+      ;; else
+      (if selected-episode
+        (ui/on
+         ::back
+         (fn []
+           [[:set $selected-episode nil]])
+         (episode-view {:episode selected-episode}))
+        (ui/on
+         ::select-episode
+         (fn [{:keys [episode]}]
+           [[:set $selected-episode episode]])
+         (episode-viewer {:episodes episodes})))))))
 
 (def app (membrane.component/make-app #'pod-ui pod-state))
 
@@ -762,4 +843,16 @@
 (add-watch pod-state ::update-view
            (fn [k ref old updated]
              (repaint!)))
+
+(add-watch pod-state ::handle-keyboard
+           (fn [k ref old new]
+             (let [focus-path [:membrane.component/context :focus]
+                   old-focus (get-in old focus-path)
+                   new-focus (get-in new focus-path)]
+               (when (not= old-focus new-focus)
+                 (future
+                   (if new-focus
+                     (show-keyboard)
+                     (hide-keyboard)))))))
+
 
