@@ -14,6 +14,7 @@
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]
             [com.phronemophobic.grease.objc :as grease]
+            [com.phronemophobic.grease.component :as gui]
             [clojure.core.async :as async ]
             [clojure.data.json :as json]
             [clojure.data.xml :as xml]
@@ -433,6 +434,7 @@
 ;; Declare UI state
 
 (defonce pod-state (atom {}))
+(defonce handler (membrane.component/default-handler pod-state))
 (declare repaint!)
 
 ;; Operations for working with AVPlayer
@@ -695,8 +697,7 @@
            :player player)
     (configure-controls player))
 
-  (with-open [conn (jdbc/get-connection db)]
-    (swap! pod-state assoc :episodes (jdbc/execute! conn ["select * from episode order by RELEASEDATE desc limit 10"])))
+  (handler ::refresh-episodes {:$episodes '(keypath :episodes)})
   (repaint!)
   ,)
 
@@ -715,6 +716,13 @@
 (defeffect ::skip-backward []
   (skip-backward 5))
 
+(defeffect ::refresh-episodes [{:keys [$episodes]}]
+  (future
+    (dispatch! :set $episodes
+               (with-open [conn (jdbc/get-connection db)]
+                 (jdbc/execute! conn ["select episode.*, queue.LAST_PLAYED from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"]))))
+  )
+
 (defn button [text on-click]
   (ui/on
    :mouse-down
@@ -726,14 +734,23 @@
     (ui/label text (ui/font nil 33)))))
 
 (defui episode-viewer [{:keys [page episodes]}]
-  (apply ui/vertical-layout
-         (for [episode (take 10 episodes)]
-           (ui/on
-            :mouse-down
-            (fn [_]
-              [[::select-episode {:episode episode}]])
-            (ui/bordered [5 20]
-                         (ui/label (:EPISODE/TRACKNAME episode)))))))
+  (ui/vertical-layout
+   (button "refresh"
+           (fn []
+             [[::refresh-episodes {:$episodes $episodes}]]))
+   (gui/scrollview
+    {:scroll-bounds [300 500]
+     :extra (get extra ::scrollveiw)
+     :$body nil
+     :body
+     (apply ui/vertical-layout
+            (for [episode (take 50 episodes)]
+              (ui/on
+               :mouse-down
+               (fn [_]
+                 [[::select-episode {:episode episode}]])
+               (ui/bordered [5 20]
+                            (ui/label (:EPISODE/TRACKNAME episode))))))})))
 
 (defui episode-view [{:keys [episode]}]
   (ui/vertical-layout
@@ -832,7 +849,7 @@
            [[:set $selected-episode episode]])
          (episode-viewer {:episodes episodes})))))))
 
-(def app (membrane.component/make-app #'pod-ui pod-state))
+(def app (membrane.component/make-app #'pod-ui pod-state handler))
 
 (defn repaint! []
   (reset! main-view (app)))
