@@ -38,6 +38,10 @@
              {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
                                            :local/root "../membrane"
                                            }
+              com.phronemophobic.membrane/skialib-macosx-aarch64 {:mvn/version "RELEASE"
+                                                                    ;; :local/root "csource/macos-aarch64"
+                                                                    }
+
               babashka/babashka.nrepl {:mvn/version "0.0.7"}
               org.clojure/data.xml {:mvn/version "0.2.0-alpha8"}
               com.h2database/h2 {:mvn/version "2.2.224"}
