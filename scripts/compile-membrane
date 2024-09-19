@@ -64,3 +64,4 @@ find ./library/tmp -name 'bb.o' -exec cp {} ./library/build/out \;
 
 # This is where xcode will look for headers
 # ln -s "$GRAALVM_HOME" build/graalvm
+date
