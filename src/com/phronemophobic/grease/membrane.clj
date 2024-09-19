@@ -304,7 +304,10 @@
                           "app.clj")]
     (prn "documents dir" documents-dir)
     (when (fs/exists? app-path)
-      (sci/eval-string* @sci-ctx (slurp app-path))))
+      (try
+        (sci/eval-string* @sci-ctx (slurp app-path))
+        (catch Exception e
+          (prn e)))))
   #_(let [path-str (dt-ffi/c->string
                   (objc/clj_app_dir))
         path (io/file path-str "gol.clj")]
