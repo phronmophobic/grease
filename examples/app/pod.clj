@@ -383,6 +383,10 @@
                                   "Unique index or primary key violation")
            (throw e)))))))
 
+(defn latest-episodes []
+  (with-open [conn (jdbc/get-connection db)]
+                 (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"])))
+
 (comment
   (def podcasts (search-podcasts "defn"))
   (def episodes (get-episodes 1114899563))
@@ -718,10 +722,7 @@
 
 (defeffect ::refresh-episodes [{:keys [$episodes]}]
   (future
-    (dispatch! :set $episodes
-               (with-open [conn (jdbc/get-connection db)]
-                 (jdbc/execute! conn ["select episode.*, queue.LAST_PLAYED from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"]))))
-  )
+    (dispatch! :set $episodes (latest-episodes))))
 
 (defn button [text on-click]
   (ui/on
