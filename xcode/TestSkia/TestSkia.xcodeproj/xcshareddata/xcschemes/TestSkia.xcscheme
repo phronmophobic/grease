@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3A75F283267445BB0015D82C"
-               BuildableName = "TestSkia.app"
-               BlueprintName = "TestSkia"
+               BuildableName = "LearnLisp.app"
+               BlueprintName = "LearnLisp"
                ReferencedContainer = "container:TestSkia.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A75F283267445BB0015D82C"
-            BuildableName = "TestSkia.app"
-            BlueprintName = "TestSkia"
+            BuildableName = "LearnLisp.app"
+            BlueprintName = "LearnLisp"
             ReferencedContainer = "container:TestSkia.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A75F283267445BB0015D82C"
-            BuildableName = "TestSkia.app"
-            BlueprintName = "TestSkia"
+            BuildableName = "LearnLisp.app"
+            BlueprintName = "LearnLisp"
             ReferencedContainer = "container:TestSkia.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
