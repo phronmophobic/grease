@@ -473,7 +473,7 @@
                  duration-seconds)
                
                MPNowPlayingInfoPropertyDefaultPlaybackRate
-               1.0
+               1.25
 
                MPNowPlayingInfoPropertyElapsedPlaybackTime
                (let [time-passed (objc ^cm_time [~(:player @pod-state) :currentTime])
@@ -482,7 +482,7 @@
                  seconds)
 
                MPNowPlayingInfoPropertyPlaybackRate
-               1.0
+               1.25
 
                MPMediaItemPropertyMediaType
                MPMediaTypePodcast}
@@ -694,7 +694,8 @@
   
   (let [player (objc/arc!
                 (objc [[[AVPlayer :alloc] :init] :autorelease]))]
-
+    (objc ^void [player :setDefaultRate ~(float 1.25)])
+    
     (swap! pod-state assoc
            :view :main
            :player player)
