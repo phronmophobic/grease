@@ -599,6 +599,7 @@
 
             player (get-player)
             player-item (objc/arc! (objc [AVPlayerItem :playerItemWithAsset asset] ))]
+        (swap! pod-state assoc :playing-episode episode)
         (objc [player :replaceCurrentItemWithPlayerItem player-item])
         (let [{:EPISODE/keys [TRACKID COLLECTIONID]} episode
               row (jdbc/execute-one! db
@@ -611,9 +612,7 @@
               timestamp (:QUEUE/TIMESTAMP row)]
           (when timestamp
             (log [:starting-at timestamp])
-            (seek-to-time player (cm-time-interval timestamp))))
-
-        (swap! pod-state assoc :playing-episode episode)))))
+            (seek-to-time player (cm-time-interval timestamp))))))))
 
 (defn configure-audio []
   (let [p (promise)]
