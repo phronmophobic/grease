@@ -95,7 +95,7 @@
 		3A43FED42C8E31E4008D67EB /* libsvg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsvg.a; sourceTree = "<group>"; };
 		3A6C99A326B0CB7C000479D4 /* clj_objc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clj_objc.o; sourceTree = "<group>"; };
 		3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		3A75F284267445BC0015D82C /* TestSkia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestSkia.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A75F284267445BC0015D82C /* LearnLisp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnLisp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A75F287267445BC0015D82C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3A75F288267445BC0015D82C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3A75F28A267445BC0015D82C /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
@@ -187,7 +187,7 @@
 		3A75F285267445BC0015D82C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A75F284267445BC0015D82C /* TestSkia.app */,
+				3A75F284267445BC0015D82C /* LearnLisp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -251,9 +251,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A75F283267445BB0015D82C /* TestSkia */ = {
+		3A75F283267445BB0015D82C /* LearnLisp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A75F29D267445BD0015D82C /* Build configuration list for PBXNativeTarget "TestSkia" */;
+			buildConfigurationList = 3A75F29D267445BD0015D82C /* Build configuration list for PBXNativeTarget "LearnLisp" */;
 			buildPhases = (
 				3A75F280267445BB0015D82C /* Sources */,
 				3A75F281267445BB0015D82C /* Frameworks */,
@@ -264,9 +264,9 @@
 			dependencies = (
 				3A2C43752C93CD2B009D8338 /* PBXTargetDependency */,
 			);
-			name = TestSkia;
+			name = LearnLisp;
 			productName = TestSkia;
-			productReference = 3A75F284267445BC0015D82C /* TestSkia.app */;
+			productReference = 3A75F284267445BC0015D82C /* LearnLisp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -301,7 +301,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				3A75F283267445BB0015D82C /* TestSkia */,
+				3A75F283267445BB0015D82C /* LearnLisp */,
 			);
 		};
 /* End PBXProject section */
@@ -729,7 +729,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A75F29D267445BD0015D82C /* Build configuration list for PBXNativeTarget "TestSkia" */ = {
+		3A75F29D267445BD0015D82C /* Build configuration list for PBXNativeTarget "LearnLisp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A75F29E267445BD0015D82C /* Debug */,
