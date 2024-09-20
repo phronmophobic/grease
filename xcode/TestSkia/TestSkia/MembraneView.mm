@@ -43,10 +43,16 @@ void clj_generic_callback(void *cif, void *ret, void* args,
     
     graal_isolate_t *isolate = _clj_main_view.isolate;
     
-    graal_isolatethread_t* thread;
-    graal_attach_thread(isolate, &thread);
-    com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
-	graal_detach_thread(thread);
+    graal_isolatethread_t* thread = graal_get_current_thread(isolate);
+    if (thread){
+        // already attached, do not detach
+        com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
+    } else{
+        graal_attach_thread(isolate, &thread);
+        com_phronemophobic_clj_libffi_callback(thread , key, ret, args);
+        graal_detach_thread(thread);
+    }
+
 }
 
 
