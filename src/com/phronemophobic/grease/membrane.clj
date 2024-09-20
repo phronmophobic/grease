@@ -69,6 +69,9 @@
 (defn get-sci-ctx []
   @sci-ctx)
 
+(def repl-requires
+  '[[clojure.repl :refer [dir doc]]])
+
 (def opts (addons/future
             {:classes
              {:allow :all
@@ -160,8 +163,10 @@
                      'clojure.instant babashka.impl.clojure.instant/instant-namespace
                      }
 
-                    {'clojure.main {'repl-requires
-                                    '[[clojure.repl :refer [dir doc]]]}})}))
+                    (let [ns-name 'clojure.main
+                          fns (sci/create-ns ns-name nil)]
+                      {ns-name {'repl-requires
+                                (sci/copy-var repl-requires fns)}}))}))
 
 
 (def sci-ctx (delay
