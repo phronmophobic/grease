@@ -10,10 +10,9 @@
             [membrane.ui :as ui]
             [tech.v3.datatype.struct :as dt-struct]
             [tech.v3.datatype.native-buffer :as native-buffer]
-            [com.phronemophobic.grease.objc :as grease]
+            [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]
-            [com.phronemophobic.grease.objc :as grease]
             [com.phronemophobic.grease.component :as gui]
             [clojure.core.async :as async ]
             [clojure.data.json :as json]
@@ -23,6 +22,12 @@
             [honey.sql :as sql]
             [next.jdbc :as jdbc]
             ))
+
+;; Declare UI state
+
+(defonce pod-state (atom {}))
+(defonce handler (membrane.component/default-handler pod-state))
+(declare repaint!)
 
 ;; Generic config and helpers
 
@@ -60,19 +65,6 @@
     (objc [nsdict :setObject:forKey @v @k]))
   nsdict)
 
-(defn show-keyboard []
-  (objc ^void
-        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
-         nil
-         ~(byte 0)]))
-
-(defn hide-keyboard []
-  (objc ^void
-        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
-         nil
-         ~(byte 0)]))
 
 (honey.sql/register-clause!
  :merge-into
@@ -384,8 +376,14 @@
            (throw e)))))))
 
 (defn latest-episodes []
-  (with-open [conn (jdbc/get-connection db)]
-                 (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"])))
+  (let [search-text (:search-text @pod-state)]
+    (if (seq search-text)
+      (with-open [conn (jdbc/get-connection db)]
+        (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) where lower(episode.TRACKNAME) like ? order by RELEASEDATE  desc limit 50"
+                             (str "%" (str/lower-case search-text) "%")]))
+      ;; else 
+      (with-open [conn (jdbc/get-connection db)]
+        (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"])))))
 
 (comment
   (def podcasts (search-podcasts "defn"))
@@ -434,12 +432,6 @@
     (log :quitting))
   ,)
 
-
-;; Declare UI state
-
-(defonce pod-state (atom {}))
-(defonce handler (membrane.component/default-handler pod-state))
-(declare repaint!)
 
 ;; Operations for working with AVPlayer
 
@@ -701,7 +693,7 @@
            :player player)
     (configure-controls player))
 
-  (handler ::refresh-episodes {:$episodes '(keypath :episodes)})
+  (handler ::refresh-episodes {})
   (repaint!)
   ,)
 
@@ -720,9 +712,9 @@
 (defeffect ::skip-backward []
   (skip-backward 5))
 
-(defeffect ::refresh-episodes [{:keys [$episodes]}]
+(defeffect ::refresh-episodes [{}]
   (future
-    (dispatch! :set $episodes (latest-episodes))))
+    (swap! pod-state assoc :episodes (latest-episodes))))
 
 (defn button [text on-click]
   (ui/on
@@ -734,11 +726,16 @@
     [20 20]
     (ui/label text (ui/font nil 33)))))
 
-(defui episode-viewer [{:keys [page episodes]}]
+(defui episode-viewer [{:keys [page episodes search-text]}]
   (ui/vertical-layout
    (button "refresh"
            (fn []
-             [[::refresh-episodes {:$episodes $episodes}]]))
+             [[::refresh-episodes {}]]))
+   (let [search-text (or search-text "")]
+     (ui/padding 5
+                 (ui/horizontal-layout
+                  (ui/label "search: ")
+                  (basic/textarea {:text search-text}))))
    (gui/scrollview
     {:scroll-bounds [300 500]
      :extra (get extra ::scrollveiw)
@@ -824,6 +821,7 @@
             [[::clear-podcasts {}]])))
 
 (defui pod-ui [{:keys [playing? episodes selected-episode
+                       search-text
                        view]}]
   (ui/translate
    10 50
@@ -848,12 +846,13 @@
          ::select-episode
          (fn [{:keys [episode]}]
            [[:set $selected-episode episode]])
-         (episode-viewer {:episodes episodes})))))))
+         (episode-viewer {:episodes episodes
+                          :search-text search-text})))))))
 
 (def app (membrane.component/make-app #'pod-ui pod-state handler))
 
 (defn repaint! []
-  (reset! main-view (app)))
+  (reset! ios/main-view (app)))
 
 (defonce __initialize
   (init))

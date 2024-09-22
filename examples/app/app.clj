@@ -10,11 +10,12 @@
             [tech.v3.datatype.ffi :as dt-ffi ]
             [membrane.ui :as ui]
             [clojure.data.xml :as xml]
-            [com.phronemophobic.grease.objc :as grease]
+            [clojure.string :as str]
+            babashka.nrepl.server
+            [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.grease.component :as gui]
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]))
-
 
 (defn documents-dir []
   ;; fileSystemRepresentation
@@ -97,25 +98,58 @@
       :$body nil
       :body (code-editor/text-editor {:buf buf})}))))
 
-(defui dir-viewer [{:keys [dir]}]
-  (gui/scrollview
-   {:scroll-bounds [250 500]
-    :$body nil
-    :body(let [files (fs/list-dir dir)]
-      (apply
-       ui/vertical-layout
-       (when-not (fs/same-file? dir scripts-dir)
-         (ui/on
-          :mouse-down
-          (fn [_]
-            [[::select-file {:file (fs/parent dir)}]])
-          (ui/bordered
-           20
-           (ui/label ".."))))
-       (for [f files]
-         (file-row f))))}))
+(defui dir-viewer [{:keys [dir nrepl-server]}]
+  (ui/vertical-layout
+   (if nrepl-server
+     (ui/horizontal-layout
+      (basic/button {:text "stop nrepl"
+                     :on-click
+                     (fn []
+                       [[::stop-nrepl-server]])})
+      (ui/label (str (-> nrepl-server
+                         :socket
+                         .getInetAddress
+                         .getHostAddress)
+                     ":"
+                      (-> nrepl-server
+                         :socket
+                         .getLocalPort))))
+     (basic/button {:text "start nrepl"
+                    :on-click
+                    (fn []
+                      [[::start-nrepl-server]])}))
+   (let [relative-path (str/join 
+                         " / "
+                         (cons
+                          "."
+                          (reverse
+                           (eduction
+                            (take-while some?)
+                            (take-while #(not (fs/same-file? %
+                                                             scripts-dir)))
+                            (map fs/file-name)
 
-(defui file-viewer [{:keys [dir selected-file buffers]}]
+                            (iterate fs/parent dir)))))]
+     (ui/label (str "dir: " relative-path)))
+   (gui/scrollview
+    {:scroll-bounds [250 500]
+     :extra (get extra [::scroll dir])
+     :$body nil
+     :body(let [files (fs/list-dir dir)]
+            (apply
+             ui/vertical-layout
+             (when-not (fs/same-file? dir scripts-dir)
+               (ui/on
+                :mouse-down
+                (fn [_]
+                  [[::select-file {:file (fs/parent dir)}]])
+                (ui/bordered
+                 20
+                 (ui/label ".."))))
+             (for [f files]
+               (file-row f))))})))
+
+(defui file-viewer [{:keys [dir selected-file buffers nrepl-server]}]
   (ui/translate
    30 50
    (ui/on
@@ -130,7 +164,8 @@
      (if selected-file
        (file-editor {:file selected-file
                      :buf (get buffers selected-file)})
-       (dir-viewer {:dir dir}))))))
+       (dir-viewer {:dir dir
+                    :nrepl-server nrepl-server}))))))
 
 (defn initial-state []
   {:dir scripts-dir})
@@ -142,7 +177,7 @@
 (def app (membrane.component/make-app #'file-viewer app-state))
 
 (defn repaint! []
-  (reset! main-view (app)))
+  (reset! ios/main-view (app)))
 
 (defonce __initial_paint
   (repaint!))
@@ -150,20 +185,6 @@
 (add-watch app-state ::update-view
            (fn [k ref old updated]
              (repaint!)))
-
-(defn show-keyboard []
-  (objc ^void
-        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
-         nil
-         ~(byte 0)]))
-
-(defn hide-keyboard []
-  (objc ^void
-        [~(grease/clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
-         nil
-         ~(byte 0)]))
 
 (add-watch app-state ::handle-keyboard
            (fn [k ref old new]
@@ -173,8 +194,29 @@
                (when (not= old-focus new-focus)
                  (future
                    (if new-focus
-                     (show-keyboard)
-                     (hide-keyboard)))))))
+                     (ios/show-keyboard)
+                     (ios/hide-keyboard)))))))
+
+(defeffect ::stop-nrepl-server []
+  (let [[{:keys [nrepl-server]} _] (swap-vals! app-state dissoc :nrepl-server)]
+    (when nrepl-server
+      (babashka.nrepl.server/stop-server! nrepl-server)))
+  nil)
+
+(defeffect ::start-nrepl-server []
+  (dispatch! ::stop-nrepl-server)
+  (let [host (.getHostAddress (ios/get-local-address))
+        port 22345
+        sci-ctx (ios/new-sci-ctx)
+        server (babashka.nrepl.server/start-server!
+                sci-ctx
+                {:host host :port port
+                 :xform ios/server-xform})]
+    (swap! app-state assoc :nrepl-server server))
+
+  nil)
+
+
 
 
 
