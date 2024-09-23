@@ -21,13 +21,13 @@
             [clojure.zip :as z]
             [honey.sql :as sql]
             [next.jdbc :as jdbc]
+            app
             ))
 
 ;; Declare UI state
 
 (defonce pod-state (atom {}))
 (defonce handler (membrane.component/default-handler pod-state))
-(declare repaint!)
 
 ;; Generic config and helpers
 
@@ -694,7 +694,6 @@
     (configure-controls player))
 
   (handler ::refresh-episodes {})
-  (repaint!)
   ,)
 
 ;; UI
@@ -851,15 +850,20 @@
 
 (def app (membrane.component/make-app #'pod-ui pod-state handler))
 
-(defn repaint! []
-  (reset! ios/main-view (app)))
-
-(defonce __initialize
-  (init))
+(defn -main []
+  (init)
+  (let [{:keys [repaint!]}
+        (app/show! {:on-close (fn []
+                               (log ::closing)
+                                (swap! pod-state dissoc :repaint!))
+                    :view-fn app})]
+    (swap! pod-state assoc :repaint! repaint!)))
 
 (add-watch pod-state ::update-view
            (fn [k ref old updated]
-             (repaint!)))
+             (when-let [repaint! (:repaint! updated)]
+               (when (not= old updated)
+                 (repaint!)))))
 
 (add-watch pod-state ::handle-keyboard
            (fn [k ref old new]
@@ -869,7 +873,9 @@
                (when (not= old-focus new-focus)
                  (future
                    (if new-focus
-                     (show-keyboard)
-                     (hide-keyboard)))))))
+                     (ios/show-keyboard)
+                     (ios/hide-keyboard)))))))
+
+
 
 
