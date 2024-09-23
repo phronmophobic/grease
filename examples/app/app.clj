@@ -15,7 +15,9 @@
             [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.grease.component :as gui]
             [com.phronemophobic.objcjure :refer [objc describe]
-             :as objc]))
+             :as objc])
+  (:import java.io.ByteArrayInputStream
+           java.io.PushbackReader))
 
 (defn documents-dir []
   ;; fileSystemRepresentation
@@ -76,9 +78,26 @@
 (def eval-ns *ns*)
 (defeffect ::eval-buf [{:keys [buf]}]
   (future
-    (let [s (buffer/text buf)]
-      (binding [*ns* eval-ns]
-        (load-string s)))
+    (try
+      (let [s (buffer/text buf)
+            is (ByteArrayInputStream. (.getBytes s "utf-8"))
+            eof (Object.)]
+        (with-open [is is
+                    rdr (io/reader is)
+                    rdr (PushbackReader. rdr)]
+          (binding [*ns* eval-ns]
+            (try
+              (loop []
+                (let [form (read rdr false eof)]
+                  (when (not= eof form)
+                    (eval form)
+                    (recur))))
+              (when-let [-main (resolve '-main)]
+                ((deref -main)))
+              (catch Exception e
+                (log e))))))
+      (catch Exception e
+        (log e)))
     (repaint!)))
 
 (defui file-editor [{:keys [file buf]}]
