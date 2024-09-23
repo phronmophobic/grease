@@ -186,6 +186,49 @@
        (dir-viewer {:dir dir
                     :nrepl-server nrepl-server}))))))
 
+(defn delete-X []
+  (ui/with-style :membrane.ui/style-stroke
+    (ui/with-color
+      [1 0 0]
+      (ui/with-stroke-width
+        3
+        [(ui/path [0 0]
+                  [10 10])
+         (ui/path [10 0]
+                  [0 10])]))))
+
+(defeffect ::close-app [{:keys [$app]}]
+  (dispatch! :set $app nil))
+
+(defui app-view [{:keys [app]}]
+  (ui/vertical-layout
+   (ui/label (pr-str app))
+   [(try
+      (ui/try-draw
+       (:view app)
+       (fn [draw e]
+         (log e)
+         (draw (ui/label "Error!"))))
+      (catch Exception e
+        (log e)
+        (ui/label "Error!")))
+    (ui/translate 275 30
+                  (ui/on
+                   :mouse-down
+                   (fn [_]
+                     [[::close-app {:$app $app}]])
+                   (ui/bordered
+                    10
+                    (delete-X))))]))
+
+(defui main-app-view [{:keys [dir selected-file buffers nrepl-server app]}]
+  (if app
+    (app-view {:app app})
+    (file-viewer {:dir dir
+                  :selected-file selected-file
+                  :buffers buffers
+                  :nrepl-server nrepl-server})))
+
 (defn initial-state []
   {:dir scripts-dir})
 
@@ -193,10 +236,11 @@
 (defn init! []
   (reset! app-state (initial-state)))
 
-(def app (membrane.component/make-app #'file-viewer app-state))
+(def app (membrane.component/make-app #'main-app-view app-state))
 
 (defn repaint! []
-  (reset! ios/main-view (app)))
+  (reset! ios/main-view (app))
+  nil)
 
 (defonce __initial_paint
   (repaint!))
@@ -226,7 +270,7 @@
   (dispatch! ::stop-nrepl-server)
   (let [host (.getHostAddress (ios/get-local-address))
         port 22345
-        sci-ctx (ios/new-sci-ctx)
+        sci-ctx (ios/get-sci-ctx)
         server (babashka.nrepl.server/start-server!
                 sci-ctx
                 {:host host :port port
@@ -236,7 +280,35 @@
   nil)
 
 
+(add-watch app-state
+           ::close-app
+           (fn [k ref old new]
+             (when (not= (-> old :app :view-fn)
+                         (-> new :app :view-fn))
+               (when-let [on-close (-> old :app :on-close)]
+                 (try
+                   (on-close)
+                   (catch Exception e
+                     (log e)))))))
 
+(defn show! [{:keys [view-fn
+                     on-close]}]
+  (swap! app-state assoc :app {:view-fn view-fn
+                               :on-close on-close})
+  (let [repaint! (fn []
+                   (let [old @app-state
+                         new (update old :app
+                                     (fn [app]
+                                       (when-let [view-fn (:view-fn app)]
+                                         (assoc app :view
+                                                (try
+                                                  (view-fn)
+                                                  (catch Exception e
+                                                    (log e)
+                                                    (ui/label "Error")))))))]
+                     ;; only try once
+                     (compare-and-set! app-state old new)))]
+    {:repaint! repaint!}))
 
 
 
