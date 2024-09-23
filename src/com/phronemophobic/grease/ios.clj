@@ -227,6 +227,8 @@
               'java.util.Date java.util.Date
               'java.net.URL java.net.URL
               'java.net.InetAddress java.net.InetAddress
+              'java.io.ByteArrayInputStream java.io.ByteArrayInputStream
+              'java.io.PushbackReader java.io.PushbackReader
               }
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
