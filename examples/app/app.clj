@@ -154,7 +154,10 @@
     {:scroll-bounds [250 500]
      :extra (get extra [::scroll dir])
      :$body nil
-     :body(let [files (fs/list-dir dir)]
+     :body(let [files (sort-by
+                       (fn [f]
+                         (str/lower-case (fs/file-name f)))
+                       (fs/list-dir dir))]
             (apply
              ui/vertical-layout
              (when-not (fs/same-file? dir scripts-dir)
