@@ -1,6 +1,7 @@
 (ns app
   (:require [membrane.basic-components :as basic]
             [com.phronemophobic.clj-libffi :as ffi]
+            [com.phronemophobic.clj-libffi.callback :as cb]
             [membrane.components.code-editor.code-editor :as code-editor]
             [liq.buffer :as buffer]
             [membrane.component
@@ -35,6 +36,34 @@
   (doto (fs/file  (documents-dir)
                   "scripts")
     fs/create-dirs))
+
+(defn oprn [o]
+  (println
+   (objc/nsstring->str
+    (objc
+     [o :description]))))
+
+(defn log-exception [e]
+  (with-open [w (io/writer (fs/file scripts-dir
+                                    "exception.log"))]
+    (let [exception (objc/nsstring->str
+                     (objc [e :description]))
+          symbols (when-let [symbols (objc [e :callStackSymbols])]
+                    (objc/nsstring->str
+                     (objc [symbols :description])))]
+      (.write w (str/join
+                 "\n"
+                 ["Exception:"
+                  exception
+                  symbols])))))
+
+(defonce __init-exception-logger
+  (ffi/call "NSSetUncaughtExceptionHandler"
+            :void
+            :pointer
+            (cb/make-callback log-exception
+                              :void [:pointer])))
+
 
 (defn file-row [f]
   (let [view (ui/bordered
