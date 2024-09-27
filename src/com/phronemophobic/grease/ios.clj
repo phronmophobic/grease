@@ -89,23 +89,46 @@
                                                                       (catch Exception e
                                                                         (println e)))))))
 
-#_(defn show-alert! []
+(defn prompt-bool [{:keys [title message ok-text cancel-text]}]
+  (let [p (promise)]
     (dispatch-main-async
      (fn []
-       (let [vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])
-             alert (objc
-                    [UIAlertController :alertControllerWithTitle:message:preferredStyle
-                     @"Title"
-                     @"Message"
-                     UIAlertControllerStyleAlert])
-             default-action (objc [UIAlertAction :actionWithTitle:style:handler
-                                   @"default"
-                                   UIAlertActionStyleDefault
-                                   (fn ^void [action]
-                                     (log :default-action))])]
-         (objc [alert :addAction default-action])
+       (let [title (if title
+                     (objc/str->nsstring title)
+                     (ffi/long->pointer 0))
+             message (if message
+                       (objc/str->nsstring message)
+                       (ffi/long->pointer 0))
+             ok-text (objc/str->nsstring (or ok-text "OK"))
+             cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
+             
+             alertController (objc [UIAlertController :alertControllerWithTitle:message:preferredStyle
+                                    title
+                                    message
+                                    UIAlertControllerStyleAlert])
+             
+             cancelAction (objc
+                           [UIAlertAction :actionWithTitle:style:handler
+                            cancel-text
+                            UIAlertActionStyleCancel
+                            (fn ^void [action]
+                              (deliver p false))])
+             okAction (objc
+                       [UIAlertAction :actionWithTitle:style:handler
+                        ok-text
+                        UIAlertActionStyleDefault
+                        (fn ^void [action]
+                          (deliver p true))])
+             _ (do
+                 (objc [alertController :addAction cancelAction])
+                 (objc [alertController :addAction okAction]))
+
+             vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])
+
+             ]
          (objc [vc :presentViewController:animated:completion
-                alert true nil])))))
+                alertController true nil]))))
+    @p))
 
 (defn show-keyboard []
   (objc ^void
@@ -120,6 +143,58 @@
          ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
          nil
          ~(byte 0)]))
+
+(defn prompt-for-text [{:keys [title message placeholder on-cancel on-ok cancel-text ok-text]}]
+  (dispatch-main-async
+   (fn []
+     (let [title (if title
+                   (objc/str->nsstring title)
+                   (ffi/long->pointer 0))
+           message (if message
+                     (objc/str->nsstring message)
+                     (ffi/long->pointer 0))
+           ok-text (objc/str->nsstring (or ok-text "OK"))
+           cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
+        
+           alertController (objc [UIAlertController :alertControllerWithTitle:message:preferredStyle
+                                  title
+                                  message
+                                  UIAlertControllerStyleAlert])
+          
+           _ (objc [alertController :addTextFieldWithConfigurationHandler
+                    (fn ^void [textField]
+                      (when placeholder
+                        (objc [textField :setPlaceholder ~(objc/str->nsstring placeholder)])))])
+           cancelAction (objc
+                         [UIAlertAction :actionWithTitle:style:handler
+                          cancel-text
+                          UIAlertActionStyleCancel
+                          ~(if on-cancel
+                             (objc
+                              (fn ^void [action]
+                                (on-cancel)))
+                             (ffi/long->pointer 0))])
+           okAction (objc
+                     [UIAlertAction :actionWithTitle:style:handler
+                      ok-text
+                      UIAlertActionStyleDefault
+                      ~(if on-ok
+                         (objc
+                          (fn ^void [action]
+                            (let [textField (objc
+                                             [[alertController :textFields] :firstObject])
+                                  inputText (objc [textField :text])]
+                              (on-ok inputText))))
+                         (ffi/long->pointer 0))])
+           _ (do
+               (objc [alertController :addAction cancelAction])
+               (objc [alertController :addAction okAction]))
+
+           vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])
+
+           ]
+       (objc [vc :presentViewController:animated:completion
+              alertController true nil])))))
 
 
 (defn documents-dir []

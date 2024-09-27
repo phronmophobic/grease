@@ -129,7 +129,19 @@
         (log e)))
     (repaint!)))
 
-(defui file-editor [{:keys [file buf]}]
+(defeffect ::save-file [{:keys [file buf]}]
+  (let [s (buffer/text buf)]
+    (fs/write-bytes file (.getBytes s "utf-8"))))
+
+(defeffect ::delete-file [{:keys [file buf $file $last-updated]}]
+  (future
+    (when (ios/prompt-bool {:title "Delete?"
+                            :message (str file)})
+      (fs/delete-if-exists file)
+      (dispatch! :set $last-updated (java.util.Date.))
+      (dispatch! :set $file nil))))
+
+(defui file-editor [{:keys [file buf last-updated]}]
   (ui/translate
    0 30
    (ui/vertical-layout
@@ -140,65 +152,102 @@
      (basic/button {:text "eval"
                     :on-click
                     (fn []
-                      [[::eval-buf {:buf buf}]])}))
+                      [[::eval-buf {:buf buf}]])})
+     (basic/button {:text "save"
+                    :on-click
+                    (fn []
+                      [[::save-file {:file file
+                                     :buf buf}]])})
+     (basic/button {:text "delete"
+                    :on-click
+                    (fn []
+                      [[::delete-file {:file file
+                                       :$file $file
+                                       :$last-updated $last-updated}]])}))
     (gui/scrollview
      {:scroll-bounds [250 350]
       :$body nil
       :body (code-editor/text-editor {:buf buf})}))))
 
-(defui dir-viewer [{:keys [dir nrepl-server]}]
-  (ui/vertical-layout
-   (if nrepl-server
-     (ui/horizontal-layout
-      (basic/button {:text "stop nrepl"
-                     :on-click
-                     (fn []
-                       [[::stop-nrepl-server]])})
-      (ui/label (str (-> nrepl-server
-                         :socket
-                         .getInetAddress
-                         .getHostAddress)
-                     ":"
-                      (-> nrepl-server
-                         :socket
-                         .getLocalPort))))
-     (basic/button {:text "start nrepl"
-                    :on-click
-                    (fn []
-                      [[::start-nrepl-server]])}))
-   (let [relative-path (str/join 
-                         " / "
-                         (cons
-                          "."
-                          (reverse
-                           (eduction
-                            (take-while some?)
-                            (take-while #(not (fs/same-file? %
-                                                             scripts-dir)))
-                            (map fs/file-name)
+(defn prompt-create-file []
+  (let [p (promise)]
+    (ios/prompt-for-text {:title "New File"
+                          :message "Choose a file name"
+                          :ok-text "Create"
+                          :on-ok
+                          (fn [s]
+                            (deliver p (objc/nsstring->str s)))
+                          :on-cancel
+                          (fn []
+                            (deliver p nil))})
+    @p))
 
-                            (iterate fs/parent dir)))))]
-     (ui/label (str "dir: " relative-path)))
-   (gui/scrollview
-    {:scroll-bounds [250 500]
-     :extra (get extra [::scroll dir])
-     :$body nil
-     :body(let [files (sort-by
-                       (fn [f]
-                         (str/lower-case (fs/file-name f)))
-                       (fs/list-dir dir))]
-            (apply
-             ui/vertical-layout
-             (when-not (fs/same-file? dir scripts-dir)
-               (ui/on
-                :mouse-down
-                (fn [_]
-                  [[::select-file {:file (fs/parent dir)}]])
-                (ui/bordered
-                 20
-                 (ui/label ".."))))
-             (for [f files]
-               (file-row f))))})))
+(defeffect ::create-file [{:keys [dir $last-update]}]
+  (future
+    (when-let [file-name (prompt-create-file)]
+      (fs/create-file (fs/file dir
+                               file-name))
+      (dispatch! :set $last-update (java.util.Date.)))))
+
+(defui dir-viewer [{:keys [dir nrepl-server]}]
+  (let [last-update (get extra ::last-update)]
+    (ui/vertical-layout
+     (if nrepl-server
+       (ui/horizontal-layout
+        (basic/button {:text "stop nrepl"
+                       :on-click
+                       (fn []
+                         [[::stop-nrepl-server]])})
+        (ui/label (str (-> nrepl-server
+                           :socket
+                           .getInetAddress
+                           .getHostAddress)
+                       ":"
+                       (-> nrepl-server
+                           :socket
+                           .getLocalPort)))))
+     (basic/button {:text "start nrepl"
+                      :on-click
+                      (fn []
+                        [[::start-nrepl-server]])})
+     (basic/button {:text "new"
+                      :on-click
+                      (fn []
+                        [[::create-file {:dir dir
+                                         :$last-update $last-update}]])})
+     (let [relative-path (str/join 
+                          " / "
+                          (cons
+                           "."
+                           (reverse
+                            (eduction
+                             (take-while some?)
+                             (take-while #(not (fs/same-file? %
+                                                              scripts-dir)))
+                             (map fs/file-name)
+
+                             (iterate fs/parent dir)))))]
+       (ui/label (str "dir: " relative-path)))
+     (gui/scrollview
+      {:scroll-bounds [250 500]
+       :extra (get extra [::scroll dir])
+       :$body nil
+       :body(let [files (sort-by
+                         (fn [f]
+                           (str/lower-case (fs/file-name f)))
+                         (fs/list-dir dir))]
+              (apply
+               ui/vertical-layout
+               (when-not (fs/same-file? dir scripts-dir)
+                 (ui/on
+                  :mouse-down
+                  (fn [_]
+                    [[::select-file {:file (fs/parent dir)}]])
+                  (ui/bordered
+                   20
+                   (ui/label ".."))))
+               (for [f files]
+                 (file-row f))))}))))
 
 (defui file-viewer [{:keys [dir selected-file buffers nrepl-server]}]
   (ui/translate
@@ -212,11 +261,14 @@
                :$dir $dir
                :$selected-file $selected-file)]])
     (ui/vertical-layout
-     (if selected-file
-       (file-editor {:file selected-file
-                     :buf (get buffers selected-file)})
-       (dir-viewer {:dir dir
-                    :nrepl-server nrepl-server}))))))
+     (let [last-updated (get extra ::last-updated)]
+       (if selected-file
+         (file-editor {:file selected-file
+                       :last-updated last-updated
+                       :buf (get buffers selected-file)})
+         (dir-viewer {:dir dir
+                      :last-update last-updated
+                      :nrepl-server nrepl-server})))))))
 
 (defn delete-X []
   (ui/with-style :membrane.ui/style-stroke
