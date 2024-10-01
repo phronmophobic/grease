@@ -637,7 +637,7 @@
 					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
+				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -711,7 +711,7 @@
 					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
 					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.TestSkia;
+				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
