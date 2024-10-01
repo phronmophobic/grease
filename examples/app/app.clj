@@ -20,6 +20,26 @@
   (:import java.io.ByteArrayInputStream
            java.io.PushbackReader))
 
+(def insets
+  (ios/safe-area-insets))
+(def screen-size (ios/screen-size))
+(def min-pad 0)
+(def left-margin (max min-pad (:left insets)))
+(def right-margin (max min-pad (:right insets)))
+(def top-margin (max min-pad (:top insets)))
+(def bottom-margin (max min-pad (:bottom insets)))
+(def main-width
+  (max 0
+       (- (:width screen-size)
+          left-margin
+          right-margin)))
+(def main-height
+  (max 0
+       (- (:height screen-size)
+          top-margin
+          bottom-margin)))
+(def scroll-button-size 7)
+
 (defn documents-dir []
   ;; fileSystemRepresentation
   (io/file
@@ -142,30 +162,34 @@
       (dispatch! :set $file nil))))
 
 (defui file-editor [{:keys [file buf last-updated]}]
-  (ui/translate
-   0 30
+  (let [buttons
+        (ui/horizontal-layout
+         (ui/spacer 30 0)
+         (basic/button {:text "<"
+                        :on-click (fn []
+                                    [[:set $file nil]])})
+         (basic/button {:text "eval"
+                        :on-click
+                        (fn []
+                          [[::eval-buf {:buf buf}]])})
+         (basic/button {:text "save"
+                        :on-click
+                        (fn []
+                          [[::save-file {:file file
+                                         :buf buf}]])})
+         (basic/button {:text "delete"
+                        :on-click
+                        (fn []
+                          [[::delete-file {:file file
+                                           :$file $file
+                                           :$last-updated $last-updated}]])}))
+        scrollview-width (- main-width scroll-button-size)
+        scrollview-height (- main-height
+                             (ui/height buttons))]
    (ui/vertical-layout
-    (ui/horizontal-layout
-     (basic/button {:text "<"
-                    :on-click (fn []
-                                [[:set $file nil]])})
-     (basic/button {:text "eval"
-                    :on-click
-                    (fn []
-                      [[::eval-buf {:buf buf}]])})
-     (basic/button {:text "save"
-                    :on-click
-                    (fn []
-                      [[::save-file {:file file
-                                     :buf buf}]])})
-     (basic/button {:text "delete"
-                    :on-click
-                    (fn []
-                      [[::delete-file {:file file
-                                       :$file $file
-                                       :$last-updated $last-updated}]])}))
+    buttons
     (gui/scrollview
-     {:scroll-bounds [250 350]
+     {:scroll-bounds [scrollview-width scrollview-height]
       :$body nil
       :body (code-editor/text-editor {:buf buf})}))))
 
@@ -251,7 +275,7 @@
 
 (defui file-viewer [{:keys [dir selected-file buffers nrepl-server]}]
   (ui/translate
-   30 50
+   left-margin top-margin
    (ui/on
     ::select-file
     (fn [m]
@@ -285,25 +309,30 @@
   (dispatch! :set $app nil))
 
 (defui app-view [{:keys [app]}]
-  (ui/vertical-layout
-   (ui/label (pr-str app))
-   [(try
-      (ui/try-draw
-       (:view app)
-       (fn [draw e]
-         (log e)
-         (draw (ui/label "Error!"))))
-      (catch Exception e
+  [(try
+     (ui/try-draw
+      (:view app)
+      (fn [draw e]
         (log e)
-        (ui/label "Error!")))
-    (ui/translate 275 30
-                  (ui/on
-                   :mouse-down
-                   (fn [_]
-                     [[::close-app {:$app $app}]])
-                   (ui/bordered
-                    10
-                    (delete-X))))]))
+        (draw (ui/label "Error!"))))
+     (catch Exception e
+       (log e)
+       (ui/label "Error!")))
+   (let [close-button (ui/bordered
+                       10
+                       (delete-X))
+         button-x (- (:width screen-size)
+                     right-margin
+                     (ui/width close-button)
+                     5)
+         button-y top-margin]
+     (ui/translate button-x
+                   button-y
+                   (ui/on
+                    :mouse-down
+                    (fn [_]
+                      [[::close-app {:$app $app}]])
+                    close-button)))])
 
 (defui main-app-view [{:keys [dir selected-file buffers nrepl-server app]}]
   (if app
