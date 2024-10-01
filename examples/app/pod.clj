@@ -72,6 +72,13 @@
    [(str "MERGE INTO " (honey.sql/format-entity table))])
  :values)
 
+(honey.sql/register-fn!
+ :greatest-ignore-nulls
+ (fn [_ params]
+   (let [[sql] (honey.sql/format-expr (into [:greatest]
+                                        params))]
+     [(str sql " IGNORE NULLS")])))
+
 (defn lookup-nsstring-symbol [s]
   (let [symbol  (ffi/dlsym (ffi/long->pointer (long -2 ))
                            (dt-ffi/string->c s))
@@ -376,14 +383,25 @@
            (throw e)))))))
 
 (defn latest-episodes []
-  (let [search-text (:search-text @pod-state)]
-    (if (seq search-text)
-      (with-open [conn (jdbc/get-connection db)]
-        (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) where lower(episode.TRACKNAME) like ? order by RELEASEDATE  desc limit 50"
-                             (str "%" (str/lower-case search-text) "%")]))
-      ;; else 
-      (with-open [conn (jdbc/get-connection db)]
-        (jdbc/execute! conn ["select episode.*, queue.TIMESTAMP from episode left join queue on (queue.TRACKID=episode.TRACKID and queue.COLLECTIONID = episode.COLLECTIONID) order by RELEASEDATE desc limit 50"])))))
+  (with-open [conn (jdbc/get-connection db)]
+   (let [search-text (:search-text @pod-state)
+         query {:select [:episode/*
+                         :queue/last_played
+                         :queue/TIMESTAMP]
+                :from [:episode]
+                :left-join [:queue [:and
+                                    [:= :queue/trackid :episode/trackid]
+                                    [:= :queue/collectionid :episode/collectionid]]]
+                :order-by [[[:greatest-ignore-nulls :queue/last_played :episode/releasedate]
+                              :desc]]
+                :limit 50}
+         query (if (seq search-text)
+                 (assoc query :where [:like [:lower :episode/TRACKNAME] search-text])
+                 query)]
+     (with-open [conn (jdbc/get-connection db)]
+       (jdbc/execute! conn (sql/format query))))))
+
+
 
 (comment
   (def podcasts (search-podcasts "defn"))
