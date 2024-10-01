@@ -14,7 +14,7 @@
 typedef void (*operation_t)(void*,void*,void*,void*);
 
 extern "C" {
-const char* _Nullable clj_app_dir();
+
 void* _Nullable clj_main_view();
 void clj_generic_callback(void * _Nullable cif, void * _Nullable ret, void* _Nullable args,
                           void * _Nullable userdata);

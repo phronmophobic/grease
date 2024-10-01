@@ -21,10 +21,6 @@ void set_main_view(MembraneView* view){
     _clj_main_view = view;
 }
 
-const char* clj_app_dir(){
-    NSBundle* mb = [NSBundle mainBundle];
-    return [[mb bundlePath] UTF8String];
-}
 void* clj_main_view(){
     return (__bridge void*)_clj_main_view;
 }

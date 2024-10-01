@@ -47,7 +47,12 @@
             )
   (:import java.net.URL
            java.net.NetworkInterface
-           java.net.InetAddress)
+           java.net.InetAddress
+           [java.io
+            BufferedWriter
+            PrintWriter
+            StringWriter
+            Writer])
   (:gen-class))
 
 (set! *warn-on-reflection* true)
@@ -60,12 +65,32 @@
   {:clj_main_view {:rettype :pointer
                    :argtypes []}
 
-   :clj_app_dir {:rettype :pointer
-                 :argtypes []}
-
    :clj_debug {:rettype :pointer
                :argtypes [['data :pointer]]}
    ,})
+
+
+(dt-struct/define-datatype!
+  :CGPoint
+  [{:name :x :datatype :float64}
+   {:name :y :datatype :float64}])
+
+(dt-struct/define-datatype!
+  :CGSize
+  [{:name :width :datatype :float64}
+   {:name :height :datatype :float64}])
+
+(dt-struct/define-datatype!
+  :CGRect
+  [{:name :origin :datatype :CGPoint}
+   {:name :size :datatype :CGSize}])
+
+(dt-struct/define-datatype!
+  :UIEdgeInsets
+  [{:name :top :datatype :float64}
+   {:name :left :datatype :float64}
+   {:name :bottom :datatype :float64}
+   {:name :right :datatype :float64}])
 
 
 (def UIAlertControllerStyleActionSheet 0)
@@ -197,8 +222,14 @@
               alertController true nil])))))
 
 
+(defn bundle-dir []
+    ;; NSBundle* mb = [NSBundle mainBundle];
+    ;; return [[mb bundlePath] UTF8String];
+  (io/file
+   (dt-ffi/c->string
+    (objc [[[NSBundle :mainBundle] :bundlePath] :UTF8String]))))
+
 (defn documents-dir []
-  ;; fileSystemRepresentation
   (io/file
    (dt-ffi/c->string
     (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
@@ -210,6 +241,31 @@
            fileSystemRepresentation])))
   )
 
+(defmacro ^:private
+  on-main
+  [& body]
+  `(if (objc ~(with-meta '[NSThread isMainThread]
+                {:tag 'boolean}))
+     (do ~@body)
+     (let [p# (promise)]
+       (dispatch-main-async
+        (fn []
+          (let [ret# (do ~@body)]
+            (deliver p# ret#))))
+       @p#)))
+
+(def ^:private screen-bounds*
+  (delay
+    (on-main
+     (objc ^CGRect [~(clj_main_view) bounds]))))
+(defn screen-bounds []
+  @screen-bounds*)
+(defn screen-size []
+  (:size @screen-bounds*))
+
+(defn safe-area-insets []
+  (on-main
+    (objc ^UIEdgeInsets [~(clj_main_view) :safeAreaInsets])))
 
 (defn sleep [msecs]
   (Thread/sleep (long msecs)))
@@ -284,10 +340,100 @@
          (replog/append-nrepl-op (:msg request))
          request)))
 
+
+;; Broadcast messages sent to *out*
+;; to nrepl server
+(def *out*-original (delay *out*))
+(def *err*-original (delay *err*))
+(defonce sessions
+  (atom {}))
+
+(let [out (delay *out*)]
+  (defn broadcast! [stream-key text]
+    (doseq [[k send] @sessions]
+      (try
+        (send stream-key text)
+        (catch Throwable e
+          (binding [*out* @*out*-original]
+            (println e))
+          (swap! sessions dissoc k)
+          )))))
+
+(defn- to-char-array
+  ^chars
+  [x]
+  (cond
+    (string? x) (.toCharArray ^String x)
+    (integer? x) (char-array [(char x)])
+    :else x))
+
+(defn wrap-writer [stream-key ^Writer wrapped-writer]
+  (let [pw (-> (proxy [Writer] []
+                 (write
+                   ([x]
+                    (let [cbuf (to-char-array x)]
+                      (.write ^Writer this cbuf (int 0) (count cbuf))))
+                   ([x off len]
+                    (let [cbuf (to-char-array x)
+                          text (str (doto (StringWriter.)
+                                      (.write cbuf ^int off ^int len)))]
+                      (when (pos? (count text))
+                        (broadcast! stream-key text))
+                      (.write wrapped-writer ^char/1 x (int off) (int len)))))
+                 (flush [])
+                 (close []))
+               (BufferedWriter. 1024)
+               (PrintWriter. true))]
+    pw))
+
+(defn setup-nrepl-logging! []
+  
+  (let [new-out (wrap-writer "out" *out*)
+        new-err (wrap-writer "err" *err*)]
+    ;; make sure these get set first
+    @*out*-original
+    @*err*-original
+    (alter-var-root #'*out* (constantly new-out))
+    (alter-var-root #'*err* (constantly new-err)))
+  nil)
+
+(def
+  ^{::middleware/requires #{#'middleware/wrap-process-message
+                            #'middleware/wrap-response-for}}
+  pipe-logs
+  (fn [rf]
+    (let [session-id (Object.)
+          last-session-info* (atom nil)]
+      (swap! sessions
+             assoc
+             session-id
+             (fn [stream-key text]
+               (let [{:keys [result id session]} @last-session-info*]
+                 (rf result
+                     { ;; :response-for msg
+                      :response {stream-key text
+                                 "id" id
+                                 "session" session}}))))
+      (fn
+        ([] (rf))
+        ([result]
+         (swap! sessions
+                dissoc session-id)
+         (rf result))
+        ([result {:keys [response] :as input}]
+         (let [{:strs [session id]} response]
+           (when (and session id result)
+             (reset! last-session-info*
+                     {:result result
+                      :session session
+                      :id id})))
+         (rf result input))))))
+
 ;; Add cross cutting middleware
 (def server-xform
   (middleware/middleware->xform
    (conj middleware/default-middleware
+         #'pipe-logs
          #'display-evals
          #'replog-evals)))
 
@@ -462,42 +608,49 @@
 
  
 (defn clj_init []
-  (let [documents-dir
-        (io/file
-         (dt-ffi/c->string
-          (objc
-           [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
-              ;; (int 14) ;; application support
-              (int 9) ;; documents
-              (int 1)
-              ]
-             :objectAtIndex 0]
-            fileSystemRepresentation])))
-        app-path (fs/file documents-dir
-                          "scripts"
-                          "app.clj")]
-    (prn "documents dir" documents-dir)
+  ;; copy gol example
+  (let [gol-bundle-path (fs/file (bundle-dir)
+                                 "gol.clj")
+        gol-script-path (fs/file (documents-dir)
+                                 "scripts"
+                                 "gol.clj")]
+    (when (not (fs/exists? gol-script-path))
+      (fs/copy gol-bundle-path
+               gol-script-path)))
+
+  (let [app-bundle-path (fs/file (bundle-dir)
+                                 "app.clj")
+        app-script-path (fs/file (documents-dir)
+                                 "scripts"
+                                 "app.clj")
+        app-path (if (fs/exists? app-script-path)
+                   app-script-path
+                   app-bundle-path)]
     (when (fs/exists? app-path)
       (try
         (sci/eval-string* @sci-ctx (slurp app-path))
         (catch Exception e
           (prn e)))))
 
-  (let [local-address (get-local-address)
-        host-address (when local-address
-                       (.getHostAddress ^InetAddress local-address))
-        port 12345
-        address-str (if host-address
-                      (str host-address ":" 23456)
-                      "No local address found.")]
-    (reset! debug-view (ui/translate 10 50
-                                     (with-background
-                                       (ui/label address-str))))
-    (println (str "address: \n" address-str))
 
-    (babashka.nrepl.server/start-server! @sci-ctx
-                                         {:host host-address :port 23456
-                                          :xform server-xform})))
+  (setup-nrepl-logging!)
+
+  #_(let [local-address (get-local-address)
+          host-address (when local-address
+                         (.getHostAddress ^InetAddress local-address))
+          port 12345
+          address-str (if host-address
+                        (str host-address ":" 23456)
+                        "No local address found.")]
+      (reset! debug-view (ui/translate 10 50
+                                       (with-background
+                                         (ui/label address-str))))
+      (setup-nrepl-logging!)
+      (println (str "address: \n" address-str))
+
+      (babashka.nrepl.server/start-server! @sci-ctx
+                                           {:host host-address :port 23456
+                                            :xform server-xform})))
 
 (defonce last-draw (atom nil))
 
