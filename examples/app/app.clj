@@ -229,11 +229,11 @@
                        ":"
                        (-> nrepl-server
                            :socket
-                           .getLocalPort)))))
-     (basic/button {:text "start nrepl"
+                           .getLocalPort))))
+       (basic/button {:text "start nrepl"
                       :on-click
                       (fn []
-                        [[::start-nrepl-server]])})
+                        [[::start-nrepl-server]])}))
      (basic/button {:text "new"
                       :on-click
                       (fn []
