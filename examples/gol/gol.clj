@@ -1,11 +1,11 @@
-(ns gol)
+(ns gol
+  (:require [membrane.ui :as ui]
+            [com.phronemophobic.grease.ios :as ios]))
 
-(require '[membrane.ui :as ui])
-(require '[com.phronemophobic.grease.membrane :refer
-           [main-view]])
+(def screen-size (ios/screen-size))
 
 
-(def state-atm
+(defonce state-atm
   (atom
    {:board #{[1 0] [1 1] [1 2]}}))
 
@@ -33,45 +33,49 @@
       (ui/rounded-rectangle (+ w 6) h 8))
      body]))
 
-(do
-  (defn view [{:keys [board running?] :as state}]
-    (ui/translate
-     30 30
-     (ui/on
-      :mouse-move
-      (fn [[x y]]
-        (swap! state-atm update :board
-               conj [(int (/ x grid-size))
-                     (int (/ y grid-size))])
-        nil)
-      (ui/wrap-on
-       :mouse-down
-       (fn [handler [x y]]
-         
-         (swap! state-atm update :board
-                conj [(int (/ x grid-size))
-                      (int (/ y grid-size))])
-         (handler [x y]))
-       [(ui/spacer 600 600)
-        
-        (into []
-                (map (fn [[x y]]
-                       (ui/translate (* x grid-size) (* y grid-size)
-                                     (ui/rectangle grid-size grid-size))))
-                board)
-        (ui/translate 0 400
-                      (ui/on
-                       :mouse-down
-                       (fn [_]
-                         (swap! state-atm
-                                update :running? not)
-                         nil)
-                       (big-button (if running?
-                                     "Stop"
-                                     "Start")))
-                      )])))
-    )
-  (reset! main-view (view @state-atm)))
+(defn view [{:keys [board running?] :as state}]
+  (ui/on
+   :mouse-move
+   (fn [[x y]]
+     (swap! state-atm update :board
+            conj [(int (/ x grid-size))
+                  (int (/ y grid-size))])
+     nil)
+   (ui/wrap-on
+    :mouse-down
+    (fn [handler [x y]]
+      
+      (swap! state-atm update :board
+             conj [(int (/ x grid-size))
+                   (int (/ y grid-size))])
+      (handler [x y]))
+    [(ui/spacer 600 600)
+     
+     (into []
+           (map (fn [[x y]]
+                  (ui/translate (* x grid-size) (* y grid-size)
+                                (ui/rectangle grid-size grid-size))))
+           board)
+     (let [button (big-button (if running?
+                                "Stop"
+                                "Start"))
+           [bw bh] (ui/bounds button)
+           bx (quot (- (:width screen-size)
+                       bw)
+                    2)
+           by (- (:height screen-size)
+                 (* 2 bh))]
+      (ui/translate
+       bx by
+       (ui/on
+        :mouse-down
+        (fn [_]
+          (swap! state-atm
+                 update :running? not)
+          nil)
+        button)
+       ))])))
+
 
 (defn add-random []
   (swap! state-atm
@@ -83,8 +87,11 @@
                                    (rand-int 30)])))))
   )
 
-(add-watch state-atm ::update-view (fn [k ref old updated]
-                                     (reset! main-view (view updated))))
+(add-watch state-atm ::update-view
+           (fn [k ref old updated]
+             (when-let [repaint! (:repaint! updated)]
+               (when (not= old updated)
+                 (repaint!)))))
 
 (add-watch state-atm ::run-gol (fn [k ref old updated]
                                  (when (and (:running? updated)
@@ -93,7 +100,7 @@
                                      (while (:running? @state-atm)
                                        (swap! state-atm
                                               update :board step)
-                                       (sleep 30))))))
+                                       (ios/sleep 30))))))
 
 (add-random)
 (swap! state-atm identity)
@@ -102,4 +109,16 @@
   (dotimes [i nsteps]
     (swap! state-atm
            update :board step)
-    (sleep 30)))
+    (ios/sleep 30)))
+
+(defn -main []
+  (let [{:keys [repaint!]}
+        (app/show! {:on-close (fn []
+                                 (swap! state-atm
+                                        (fn [state]
+                                          (-> state
+                                              (dissoc :repaint!)
+                                              (assoc :running? false)))))
+                    :view-fn (fn []
+                               (view @state-atm))})]
+    (swap! state-atm assoc :repaint! repaint!)))
