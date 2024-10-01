@@ -5,19 +5,19 @@
 //  Created by Adrian Smith on 6/11/21.
 //
 
-#include "GrDirectContext.h"
-#include "gl/GrGLInterface.h"
-#include "SkData.h"
-#include "SkImage.h"
-#include "SkStream.h"
-#include "SkSurface.h"
-#include "SkCanvas.h"
-#include "SkPaint.h"
-#include "SkTextBlob.h"
-#include "SkFont.h"
+#import "GrDirectContext.h"
+#import "gl/GrGLInterface.h"
+#import "SkData.h"
+#import "SkImage.h"
+#import "SkStream.h"
+#import "SkSurface.h"
+#import "SkCanvas.h"
+#import "SkPaint.h"
+#import "SkTextBlob.h"
+#import "SkFont.h"
 
-#include "skia.h"
-#include "bb.h"
+#import "skia.h"
+#import "bb.h"
 #import "MembraneView.h"
 
 #import <simd/simd.h>
@@ -30,7 +30,7 @@
 
 #import <CoreMotion/CoreMotion.h>
 
-graal_isolate_t *isolate = NULL;
+
 static const NSUInteger MaxBuffersInFlight = 3;
 
 sk_sp<SkSurface> SkMtkViewToSurface(MTKView* mtkView, GrRecordingContext* rContext) {
@@ -111,19 +111,7 @@ void testDraw(SkCanvas* canvas){
         grContext= nullptr;
         [self _loadMetalWithView:view];
         
-
-		graal_isolatethread_t* thread;
-        if (graal_create_isolate(NULL, &isolate, &thread) != 0) {
-          fprintf(stderr, "initialization error\n");
-        }
-        
-        ((MembraneView*)view).isolate = isolate;
         set_main_view(((MembraneView*)view));
-
-
-        clj_init(thread);
-		graal_detach_thread(thread);
-        
 
     }
 
@@ -300,7 +288,7 @@ void testDraw(SkCanvas* canvas){
 //    [self _updateGameState];
 
     graal_isolatethread_t* thread;
-    graal_attach_thread(isolate, &thread);
+    graal_attach_thread(_isolate, &thread);
     if (!clj_needs_redraw(thread)){
         return;
     }

@@ -6,8 +6,8 @@
 //
 
 #import <MetalKit/MetalKit.h>
-#include "bb.h"
-#include "skia.h"
+#import "bb.h"
+#import "skia.h"
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 
@@ -21,9 +21,6 @@ void clj_generic_callback(void * _Nullable cif, void * _Nullable ret, void* _Nul
 operation_t clj_get_generic_callback_address();
 void clj_debug(void* p);
 
-double xAcceleration(CMAccelerometerData* _Nonnull data);
-double yAcceleration(CMAccelerometerData* _Nonnull data);
-double zAcceleration(CMAccelerometerData* _Nonnull data);
 
 }
 

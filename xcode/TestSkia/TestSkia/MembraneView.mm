@@ -6,7 +6,7 @@
 //
 
 #import "MembraneView.h"
-#include "bb.h"
+#import "bb.h"
 
 // These are here as a convenience for looking up
 // objc enums and types.
