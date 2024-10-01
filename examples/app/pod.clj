@@ -877,5 +877,103 @@
                      (ios/hide-keyboard)))))))
 
 
+;; Utilities for parsing rss
 
+(defn zip-iter [zip]
+  (eduction
+   (take-while #(not (z/end? %)))
+   (iterate z/next
+            zip)))
 
+(defn find-tag [zip tag]
+  (some (fn [z]
+          (let [node (z/node z)]
+            (when (= tag (:tag node))
+              node)))
+        (zip-iter zip)))
+
+(defn parse-item [zitem]
+  (let [summary (-> (find-tag zitem :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/summary)
+                    :content
+                    first)
+        title (-> (find-tag zitem :title)
+                    :content
+                    first)
+        url (-> (find-tag zitem :enclosure)
+                    :attrs
+                    :url)
+        guid (-> (find-tag zitem :guid)
+                 :content
+                 first
+                 str/trim)]
+    {:description summary
+     :guid guid
+     :trackName title
+     :episodeUrl url}))
+
+(defn parse-rss [zrss]
+  (let [items (into []
+                    (comp
+                     (filter #(= :item
+                                 (:tag (z/node %))))
+                     (map parse-item)
+                     (map #(reduce-kv (fn [m k v]
+                                        (assoc m (name k) v))
+                                      {}
+                                      %)))
+                    (zip-iter zrss))]
+    items)
+  )
+
+;; need to update db to use guid
+#_(defn add-rss [url]
+  (with-open [rdr (io/reader (io/as-url url))]
+    (let [xml (xml/parse rdr)
+          zrss (z/xml-zip xml)
+
+          statements (into []
+                           (comp
+
+                            (map (fn [episode]
+                                   ))
+                            (map (fn [episode]
+                                   (sql/format {:insert-into :episode
+                                                :values
+                                                [(-> episode
+                                                     (select-keys
+                                                      ["description"
+                                                       "artistName"
+                                                       "collectionName"
+                                                       "episodeUrl"
+                                                       "episodeGuid"
+                                                       "collectionId"
+                                                       "trackId"
+                                                       "trackName"
+                                                       "releaseDate"
+                                                       "trackTimeMillis"
+                                                       "releaseDate"])
+                                                     truncate-description
+                                                     uppercase-keys)]}))))
+                           (parse-rss zrss))]
+      (doseq [statement statements]
+        (jdbc/execute! db statement)))))
+
+(comment
+
+  (with-open [is (io/input-stream (io/as-url "https://feeds.zencastr.com/f/8BBgc1Lp.rss"))]
+    (io/copy is
+             (io/file scripts-dir "rss.xml")))
+
+  (def xml (with-open [rdr (io/reader (io/file scripts-dir "rss.xml"))]
+             (let [xml (xml/parse rdr)
+                   zip (z/xml-zip xml)]
+               (loop [zip zip]
+                 (if (z/end? zip)
+                   zip
+                   (recur (z/next zip))))
+               xml)))
+
+  (def zrss (z/xml-zip xml))
+  (def episodes (parse-rss zrss))
+
+  ,)
