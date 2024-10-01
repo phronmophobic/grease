@@ -20,6 +20,10 @@ xcuserdata
 
 build/
 
+# user-specific XCode stuff
+xcuserdata
+project.xcworkspace
+
 *.pbxuser
 *.perspective
 *.perspectivev3
