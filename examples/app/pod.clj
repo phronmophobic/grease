@@ -334,23 +334,23 @@
   (update m "releaseDate" clojure.instant/read-instant-date))
 
 (defn add-podcast [podcast episodes]
-  (into [(sql/format {:insert-into :podcast
-                      :values
-                      [(-> podcast
-                           (select-keys ["collectionId"
-                                         "artistName"
-                                         "collectionName"
-                                         "feedUrl"
-                                         "artworkUrl30"
-                                         "artworkUrl100"
-                                         "artworkUrl60" 
-                                         "artworkUrl600"])
-                           uppercase-keys)]})]
-        
-        (map (fn [episode]
-               (sql/format {:insert-into :episode
-                            :values
-                            [(-> episode
+  [(sql/format {:insert-into :podcast
+                :values
+                [(-> podcast
+                     (select-keys ["collectionId"
+                                   "artistName"
+                                   "collectionName"
+                                   "feedUrl"
+                                   "artworkUrl30"
+                                   "artworkUrl100"
+                                   "artworkUrl60"
+                                   "artworkUrl600"])
+                     uppercase-keys)]})
+   (sql/format {:merge-into :episode
+                :values
+                (into []
+                      (map (fn [episode]
+                             (-> episode
                                  (select-keys
                                   ["description"
                                    "artistName"
@@ -364,8 +364,8 @@
                                    "trackTimeMillis"
                                    "releaseDate"])
                                  truncate-description
-                                 uppercase-keys)]})))
-        episodes))
+                                 uppercase-keys)))
+                      episodes)})])
 
 (defn add-podcast!
   ([podcast]
