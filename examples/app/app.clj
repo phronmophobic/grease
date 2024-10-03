@@ -235,10 +235,10 @@
                       (fn []
                         [[::start-nrepl-server]])}))
      (basic/button {:text "new"
-                      :on-click
-                      (fn []
-                        [[::create-file {:dir dir
-                                         :$last-update $last-update}]])})
+                    :on-click
+                    (fn []
+                      [[::create-file {:dir dir
+                                       :$last-update $last-update}]])})
      (let [relative-path (str/join 
                           " / "
                           (cons
