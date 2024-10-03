@@ -404,8 +404,20 @@
                    (catch Exception e
                      (log e)))))))
 
-(defn show! [{:keys [view-fn
-                     on-close]}]
+(defn show!
+  "Opens a new app.
+
+  The following keys are required:
+  `:view-fn`: A function that takes no args and returns a view to be displayed.
+              The view does not automatically repaint. Call `repaint!` to update the view.
+  `:on-close`: A function that takes no args. Will be called when the app is closed.
+
+  `show!` returns a map with the following keys:
+  `:repaint!`: A function that takes no args. It will cause the app's view to be displayed.
+
+  If an app is currently open, it will be closed."
+  [{:keys [view-fn
+           on-close]}]
   (swap! app-state assoc :app {:view-fn view-fn
                                :on-close on-close})
   (let [repaint! (fn []

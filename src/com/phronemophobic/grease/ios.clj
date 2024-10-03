@@ -59,15 +59,17 @@
 
 (set! *warn-on-reflection* true)
 
-(def main-view (atom nil))
+(def main-view "The main view displayed. Edit at your own peril." (atom nil))
 (defonce debug-view (atom nil))
 (defonce debug-log (atom []))
 
 (dt-ffi/define-library-interface
   {:clj_main_view {:rettype :pointer
+                   :doc "Returns the UIView used to display the app."
                    :argtypes []}
 
    :clj_debug {:rettype :pointer
+               :doc "Used for development. Noop."
                :argtypes [['data :pointer]]}
    ,})
 
@@ -108,7 +110,9 @@
   (ffi/call "NSSetUncaughtExceptionHandler" :void :pointer handler)
   )
 
-(defn dispatch-main-async [f]
+(defn dispatch-main-async
+  "Run `f` on the main queue."
+  [f]
   (ffi/call "dispatch_async" :void :pointer @main-queue :pointer (objc
                                                                   (fn ^void []
                                                                     (try
@@ -116,7 +120,11 @@
                                                                       (catch Exception e
                                                                         (println e)))))))
 
-(defn prompt-bool [{:keys [title message ok-text cancel-text]}]
+(defn prompt-bool
+  "Displayes a prompt. Blocks until a response is given.
+
+  Returns true/false."
+  [{:keys [title message ok-text cancel-text]}]
   (let [p (promise)]
     (dispatch-main-async
      (fn []
@@ -157,21 +165,32 @@
                 alertController true nil]))))
     @p))
 
-(defn show-keyboard []
+(defn show-keyboard
+  "Displays the keyboard."
+  []
   (objc ^void
         [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
          ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
          nil
          ~(byte 0)]))
 
-(defn hide-keyboard []
+(defn hide-keyboard
+  "Hides the keyboard."
+  []
   (objc ^void
         [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
          ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
          nil
          ~(byte 0)]))
 
-(defn prompt-for-text [{:keys [title message placeholder on-cancel on-ok cancel-text ok-text]}]
+(defn prompt-for-text
+  "Shows an alert prompt with a text field.
+
+  Returns immediately.
+  
+  `on-cancel` 0 arity function called when cancelled.
+  `on-ok` ` 1 arity function called with the provided text"
+  [{:keys [title message placeholder on-cancel on-ok cancel-text ok-text]}]
   (dispatch-main-async
    (fn []
      (let [title (if title
@@ -224,7 +243,9 @@
               alertController true nil])))))
 
 
-(defn bundle-dir []
+(defn bundle-dir
+  "Returns a file for the bundle app directory. This directly can not be modified."
+  []
     ;; NSBundle* mb = [NSBundle mainBundle];
     ;; return [[mb bundlePath] UTF8String];
   (io/file
@@ -232,6 +253,7 @@
     (objc [[[NSBundle :mainBundle] :bundlePath] :UTF8String]))))
 
 (defn documents-dir []
+  "Returns a file for the documents directory. Support files for the application can be stored here."
   (io/file
    (dt-ffi/c->string
     (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
@@ -243,8 +265,17 @@
            fileSystemRepresentation])))
   )
 
-(defmacro ^:private
-  on-main
+(defn scripts-dir
+  "Returns a file for the directory where the scripts are stored."
+  []
+  (fs/file (documents-dir)
+           "scripts"))
+
+(defmacro on-main
+  "Synchronously runs `body` on the main thread and returns the result.
+
+  If already running on the main thread, executes the body directly.
+  Otherwise, enqueues the body on the main thread and waits for a result."
   [& body]
   `(if (objc ~(with-meta '[NSThread isMainThread]
                 {:tag 'boolean}))
@@ -260,12 +291,20 @@
   (delay
     (on-main
      (objc ^CGRect [~(clj_main_view) bounds]))))
-(defn screen-bounds []
+(defn screen-bounds
+  "Returns the bounds for the app's view."
+  []
   @screen-bounds*)
-(defn screen-size []
+(defn screen-size
+  "Returns the width and height of the current screen."
+  []
   (:size @screen-bounds*))
 
-(defn safe-area-insets []
+(defn safe-area-insets
+  "Returns safe area insets.
+
+  The safe area of a view reflects the area not covered by navigation bars, tab bars, toolbars, and other ancestors that obscure a view controller's view."
+  []
   (on-main
     (objc ^UIEdgeInsets [~(clj_main_view) :safeAreaInsets])))
 
@@ -273,7 +312,9 @@
   (Thread/sleep (long msecs)))
 
 
-(defn get-local-address []
+(defn get-local-address
+  "Returns a local IP address as a string, if available."
+  []
   (let [address (->> (NetworkInterface/getNetworkInterfaces)
                      enumeration-seq
                      (filter (fn [interface]
@@ -294,7 +335,9 @@
     address))
 
 
-(defn get-addresses []
+(defn get-addresses
+  "Returns all possible host addresses for the network device."
+  []
   (let [addresses (->> (NetworkInterface/getNetworkInterfaces)
                        enumeration-seq
                        (filter (fn [interface]
