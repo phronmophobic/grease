@@ -421,6 +421,7 @@
                                                     (ui/label "Error")))))))]
                      ;; only try once
                      (compare-and-set! app-state old new)))]
+    (repaint!)
     {:repaint! repaint!}))
 
 
