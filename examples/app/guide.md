@@ -31,9 +31,9 @@ An updated list of available namespaces can be found [here](https://github.com/p
 
 Most of these namespaces are useful namespaces for writing clojure scripts like you would find in babashka or on the clojure JVM. However, there are a few namespaces included that are specifically helpful for iOS development.
 
-`com.phronemophobic.objcjure`: is a fully capable objc DSL for calling platform APIs.
-`com.phronemophobic.grease.ios`: has utilties and helper functions that might typically be needed when building an iOS app.
-`membrane.ui`, `membrane.component`, `com.phronemophobic.grease.component`: Namespaces for building user interfaces.
+- `com.phronemophobic.objcjure`: is a fully capable objc DSL for calling platform APIs. [docs](https://github.com/phronmophobic/objcjure)
+- `com.phronemophobic.grease.ios`: has utilties and helper functions that might typically be needed when building an iOS app.
+- `membrane.ui`, `membrane.component`, `com.phronemophobic.grease.component`: Namespaces for building user interfaces.
 
 Finally, there is an `app` namespace which is loaded by default.
 
@@ -72,3 +72,7 @@ Support for projects and deps is planned for the future.
 ### Running local files
 
 When the app is opened, a rudimentary file browser is shown. A local script can be run by navigating to the particular file and tapping the eval button. The script will be loaded and the `-main` function in that namespace will be called, if available.
+
+## Examples
+
+Examples can be found at https://github.com/phronmophobic/grease/tree/main/examples/app.
