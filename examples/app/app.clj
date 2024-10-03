@@ -14,7 +14,7 @@
             [clojure.string :as str]
             babashka.nrepl.server
             [com.phronemophobic.grease.ios :as ios]
-            [com.phronemophobic.grease.component :as gui]
+            [com.phronemophobic.grease.component :as gcomp]
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc])
   (:import java.io.ByteArrayInputStream
@@ -186,12 +186,12 @@
         scrollview-width (- main-width scroll-button-size)
         scrollview-height (- main-height
                              (ui/height buttons))]
-   (ui/vertical-layout
-    buttons
-    (gui/scrollview
-     {:scroll-bounds [scrollview-width scrollview-height]
-      :$body nil
-      :body (code-editor/text-editor {:buf buf})}))))
+    (ui/vertical-layout
+     buttons
+     (gcomp/scrollview
+      {:scroll-bounds [scrollview-width scrollview-height]
+       :$body nil
+       :body (code-editor/text-editor {:buf buf})}))))
 
 (defn prompt-create-file []
   (let [p (promise)]
@@ -252,7 +252,7 @@
 
                              (iterate fs/parent dir)))))]
        (ui/label (str "dir: " relative-path)))
-     (gui/scrollview
+     (gcomp/scrollview
       {:scroll-bounds [250 500]
        :extra (get extra [::scroll dir])
        :$body nil

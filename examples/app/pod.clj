@@ -13,7 +13,7 @@
             [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]
-            [com.phronemophobic.grease.component :as gui]
+            [com.phronemophobic.grease.component :as gcomp]
             [clojure.core.async :as async ]
             [clojure.data.json :as json]
             [clojure.data.xml :as xml]
@@ -753,7 +753,7 @@
                  (ui/horizontal-layout
                   (ui/label "search: ")
                   (basic/textarea {:text search-text}))))
-   (gui/scrollview
+   (gcomp/scrollview
     {:scroll-bounds [300 500]
      :extra (get extra ::scrollveiw)
      :$body nil
