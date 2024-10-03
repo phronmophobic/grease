@@ -33,6 +33,8 @@
             [tech.v3.datatype.native-buffer :as native-buffer]
             [tech.v3.datatype.struct :as dt-struct]
             [tech.v3.datatype.protocols :as dtype-proto]
+            tech.v3.datatype.copy
+
             [clojure.java.io :as io]
             clojure.stacktrace)
    ;; babashka extras
@@ -492,6 +494,8 @@
                     (scify/ns->ns-map 'tech.v3.datatype)
                     (scify/ns->ns-map 'tech.v3.datatype.struct)
                     (scify/ns->ns-map 'tech.v3.datatype.protocols)
+                    (scify/ns->ns-map 'tech.v3.datatype.copy)
+
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi.callback)
                     (scify/ns->ns-map 'babashka.fs)
