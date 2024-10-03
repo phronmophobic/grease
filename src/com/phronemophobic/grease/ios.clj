@@ -655,32 +655,34 @@
 
  
 (defn clj_init []
-  ;; copy gol example
-  (let [gol-bundle-path (fs/file (bundle-dir)
-                                 "gol.clj")
-        gol-script-path (fs/file (documents-dir)
-                                 "scripts"
-                                 "gol.clj")]
-    (when (not (fs/exists? gol-script-path))
-      (fs/copy gol-bundle-path
-               gol-script-path)))
+  (let [scripts-dir (fs/file  (documents-dir)
+                              "scripts")]
+    (when (not (fs/exists? scripts-dir))
+      (fs/create-dirs scripts-dir))
 
-  (let [app-bundle-path (fs/file (bundle-dir)
-                                 "app.clj")
-        app-script-path (fs/file (documents-dir)
-                                 "scripts"
-                                 "app.clj")
-        app-path (if (fs/exists? app-script-path)
-                   app-script-path
-                   app-bundle-path)]
-    (when (fs/exists? app-path)
-      (try
-        (sci/eval-string* @sci-ctx (slurp app-path))
-        (catch Exception e
-          (prn e)))))
+    ;; copy gol example
+    (let [gol-bundle-path (fs/file (bundle-dir)
+                                   "gol.clj")
+          gol-script-path (fs/file scripts-dir
+                                   "gol.clj")]
+      (when (not (fs/exists? gol-script-path))
+        (fs/copy gol-bundle-path
+                 gol-script-path)))
 
+    (let [app-bundle-path (fs/file (bundle-dir)
+                                   "app.clj")
+          app-script-path (fs/file scripts-dir
+                                   "app.clj")
+          app-path (if (fs/exists? app-script-path)
+                     app-script-path
+                     app-bundle-path)]
+      (when (fs/exists? app-path)
+        (try
+          (sci/eval-string* @sci-ctx (slurp app-path))
+          (catch Exception e
+            (prn e)))))
 
-  (setup-nrepl-logging!)
+    (setup-nrepl-logging!))
 
   #_(let [local-address (get-local-address)
           host-address (when local-address
