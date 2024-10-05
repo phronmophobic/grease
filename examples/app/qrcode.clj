@@ -6,7 +6,6 @@
             [clojure.java.io :as io]
             [tech.v3.datatype.native-buffer :as native-buffer]
             [tech.v3.datatype.copy :as copy]
-            [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.clj-libffi :as ffi]))
 
 (defn bs->nsdata [bs]
