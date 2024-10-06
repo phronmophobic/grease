@@ -76,3 +76,8 @@ When the app is opened, a rudimentary file browser is shown. A local script can 
 ## Examples
 
 Examples can be found at https://github.com/phronmophobic/grease/tree/main/examples/app.
+
+## Resources
+
+https://github.com/phronmophobic/objcjure
+https://developer.apple.com/documentation?language=objc
