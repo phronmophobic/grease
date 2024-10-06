@@ -6,11 +6,13 @@ This guide will provide the main steps for running clojure on your iPhone.
 
 ## Download the beta to your phone
 
+https://testflight.apple.com/join/wDmjG51P
+
 # Development
 
 ## Connecting via nrepl
 
-Open the app and tap the start nrepl button. If you are connected to a
+Open the app and tap the "start nrepl" button. If you are connected to a
 local wifi network, an nrepl server will start and display the
 ip and port. It's technically possible to start an nrepl server
 on a globally public IP address, but that is not currently supported.
