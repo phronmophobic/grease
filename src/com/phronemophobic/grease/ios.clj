@@ -354,6 +354,88 @@
                             (.getHostAddress ^InetAddress ip4)))))]
     addresses))
 
+(def ^:private O_EVTONLY (int 0x00008000))
+(def ^:private source-type-vnode (delay (ffi/dlsym ffi/RTLD_DEFAULT (dt-ffi/string->c "_dispatch_source_type_vnode"))))
+(def ^:private  DISPATCH_VNODE_WRITE	0x2)
+;; https://www.cocoanetics.com/2013/08/monitoring-a-folder-with-gcd/
+(defn watch-directory
+  "Watches the directory for changes and calls `f` with no arguments when a change is detected.
+
+  Returns a 0 arity function that will stop watching when called."
+  [path f]
+  (let [;; _fileDescriptor = open([path fileSystemRepresentation], O_EVTONLY);
+        fd (ffi/call "open" :int32
+                     :pointer (dt-ffi/string->c
+                               (str path))
+                     :int32 O_EVTONLY)
+
+        ;; _queue = dispatch_queue_create("DTFolderMonitor Queue", 0);
+        file-queue (ffi/call "dispatch_queue_create"
+                             :pointer
+                             :pointer (dt-ffi/string->c
+                                       "com.phronemophobic.FileWatcher")
+                             :pointer (ffi/long->pointer 0))
+
+        ;; _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, _fileDescriptor, DISPATCH_VNODE_WRITE, _queue);
+        source (ffi/call "dispatch_source_create"
+                         :pointer
+                         :pointer @source-type-vnode
+                         :int32 fd
+                         :int64 DISPATCH_VNODE_WRITE
+                         :pointer file-queue)
+
+        ;; // call the passed block if the source is modified
+        ;; dispatch_source_set_event_handler(_source, _block);
+        _ (ffi/call "dispatch_source_set_event_handler"
+                  :void
+                  :pointer source
+                  :pointer (objc/make-block
+                            (fn []
+                              (f))
+                            :void
+                            []))
+ 
+        ;; // close the file descriptor when the dispatch source is cancelled
+        ;; dispatch_source_set_cancel_handler(_source, ^{
+ 
+        ;; 	close(_fileDescriptor);
+        ;; });
+        _ (ffi/call "dispatch_source_set_cancel_handler"
+                  :void
+                  :pointer source
+                  :pointer (objc/make-block
+                            (fn []
+                              (ffi/call "close" :void :int32 fd))
+                            :void
+                            []))
+ 
+        ;; // at this point the dispatch source is paused, so start watching
+        ;; dispatch_resume(_source);
+        _ (ffi/call "dispatch_resume"
+                    :void
+                    :pointer source)]
+    (fn []
+      ;; cleanup
+      ;; dispatch_source_cancel(_source);
+      (ffi/call "dispatch_source_cancel"
+                :void
+                :pointer source)
+      
+      ;; #if !OS_OBJECT_USE_OBJC
+      ;; dispatch_release(_source);
+      ;; #endif
+      (ffi/call "dispatch_release"
+                :void
+                :pointer source)
+
+      ;;       #if OS_OBJECT_USE_OBJC
+      ;; 	dispatch_release(_queue);
+      ;; #endif
+      (ffi/call "dispatch_release"
+                :void
+                :pointer file-queue)
+      nil)))
+
 
 (declare sci-ctx)
 (defmacro objc-wrapper [form]

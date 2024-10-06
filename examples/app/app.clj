@@ -273,7 +273,7 @@
                (for [f files]
                  (file-row f))))}))))
 
-(defui file-viewer [{:keys [dir selected-file buffers nrepl-server]}]
+(defui file-viewer [{:keys [dir selected-file buffers nrepl-server last-updated]}]
   (ui/translate
    left-margin top-margin
    (ui/on
@@ -285,14 +285,13 @@
                :$dir $dir
                :$selected-file $selected-file)]])
     (ui/vertical-layout
-     (let [last-updated (get extra ::last-updated)]
-       (if selected-file
-         (file-editor {:file selected-file
-                       :last-updated last-updated
-                       :buf (get buffers selected-file)})
-         (dir-viewer {:dir dir
-                      :last-update last-updated
-                      :nrepl-server nrepl-server})))))))
+     (if selected-file
+       (file-editor {:file selected-file
+                     :last-updated last-updated
+                     :buf (get buffers selected-file)})
+       (dir-viewer {:dir dir
+                    :last-update last-updated
+                    :nrepl-server nrepl-server}))))))
 
 (defn delete-X []
   (ui/with-style :membrane.ui/style-stroke
@@ -334,12 +333,13 @@
                       [[::close-app {:$app $app}]])
                     close-button)))])
 
-(defui main-app-view [{:keys [dir selected-file buffers nrepl-server app]}]
+(defui main-app-view [{:keys [dir selected-file buffers nrepl-server app last-updated]}]
   (if app
     (app-view {:app app})
     (file-viewer {:dir dir
                   :selected-file selected-file
                   :buffers buffers
+                  :last-updated last-updated
                   :nrepl-server nrepl-server})))
 
 (defn initial-state []
@@ -372,6 +372,24 @@
                    (if new-focus
                      (ios/show-keyboard)
                      (ios/hide-keyboard)))))))
+
+(defn ^:private bump-last-updated []
+  (swap! app-state assoc :last-updated (java.util.Date.)))
+(defonce ^:private
+  watcher-state (atom (ios/watch-directory (:dir @app-state)
+                                           bump-last-updated)))
+(add-watch app-state ::file-watcher
+           (fn [k ref old new]
+             (let [old-dir (:dir old)
+                   new-dir (:dir new)]
+               (when (not (fs/same-file? old-dir new-dir))
+                 (let [new-watcher (ios/watch-directory new-dir
+                                                        bump-last-updated)
+                       [old _]
+                       (reset-vals! watcher-state
+                                    new-watcher)]
+                   (when old
+                     (old)))))))
 
 (defeffect ::stop-nrepl-server []
   (let [[{:keys [nrepl-server]} _] (swap-vals! app-state dissoc :nrepl-server)]
