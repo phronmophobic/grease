@@ -81,5 +81,6 @@ Examples can be found at https://github.com/phronmophobic/grease/tree/main/examp
 
 ## Resources
 
-https://github.com/phronmophobic/objcjure
-https://developer.apple.com/documentation?language=objc
+[objcjure](https://github.com/phronmophobic/objcjure)  
+[iPhone API documentation](https://developer.apple.com/documentation?language=objc)  
+
