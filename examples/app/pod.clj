@@ -584,21 +584,27 @@
 
 (defn download-episode
   "Downloads episode if not already downloaded"
-  [episode]
+  [episode on-status]
   (let [f (episode-file episode)
         url (io/as-url (:EPISODE/EPISODEURL episode))]
     (log [:downloading (not (fs/exists? f))])
     (when (not (fs/exists? f))
-      (with-open [is (io/input-stream url)]
-        (io/copy is
-                 f)))))
+      (try
+        (on-status "downloading...")
+        (with-open [is (io/input-stream url)]
+          (io/copy is
+                   f))
+        (on-status "done!")
+        (catch Exception e
+          (on-status(str "failed: " e))
+          (throw e))))))
 
-(defop load-episode [episode]
+(defop load-episode [episode on-status]
   (let [change? (not= (:playing-episode @pod-state)
                       episode)]
     (log [:load-episode change?])
     (when change?
-      (let [_ (download-episode episode)
+      (let [_ (download-episode episode on-status)
             
             pod-url (path->nsurl
                      (str (episode-file episode))
@@ -718,8 +724,10 @@
 
 ;; UI
 
-(defeffect ::load-episode [{:keys [episode]}]
-  (load-episode episode))
+(defeffect ::load-episode [{:keys [episode $status]}]
+  (dispatch! :set $status "")
+  (load-episode episode
+                #(dispatch! :set $status %)))
 (defeffect ::toggle []
   (toggle))
 (defeffect ::play []
@@ -770,22 +778,25 @@
                             (ui/label (:EPISODE/TRACKNAME episode))))))})))
 
 (defui episode-view [{:keys [episode]}]
-  (ui/vertical-layout
-   (button "<back"
-           (fn []
-             [[::back]]))
-   (button ">>"
-           (fn []
-             [[::skip-forward]]))
-   (button "<<"
-           (fn []
-             [[::skip-backward]]))
-   (ui/label (:EPISODE/TRACKNAME episode))
-   (ui/label (:EPISODE/DESCRIPTION episode))
-   (button "play"
-           (fn []
-             [[::load-episode {:episode episode}]
-              [::toggle]]))))
+  (let [status (get extra :status "")]
+    (ui/vertical-layout
+     (button "<back"
+             (fn []
+               [[::back]]))
+     (button ">>"
+             (fn []
+               [[::skip-forward]]))
+     (button "<<"
+             (fn []
+               [[::skip-backward]]))
+     (ui/label (:EPISODE/TRACKNAME episode))
+     (ui/label (:EPISODE/DESCRIPTION episode))
+     (button "play"
+             (fn []
+               [[::load-episode {:episode episode
+                                 :$status $status}]
+                [::toggle]]))
+     (ui/label status))))
 
 (defeffect ::search-podcasts [{:keys [$podcasts
                                       query]}]
