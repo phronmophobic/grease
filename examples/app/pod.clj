@@ -440,11 +440,12 @@
     (try
       (loop []
         (when-let [msg (async/<!! player-ch)]
-          (apply (:f msg) (:args msg))
+          (try
+            (apply (:f msg) (:args msg))
+            (catch Exception e
+              (log [:error e])))
           
           (recur)))
-      (catch Exception e
-        (log [:error e]))
       (finally
         (reset! running? false)))
     (log :quitting))
