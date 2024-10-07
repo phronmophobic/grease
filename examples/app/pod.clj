@@ -700,6 +700,7 @@
         MPRemoteCommandHandlerStatusSuccess)])))
 
 (defop init []
+  (init-db)
   (configure-audio)
   
   (let [player (objc/arc!
@@ -796,17 +797,21 @@
       (catch Exception e
         (log e)))))
 
-(defeffect ::add-podcast [{:keys [podcast]}]
+(defeffect ::add-podcast [{:keys [podcast $status]}]
   (future
     (try
       (log :adding-podcast)
+      (dispatch! :set $status "Adding podcast...")
       (add-podcast! podcast)
+      (dispatch! :set $status "")
       (log :done-adding-podcast)
       (catch Exception e
+        (dispatch! :set $status "adding podcast failed :(")
         (log e)))))
 
 (defui search-view [{:keys []}]
   (let [search-text (get extra :search-text "")
+        status (get extra :status "")
         podcasts (get extra :podcasts [])]
     (apply
      ui/vertical-layout
@@ -816,11 +821,13 @@
                 [[::search-podcasts {:$podcasts $podcasts
                                      :query search-text}]]))
       (basic/textarea {:text search-text}))
+     (ui/label status)
      (for [podcast podcasts]
        (ui/on
         :mouse-down
         (fn [_]
-          [[::add-podcast {:podcast podcast}]
+          [[::add-podcast {:podcast podcast
+                           :$status $status}]
            [:set $podcasts []]])
         (ui/bordered
          20
