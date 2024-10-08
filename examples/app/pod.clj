@@ -706,21 +706,23 @@
           (skip-backward interval))
         MPRemoteCommandHandlerStatusSuccess)])))
 
-(defop init []
-  (init-db)
-  (configure-audio)
-  
-  (let [player (objc/arc!
-                (objc [[[AVPlayer :alloc] :init] :autorelease]))]
-    (objc ^void [player :setDefaultRate ~(float 1.25)])
-    
-    (swap! pod-state assoc
-           :view :main
-           :player player)
-    (configure-controls player))
+(let [__init
+      (delay
+        (init-db)
+        (configure-audio)
+        
+        (let [player (objc/arc!
+                      (objc [[[AVPlayer :alloc] :init] :autorelease]))]
+          (objc ^void [player :setDefaultRate ~(float 1.25)])
+          
+          (swap! pod-state assoc
+                 :view :main
+                 :player player)
+          (configure-controls player))
 
-  (handler ::refresh-episodes {})
-  ,)
+        (handler ::refresh-episodes {}))]
+ (defop init []
+   @__init))
 
 ;; UI
 
