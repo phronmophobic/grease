@@ -50,6 +50,10 @@
   (:import java.net.URL
            java.net.NetworkInterface
            java.net.InetAddress
+           java.time.ZonedDateTime
+           java.util.Locale
+           java.time.format.DateTimeFormatter
+           java.security.MessageDigest
            [java.io
             BufferedWriter
             PrintWriter
@@ -577,6 +581,10 @@
               'java.net.InetAddress java.net.InetAddress
               'java.io.ByteArrayInputStream java.io.ByteArrayInputStream
               'java.io.PushbackReader java.io.PushbackReader
+              'java.time.ZonedDateTime java.time.ZonedDateTime
+              'java.util.Locale java.util.Locale
+              'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
+              'java.security.MessageDigest java.security.MessageDigest
               }
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
