@@ -21,8 +21,11 @@
             [clojure.zip :as z]
             [honey.sql :as sql]
             [next.jdbc :as jdbc]
-            app
-            ))
+            app)
+  (:import java.security.MessageDigest
+           java.time.ZonedDateTime
+           java.util.Locale
+           java.time.format.DateTimeFormatter))
 
 ;; Declare UI state
 
@@ -42,6 +45,12 @@
   :cm_timerange
   [{:name :start :datatype :cm_time}
    {:name :duration :datatype :cm_time}])
+
+
+(def formatter-rfc1123 DateTimeFormatter/RFC_1123_DATE_TIME)
+(defn parse-rfc1123 [s]
+  (let [zonedDateTime (ZonedDateTime/parse s formatter-rfc1123)]
+    (.toInstant zonedDateTime)))
 
 (def NSEC_PER_SEC (int 1000000000))
 (defn cm-time-interval [seconds]
@@ -227,11 +236,14 @@
                   "episodes")
     fs/create-dirs))
 
+(defn sha256-hex [input]
+  (let [digest (MessageDigest/getInstance "SHA-256")
+        hash-bytes (.digest digest (.getBytes input "UTF-8"))]
+    (apply str (map #(format "%02x" %) hash-bytes))))
+
 (defn episode-file [episode]
   (fs/file episodes-dir
-           (str (:EPISODE/COLLECTIONID episode)
-                "-"
-                (:EPISODE/TRACKID episode)
+           (str (sha256-hex (:EPISODE/GUID episode))
                 ".mp3")))
 
 (defonce log* (atom []))
@@ -267,6 +279,105 @@
         (get "results"))))
 
 
+;; Utilities for parsing rss
+
+(defn zip-iter
+  "Returns an eduction of zip nodes given a zipper."
+  [zip]
+  (eduction
+   (take-while #(not (z/end? %)))
+   (iterate z/next
+            zip)))
+
+(defn find-tag
+  "Given an xml zip node, find the next xml element with `tag`."
+  [zip tag]
+  (some (fn [z]
+          (let [node (z/node z)]
+            (when (= tag (:tag node))
+              node)))
+        (zip-iter zip)))
+
+(defn parse-duration
+  "Tries to parse the duration. Returns duration in seconds on success or nil on failure."
+  [duration]
+  (try
+    (Integer/parseInt duration)
+    (catch Exception e
+      (try
+        (let [[_ hours minutes seconds]
+              (re-matches #"([0-9]*):?([0-9]{2}):([0-9]{2})"
+                          duration)
+              hours (try (Integer/parseInt hours) (catch Exception e 0))
+              minutes (try (Integer/parseInt minutes) (catch Exception e 0))
+              seconds (try (Integer/parseInt seconds) (catch Exception e 0))]
+          (+ (* hours 3600)
+             (* minutes 60)
+             seconds))
+        (catch Exception e
+          nil)))))
+
+(defn parse-item
+  "Parse a single item from an rss feed given an xml-zip node for the item."
+  [zitem]
+  (let [summary (-> (find-tag zitem :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/summary)
+                    :content
+                    first)
+        title (-> (find-tag zitem :title)
+                  :content
+                  first)
+        url (-> (find-tag zitem :enclosure)
+                :attrs
+                :url)
+        guid (-> (find-tag zitem :guid)
+                 :content
+                 first
+                 str/trim)
+        pubDate (-> (find-tag zitem :pubDate)
+                    :content
+                    first
+                    str/trim
+                    parse-rfc1123)
+        duration (-> (find-tag zitem
+                               :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/duration)
+                     :content
+                     first
+                     str/trim
+                     parse-duration)
+        image-url (-> (find-tag zitem
+                                :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/image)
+                      :attrs
+                      :href)]
+    {"description" summary
+     "guid" guid
+     "trackName" title
+     "pubDate" pubDate
+     "episodeUrl" url
+     "duration" duration
+     "imageUrl" image-url}))
+
+(defn parse-rss
+  "Downloads the rss feed from `url` and returns a list of parsed episodes."
+  [url]
+  (let [zrss (with-open [is (io/input-stream (io/as-url url))
+                        rdr (io/reader is)]
+               (let [xml (xml/parse rdr)
+                     zip (z/xml-zip xml)]
+                 ;; `xml/parse` returns a lazy data structure
+                 ;; walk the whole tree to realize it.
+                 (loop [zip zip]
+                   (if (z/end? zip)
+                     zip
+                     (recur (z/next zip))))
+                 zip))
+        items (into []
+                    (comp
+                     (filter #(= :item
+                                 (:tag (z/node %))))
+                     (map parse-item))
+                    (zip-iter zrss))]
+    items))
+
 ;; Database
 
 (def db
@@ -290,35 +401,36 @@
 
                 (-> {:create-table [:episode :if-not-exists]
                      :with-columns
-                     [[:description [:varchar 1024] ]
+                     [[:description [:VARCHAR 1024] ]
                       [:episodeUrl [:VARCHAR 1024]]
-                      [:episodeGuid [:VARCHAR 255]]
+                      [:imageUrl [:VARCHAR 1024]]
+                      [:guid [:VARCHAR 255]]
                       [:collectionId :bigint]
-                      [:trackId :bigint]
-                      [:trackTimeMillis :bigint]
+                      [:duration :bigint]
                       [:trackName [:VARCHAR 255]]
-                      [:releaseDate :timestamp]
-                      [:artistName [:varchar 255]]
-                      [:collectionName [:varchar 255]]
-                      [[:primary-key :collectionId :trackid]]]}
+                      [:pubDate :timestamp]
+                      [[:foreign-key :COLLECTIONID]
+                       [:references :podcast :COLLECTIONID]]
+                      [[:primary-key :guid]]]}
                     (sql/format))
 
 
                 (-> {:create-table [:queue :if-not-exists]
                      :with-columns
-                     [[:collectionId :bigint]
-                      [:trackid :bigint]
+                     [[:episodeGuid [:varchar 255]]
                       [:timestamp :double-precision]
                       [:last-played :timestamp]
                       
-                      [[:primary-key :collectionId :trackid]]]}
+                      [[:primary-key :episodeGuid]]
+                      [[:foreign-key :episodeGuid]
+                       [:references :episode :guid]]]}
                     (sql/format))]]
     (doseq [statement tables]
       (jdbc/execute! db statement))))
 
 (defn uppercase-keys [m]
   (reduce-kv (fn [m k v]
-               (assoc m (str/upper-case k) v))
+               (assoc m (str/upper-case (name k)) v))
              {}
              m))
 
@@ -352,27 +464,19 @@
                       (map (fn [episode]
                              (-> episode
                                  (select-keys
-                                  ["description"
-                                   "artistName"
-                                   "collectionName"
-                                   "episodeUrl" 
-                                   "episodeGuid" 
-                                   "collectionId" 
-                                   "trackId"
-                                   "trackName"
-                                   "releaseDate"
-                                   "trackTimeMillis"
-                                   "releaseDate"])
+                                  ["description" "guid" "trackName" "pubDate" "episodeUrl" "duration" "imageUrl"])
                                  truncate-description
                                  uppercase-keys)))
                       episodes)})])
 
 (defn add-podcast!
   ([podcast]
-   (when-let [collection-id (get podcast "collectionId")]
-     (let [episodes (-> (get-episodes collection-id)
-                        (->> (filter #(get % "episodeUrl"))))]
-       (add-podcast! podcast episodes))))
+   (let [episodes (parse-rss (get podcast "feedUrl"))
+         {:keys [collectionId]} podcast
+         episodes (into []
+                        (map #(assoc % "collectiondId" collectionId))
+                        episodes)]
+     (add-podcast! podcast episodes)))
   ([podcast episodes]
    (doseq [statement (add-podcast podcast episodes)]
      (try
@@ -390,9 +494,8 @@
                          :queue/TIMESTAMP]
                 :from [:episode]
                 :left-join [:queue [:and
-                                    [:= :queue/trackid :episode/trackid]
-                                    [:= :queue/collectionid :episode/collectionid]]]
-                :order-by [[[:greatest-ignore-nulls :queue/last_played :episode/releasedate]
+                                    [:= :queue/episodeGuid :episode/guid]]]
+                :order-by [[[:greatest-ignore-nulls :queue/last_played :episode/pubDate]
                               :desc]]
                 :limit 50}
          query (if (seq search-text)
@@ -507,7 +610,7 @@
 
     (objc [center :setNowPlayingInfo info])))
 
-(defop update-queue [trackId collectionId timestamp]
+(defop update-queue [guid timestamp]
   ;; don't set queue below 5 seconds.
   (with-open [conn (jdbc/get-connection db)]
     (when (> timestamp 5.0)
@@ -516,8 +619,7 @@
        (sql/format
         {:merge-into :queue
          :values
-         [{:trackID trackId
-           :collectionId collectionId
+         [{:episodeGuid guid
            :timestamp timestamp
            :last-played (java.util.Date.)}]})))))
 
@@ -537,9 +639,9 @@
                   ~(cm-time-interval 5)
                   nil
                   (fn ^void [^cm_time time]
-                    (let [{:EPISODE/keys [TRACKID COLLECTIONID]} (:playing-episode @pod-state)]
-                      (update-queue TRACKID COLLECTIONID (double (/ (:value time)
-                                                                    (:timescale time))))))]))]
+                    (let [{:EPISODE/keys [GUID]} (:playing-episode @pod-state)]
+                      (update-queue GUID (double (/ (:value time)
+                                                    (:timescale time))))))]))]
       (swap! pod-state assoc :player-observer observer))))
 
 (defop pause []
@@ -618,14 +720,13 @@
             player-item (objc/arc! (objc [AVPlayerItem :playerItemWithAsset asset] ))]
         (swap! pod-state assoc :playing-episode episode)
         (objc [player :replaceCurrentItemWithPlayerItem player-item])
-        (let [{:EPISODE/keys [TRACKID COLLECTIONID]} episode
+        (let [{:EPISODE/keys [GUID]} episode
               row (jdbc/execute-one! db
                                      (sql/format
                                       {:select [:TIMESTAMP]
                                        :from [:queue]
                                        :where [:and
-                                               [:= :TRACKID TRACKID]
-                                               [:= :COLLECTIONID COLLECTIONID]]}))
+                                               [:= :EPISODEGUID GUID]]}))
               timestamp (:QUEUE/TIMESTAMP row)]
           (when timestamp
             (log [:starting-at timestamp])
@@ -755,6 +856,31 @@
     [20 20]
     (ui/label text (ui/font nil 33)))))
 
+(defn format-seconds [seconds]
+  (let [hours (quot seconds
+                    3600)
+        seconds (- seconds (* hours 3600))
+        minutes (quot seconds 60)
+        seconds (- seconds (* minutes 60))]
+    (cond
+      (pos? hours) (format
+                    "%d:%02d:%02d" (long hours) (long minutes) (long seconds))
+      (pos? minutes) (format
+                    "%02d:%02d"  (long minutes) (long seconds))
+      :else (format
+             "%02ds" (long seconds)))))
+(defn format-millis [millis]
+  (format-seconds (/ millis 1000)))
+
+(defn progress-bar [progress w h]
+  (let [progress (max 0
+                      (min 1.0
+                           progress))]
+    [(ui/filled-rectangle [0.7 0.7 0.7]
+                          w h)
+     (ui/filled-rectangle [0 1 0.2 0.4]
+                          (* progress w) h)]))
+
 (defui episode-viewer [{:keys [page episodes search-text]}]
   (ui/vertical-layout
    (button "refresh"
@@ -776,8 +902,19 @@
                :mouse-down
                (fn [_]
                  [[::select-episode {:episode episode}]])
-               (ui/bordered [5 20]
-                            (ui/label (:EPISODE/TRACKNAME episode))))))})))
+               (when-let [duration (:EPISODE/DURATION episode)]
+                 (ui/bordered [5 20]
+                              (ui/vertical-layout
+                               (ui/label (:EPISODE/TRACKNAME episode))
+                               (ui/label
+                                (str
+                                 (when-let [ts (:QUEUE/TIMESTAMP episode)]
+                                   (str (format-seconds ts) " / "))
+                                 (format-seconds duration)))
+                               (when-let [ts (:QUEUE/TIMESTAMP episode)]
+                                 (progress-bar (/ ts duration)
+                                               200 10))
+                               ))))))})))
 
 (defui episode-view [{:keys [episode]}]
   (let [status (get extra :status "")]
@@ -802,7 +939,6 @@
 
 (defeffect ::search-podcasts [{:keys [$podcasts
                                       query]}]
-  (log query)
   (future
     (try
       (let [podcasts (search-podcasts query)]
@@ -916,103 +1052,4 @@
                      (ios/hide-keyboard)))))))
 
 
-;; Utilities for parsing rss
 
-(defn zip-iter [zip]
-  (eduction
-   (take-while #(not (z/end? %)))
-   (iterate z/next
-            zip)))
-
-(defn find-tag [zip tag]
-  (some (fn [z]
-          (let [node (z/node z)]
-            (when (= tag (:tag node))
-              node)))
-        (zip-iter zip)))
-
-(defn parse-item [zitem]
-  (let [summary (-> (find-tag zitem :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/summary)
-                    :content
-                    first)
-        title (-> (find-tag zitem :title)
-                    :content
-                    first)
-        url (-> (find-tag zitem :enclosure)
-                    :attrs
-                    :url)
-        guid (-> (find-tag zitem :guid)
-                 :content
-                 first
-                 str/trim)]
-    {:description summary
-     :guid guid
-     :trackName title
-     :episodeUrl url}))
-
-(defn parse-rss [zrss]
-  (let [items (into []
-                    (comp
-                     (filter #(= :item
-                                 (:tag (z/node %))))
-                     (map parse-item)
-                     (map #(reduce-kv (fn [m k v]
-                                        (assoc m (name k) v))
-                                      {}
-                                      %)))
-                    (zip-iter zrss))]
-    items)
-  )
-
-;; need to update db to use guid
-#_(defn add-rss [url]
-  (with-open [rdr (io/reader (io/as-url url))]
-    (let [xml (xml/parse rdr)
-          zrss (z/xml-zip xml)
-
-          statements (into []
-                           (comp
-
-                            (map (fn [episode]
-                                   ))
-                            (map (fn [episode]
-                                   (sql/format {:insert-into :episode
-                                                :values
-                                                [(-> episode
-                                                     (select-keys
-                                                      ["description"
-                                                       "artistName"
-                                                       "collectionName"
-                                                       "episodeUrl"
-                                                       "episodeGuid"
-                                                       "collectionId"
-                                                       "trackId"
-                                                       "trackName"
-                                                       "releaseDate"
-                                                       "trackTimeMillis"
-                                                       "releaseDate"])
-                                                     truncate-description
-                                                     uppercase-keys)]}))))
-                           (parse-rss zrss))]
-      (doseq [statement statements]
-        (jdbc/execute! db statement)))))
-
-(comment
-
-  (with-open [is (io/input-stream (io/as-url "https://feeds.zencastr.com/f/8BBgc1Lp.rss"))]
-    (io/copy is
-             (io/file scripts-dir "rss.xml")))
-
-  (def xml (with-open [rdr (io/reader (io/file scripts-dir "rss.xml"))]
-             (let [xml (xml/parse rdr)
-                   zip (z/xml-zip xml)]
-               (loop [zip zip]
-                 (if (z/end? zip)
-                   zip
-                   (recur (z/next zip))))
-               xml)))
-
-  (def zrss (z/xml-zip xml))
-  (def episodes (parse-rss zrss))
-
-  ,)
