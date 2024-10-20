@@ -499,7 +499,7 @@
                               :desc]]
                 :limit 50}
          query (if (seq search-text)
-                 (assoc query :where [:like [:lower :episode/TRACKNAME] search-text])
+                 (assoc query :where [:like [:lower :episode/TRACKNAME] (str "%" search-text "%")])
                  query)]
      (with-open [conn (jdbc/get-connection db)]
        (jdbc/execute! conn (sql/format query))))))
