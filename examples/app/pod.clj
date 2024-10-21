@@ -445,6 +445,18 @@
 (defn parse-release-date [m]
   (update m "releaseDate" clojure.instant/read-instant-date))
 
+(defn add-episodes [episodes]
+  (sql/format {:merge-into :episode
+               :values
+               (into []
+                     (map (fn [episode]
+                            (-> episode
+                                (select-keys
+                                 ["description" "guid" "trackName" "pubDate" "episodeUrl" "duration" "imageUrl" "collectionId"])
+                                truncate-description
+                                uppercase-keys)))
+                     episodes)}))
+
 (defn add-podcast [podcast episodes]
   [(sql/format {:insert-into :podcast
                 :values
@@ -458,16 +470,19 @@
                                    "artworkUrl60"
                                    "artworkUrl600"])
                      uppercase-keys)]})
-   (sql/format {:merge-into :episode
-                :values
-                (into []
-                      (map (fn [episode]
-                             (-> episode
-                                 (select-keys
-                                  ["description" "guid" "trackName" "pubDate" "episodeUrl" "duration" "imageUrl"])
-                                 truncate-description
-                                 uppercase-keys)))
-                      episodes)})])
+   (add-episodes episodes)])
+
+(defn update-podcast-episodes! []
+  (let [pods (jdbc/execute! db (sql/format
+                                {:select [:FEEDURL :COLLECTIONID]
+                                 :from :podcast}))]
+    (doseq [pod pods]
+      (let [collectionId (:PODCAST/COLLECTIONID pod)
+            episodes (into []
+                           (map #(assoc % "collectiondId" collectionId))
+                           (parse-rss (:PODCAST/FEEDURL pod)))]
+        (prn (add-episodes episodes))
+        (jdbc/execute! db (add-episodes episodes))))))
 
 (defn add-podcast!
   ([podcast]
@@ -989,10 +1004,23 @@
      fs/delete
      (fs/list-dir episodes-dir))))
 
+(defeffect ::refresh-all [{}]
+  (future
+    (try
+      (update-podcast-episodes!)
+      (dispatch! ::refresh-episodes {})
+      (ios/prompt-bool {:title "done!"})
+      (catch Exception e
+        (log e)))))
+
 (defui util-view [{:keys []}]
-  (button "clear podcasts"
-          (fn []
-            [[::clear-podcasts {}]])))
+  (ui/vertical-layout
+   (button "clear podcasts"
+           (fn []
+             [[::clear-podcasts {}]]))
+   (button "refresh-all"
+           (fn []
+             [[::refresh-all {}]]))))
 
 (defui pod-ui [{:keys [playing? episodes selected-episode
                        search-text
