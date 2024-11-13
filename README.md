@@ -4,6 +4,10 @@ An example of building a clojure library for iOS with graalvm native-image.
 
 Built with [membrane](https://github.com/phronmophobic/membrane).
 
+# Update - Nov 2024
+
+Grease is in active development and the docs are a bit out of date. For the latest info, check the [#graalvm-mobile](https://clojurians.slack.com/archives/C0260KHN0Q0) channel on the Clojurians Slack (join [here](http://clojurians.net/)).
+
 ## Game of Life Example
 
 See `examples/gol`
@@ -152,9 +156,7 @@ Found in `examples/` directory.
 [t3tr0s-bare](https://github.com/phronmophobic/t3tr0s-bare) - Tetris  
 [snake](https://github.com/phronmophobic/programming-clojure) - Snake  
 
-## Slack
 
-Questions? Comments? Connect with us on clojurians slack in [#graalvm-mobile](https://clojurians.slack.com/archives/C0260KHN0Q0) (join [here](http://clojurians.net/)).
 
 
 ## Notes
