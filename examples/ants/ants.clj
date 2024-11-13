@@ -7,9 +7,10 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 
-(ns ants)
+(ns ants
+  (:require [com.phronemophobic.grease.ios :as ios]
+            [membrane.ui :as ui]))
 
-(require '[membrane.ui :as ui])
 
 
 ;dimensions of square world
@@ -313,8 +314,10 @@
 
 (def ants (setup))
 
+
 (defn repaint []
-  (reset! main-view (render))
+  (when-let [repaint! (:repaint! @state-atm)]
+    (repaint!))
   nil)
 
 (defn step []
@@ -325,7 +328,7 @@
   (dotimes [i n]
     (step)
     (repaint)
-    (sleep 20)))
+    (ios/sleep 20)))
 
 (add-watch state-atm
            ::run-ants
@@ -336,9 +339,19 @@
                  (while (:running? @state-atm)
                    (step)
                    (repaint)
-                   (sleep 20))))))
+                   (ios/sleep 20))))))
 
-(repaint)
+
+
+(defn -main []
+  #_(observer-query)
+  (let [{:keys [repaint!]}
+        (app/show! {:on-close (fn []
+                                (swap! state-atm assoc :running? false)
+                                (swap! state-atm dissoc :repaint!))
+                    :view-fn render})]
+    (swap! state-atm assoc :repaint! repaint!)
+    (swap! state-atm assoc :running? true)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; use ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
