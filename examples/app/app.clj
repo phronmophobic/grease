@@ -88,7 +88,8 @@
 (defn file-row [f]
   (let [view (ui/bordered
               20
-              (ui/label (fs/file-name f)))
+              (ui/label (fs/file-name f)
+                        (ui/font nil 22)))
         view (ui/on
               :mouse-down
               (fn [_]
@@ -161,28 +162,54 @@
       (dispatch! :set $last-updated (java.util.Date.))
       (dispatch! :set $file nil))))
 
+(defui button [{:keys [text on-click]}]
+  (ui/on
+   :mouse-down
+   (fn [_]
+     (when on-click
+       (on-click)))
+   (let [lbl (ui/label text (ui/font nil 25))
+         [text-width text-height] (ui/bounds lbl)
+         padding 18
+         rect-width (+ text-width padding)
+         rect-height (+ text-height padding)
+         border-radius 3
+         ]
+     [
+      (ui/with-style ::ui/style-stroke
+        [
+         (ui/with-color [0.76 0.76 0.76 1]
+           (ui/rounded-rectangle (+ 0.5 rect-width) (+ 0.5 rect-height) border-radius))
+         (ui/with-color [0.85 0.85 0.85]
+           (ui/rounded-rectangle rect-width rect-height border-radius))])
+
+      (ui/translate (/ padding 2)
+                 (- (/ padding 2) 2)
+                 lbl)])))
+
+
 (defui file-editor [{:keys [file buf last-updated]}]
   (let [buttons
         (ui/horizontal-layout
          (ui/spacer 30 0)
-         (basic/button {:text "<"
-                        :on-click (fn []
-                                    [[:set $file nil]])})
-         (basic/button {:text "eval"
-                        :on-click
-                        (fn []
-                          [[::eval-buf {:buf buf}]])})
-         (basic/button {:text "save"
-                        :on-click
-                        (fn []
-                          [[::save-file {:file file
-                                         :buf buf}]])})
-         (basic/button {:text "delete"
-                        :on-click
-                        (fn []
-                          [[::delete-file {:file file
-                                           :$file $file
-                                           :$last-updated $last-updated}]])}))
+         (button {:text "<"
+                  :on-click (fn []
+                              [[:set $file nil]])})
+         (button {:text "eval"
+                  :on-click
+                  (fn []
+                    [[::eval-buf {:buf buf}]])})
+         (button {:text "save"
+                  :on-click
+                  (fn []
+                    [[::save-file {:file file
+                                   :buf buf}]])})
+         (button {:text "delete"
+                  :on-click
+                  (fn []
+                    [[::delete-file {:file file
+                                     :$file $file
+                                     :$last-updated $last-updated}]])}))
         scrollview-width (- main-width scroll-button-size)
         scrollview-height (- main-height
                              (ui/height buttons))]
@@ -218,10 +245,10 @@
     (ui/vertical-layout
      (if nrepl-server
        (ui/horizontal-layout
-        (basic/button {:text "stop nrepl"
-                       :on-click
-                       (fn []
-                         [[::stop-nrepl-server]])})
+        (button {:text "stop nrepl"
+                 :on-click
+                 (fn []
+                   [[::stop-nrepl-server]])})
         (ui/label (str (-> nrepl-server
                            :socket
                            .getInetAddress
@@ -230,15 +257,15 @@
                        (-> nrepl-server
                            :socket
                            .getLocalPort))))
-       (basic/button {:text "start nrepl"
-                      :on-click
-                      (fn []
-                        [[::start-nrepl-server]])}))
-     (basic/button {:text "new"
-                    :on-click
-                    (fn []
-                      [[::create-file {:dir dir
-                                       :$last-update $last-update}]])})
+       (button {:text "start nrepl"
+                :on-click
+                (fn []
+                  [[::start-nrepl-server]])}))
+     (button {:text "new"
+              :on-click
+              (fn []
+                [[::create-file {:dir dir
+                                 :$last-update $last-update}]])})
      (let [relative-path (str/join 
                           " / "
                           (cons
