@@ -162,7 +162,7 @@
       (dispatch! :set $last-updated (java.util.Date.))
       (dispatch! :set $file nil))))
 
-(defui button [{:keys [text on-click]}]
+(defui app-button [{:keys [text on-click]}]
   (ui/on
    :mouse-down
    (fn [_]
@@ -192,24 +192,24 @@
   (let [buttons
         (ui/horizontal-layout
          (ui/spacer 30 0)
-         (button {:text "<"
-                  :on-click (fn []
-                              [[:set $file nil]])})
-         (button {:text "eval"
-                  :on-click
-                  (fn []
-                    [[::eval-buf {:buf buf}]])})
-         (button {:text "save"
-                  :on-click
-                  (fn []
-                    [[::save-file {:file file
-                                   :buf buf}]])})
-         (button {:text "delete"
-                  :on-click
-                  (fn []
-                    [[::delete-file {:file file
-                                     :$file $file
-                                     :$last-updated $last-updated}]])}))
+         (app-button {:text "<"
+                      :on-click (fn []
+                                  [[:set $file nil]])})
+         (app-button {:text "eval"
+                      :on-click
+                      (fn []
+                        [[::eval-buf {:buf buf}]])})
+         (app-button {:text "save"
+                      :on-click
+                      (fn []
+                        [[::save-file {:file file
+                                       :buf buf}]])})
+         (app-button {:text "delete"
+                      :on-click
+                      (fn []
+                        [[::delete-file {:file file
+                                         :$file $file
+                                         :$last-updated $last-updated}]])}))
         scrollview-width (- main-width scroll-button-size)
         scrollview-height (- main-height
                              (ui/height buttons))]
@@ -245,10 +245,10 @@
     (ui/vertical-layout
      (if nrepl-server
        (ui/horizontal-layout
-        (button {:text "stop nrepl"
-                 :on-click
-                 (fn []
-                   [[::stop-nrepl-server]])})
+        (app-button {:text "stop nrepl"
+                     :on-click
+                     (fn []
+                       [[::stop-nrepl-server]])})
         (ui/label (str (-> nrepl-server
                            :socket
                            .getInetAddress
@@ -257,15 +257,15 @@
                        (-> nrepl-server
                            :socket
                            .getLocalPort))))
-       (button {:text "start nrepl"
-                :on-click
-                (fn []
-                  [[::start-nrepl-server]])}))
-     (button {:text "new"
-              :on-click
-              (fn []
-                [[::create-file {:dir dir
-                                 :$last-update $last-update}]])})
+       (app-button {:text "start nrepl"
+                    :on-click
+                    (fn []
+                      [[::start-nrepl-server]])}))
+     (app-button {:text "new"
+                  :on-click
+                  (fn []
+                    [[::create-file {:dir dir
+                                     :$last-update $last-update}]])})
      (let [relative-path (str/join 
                           " / "
                           (cons
