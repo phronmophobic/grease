@@ -1,29 +1,40 @@
 [
+
+{
+  "name" : "tech.v3.datatype.ffi.Pointer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+},
+{
+  "name" : "tech.v3.datatype.struct.Struct",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+},
+{
+  "name" : "org.h2.jdbc.JdbcConnection",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+},
+{
+  "name" : "java.net.Inet4Address",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+},
+
   {
     "name":"java.lang.Character",
     "methods":[{"name":"isIdeographic","parameterTypes":["int"] }]
   },
-  {
-    "name":"java.lang.Class",
-    "methods":[
-      {"name":"getFields","parameterTypes":[] },
-      {"name":"getMethods","parameterTypes":[] }
-    ]
-  },
+
   {
     "name":"java.lang.Deprecated",
     "allDeclaredMethods":true
   },
-  {
-    "name":"java.lang.Integer"
-  },
-  {
-    "name":"java.lang.Long"
-  },
-  {
-    "name":"java.lang.Object",
-    "allDeclaredMethods":true
-  },
+
   {
     "name":"java.lang.Runnable"
   },
@@ -128,7 +139,10 @@
 ,
   {
     "name":"java.net.InetAddress",
-    "fields":[{"name":"holder", "allowUnsafeAccess":true}]
+    "fields":[{"name":"holder", "allowUnsafeAccess":true}],
+    "allPublicMethods" : true,
+    "allPublicFields" : true,
+    "allPublicConstructors" : true
   }
 ,
   {
@@ -137,11 +151,1219 @@
   }
 
   ,
-  {
-    "name" : "java.io.InputStream",
-    "allPublicMethods" : true,
-    "allPublicFields" : true,
-    "allPublicConstructors" : true
-  }
+
+{
+  "name" : "[B",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "[I",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "[Ljava.lang.Object;",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "[Ljava.time.temporal.TemporalField;",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.ArityException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.BigInt",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.ExceptionInfo",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.BufferedReader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.BufferedWriter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.ByteArrayInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.ByteArrayOutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.Console",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.File",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FileFilter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FileInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FileNotFoundException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FileReader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FilenameFilter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.IOException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.InputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.InputStreamReader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.OutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.OutputStreamWriter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.PrintStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.PrintWriter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.PushbackInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.PushbackReader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.RandomAccessFile",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.Reader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.SequenceInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.StringReader",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.StringWriter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.Writer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Appendable",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ArithmeticException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.AssertionError",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Boolean",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Byte",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.CharSequence",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Character",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Class",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ClassNotFoundException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Comparable",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Double",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Exception",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Float",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.IllegalArgumentException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.IllegalStateException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.IndexOutOfBoundsException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Integer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.InterruptedException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Iterable",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Long",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Math",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.NullPointerException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Number",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.NumberFormatException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Object",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Process",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ProcessBuilder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ProcessBuilder$Redirect",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ProcessHandle",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.ProcessHandle$Info",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Runtime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.RuntimeException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Short",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.StackTraceElement",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.String",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.StringBuilder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.System",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.lang.Throwable",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.math.BigDecimal",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.math.BigInteger",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.math.MathContext",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.math.RoundingMode",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.ConnectException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.DatagramPacket",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.DatagramSocket",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.HttpURLConnection",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.InetAddress",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.InetSocketAddress",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.ServerSocket",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.Socket",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.SocketException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.URI",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.URLDecoder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.URLEncoder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.net.UnknownHostException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.ByteBuffer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.ByteOrder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.CharBuffer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.DirectByteBuffer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.DirectByteBufferR",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.MappedByteBuffer",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.channels.FileChannel",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.channels.FileChannel$MapMode",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.charset.Charset",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.charset.CharsetEncoder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.charset.CoderResult",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.charset.StandardCharsets",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.CopyOption",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.DirectoryNotEmptyException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileAlreadyExistsException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileSystem",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileSystems",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileVisitOption",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileVisitResult",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.FileVisitor",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.Files",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.LinkOption",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.NoSuchFileException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.OpenOption",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.Path",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.PathMatcher",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.Paths",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.StandardCopyOption",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.attribute.FileAttribute",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.attribute.FileTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.attribute.PosixFilePermission",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.nio.file.attribute.PosixFilePermissions",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.security.DigestInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.security.MessageDigest",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.security.SecureRandom",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.sql.Date",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.text.ParseException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Clock",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.DateTimeException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.DayOfWeek",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Duration",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Instant",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.LocalDate",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.LocalDateTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.LocalTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Month",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.MonthDay",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.OffsetDateTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.OffsetTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Period",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.Year",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.YearMonth",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.ZoneId",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.ZoneOffset",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.ZoneRegion",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.ZonedDateTime",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.DateTimeFormatter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.DateTimeFormatterBuilder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.DateTimeParseException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.DecimalStyle",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.ResolverStyle",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.SignStyle",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.format.TextStyle",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.ChronoField",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.ChronoUnit",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.IsoFields",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.Temporal",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.TemporalAccessor",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.TemporalAdjuster",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.TemporalAdjusters",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.TemporalAmount",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.time.temporal.TemporalField",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Base64",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Base64$Decoder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Base64$Encoder",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Date",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Locale",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Map",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.MissingResourceException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Optional",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Properties",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Random",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.Set",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.UUID",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.concurrent.ExecutionException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.concurrent.LinkedBlockingQueue",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.concurrent.TimeUnit",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.jar.JarEntry",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.jar.JarFile",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.jar.JarFile$JarFileEntry",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.regex.Matcher",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.regex.Pattern",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.stream.Stream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.DeflaterInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.GZIPInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.GZIPOutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.InflaterInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.ZipEntry",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.ZipInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.util.zip.ZipOutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "org.yaml.snakeyaml.error.YAMLException",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.Delay",
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.LineNumberingPushbackReader",
+  "allPublicConstructors" : true
+}, {
+  "name" : "clojure.lang.MapEntry",
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.EOFException",
+  "allPublicConstructors" : true
+}, {
+  "name" : "borkdude.graal.LockFix",
+  "allPublicMethods" : true
+}, {
+  "name" : "clojure.lang.PersistentQueue",
+  "allPublicFields" : true
+}, {
+  "name" : "clojure.lang.AMapEntry"
+}, {
+  "name" : "clojure.lang.APersistentMap"
+}, {
+  "name" : "clojure.lang.AReference"
+}, {
+  "name" : "clojure.lang.Associative"
+}, {
+  "name" : "clojure.lang.Atom"
+}, {
+  "name" : "clojure.lang.Cons"
+}, {
+  "name" : "clojure.lang.Counted"
+}, {
+  "name" : "clojure.lang.Cycle"
+}, {
+  "name" : "clojure.lang.Fn"
+}, {
+  "name" : "clojure.lang.IEditableCollection"
+}, {
+  "name" : "clojure.lang.IFn"
+}, {
+  "name" : "clojure.lang.IKVReduce"
+}, {
+  "name" : "clojure.lang.ILookup"
+}, {
+  "name" : "clojure.lang.IMapEntry"
+}, {
+  "name" : "clojure.lang.IMeta"
+}, {
+  "name" : "clojure.lang.IObj"
+}, {
+  "name" : "clojure.lang.IPending"
+}, {
+  "name" : "clojure.lang.IPersistentCollection"
+}, {
+  "name" : "clojure.lang.IPersistentMap"
+}, {
+  "name" : "clojure.lang.IPersistentSet"
+}, {
+  "name" : "clojure.lang.IPersistentStack"
+}, {
+  "name" : "clojure.lang.IPersistentVector"
+}, {
+  "name" : "clojure.lang.IRecord"
+}, {
+  "name" : "clojure.lang.IReduce"
+}, {
+  "name" : "clojure.lang.IReduceInit"
+}, {
+  "name" : "clojure.lang.IRef"
+}, {
+  "name" : "clojure.lang.ISeq"
+}, {
+  "name" : "clojure.lang.Indexed"
+}, {
+  "name" : "clojure.lang.Iterate"
+}, {
+  "name" : "clojure.lang.Keyword"
+}, {
+  "name" : "clojure.lang.LazySeq"
+}, {
+  "name" : "clojure.lang.Named"
+}, {
+  "name" : "clojure.lang.PersistentArrayMap"
+}, {
+  "name" : "clojure.lang.PersistentHashMap"
+}, {
+  "name" : "clojure.lang.PersistentHashSet"
+}, {
+  "name" : "clojure.lang.PersistentList"
+}, {
+  "name" : "clojure.lang.PersistentStructMap"
+}, {
+  "name" : "clojure.lang.PersistentTreeMap"
+}, {
+  "name" : "clojure.lang.PersistentTreeSet"
+}, {
+  "name" : "clojure.lang.PersistentVector"
+}, {
+  "name" : "clojure.lang.Ratio"
+}, {
+  "name" : "clojure.lang.Repeat"
+}, {
+  "name" : "clojure.lang.Reversible"
+}, {
+  "name" : "clojure.lang.Seqable"
+}, {
+  "name" : "clojure.lang.Sequential"
+}, {
+  "name" : "clojure.lang.Symbol"
+}, {
+  "name" : "clojure.lang.Volatile"
+}, {
+  "name" : "java.util.Collection"
+}, {
+  "name" : "java.util.Iterator"
+}, {
+  "name" : "java.util.List"
+}, {
+  "name" : "java.util.Map$Entry"
+}, {
+  "name" : "java.util.concurrent.atomic.AtomicInteger"
+}, {
+  "name" : "java.util.concurrent.atomic.AtomicLong"
+}, {
+  "name" : "java.lang.reflect.AccessibleObject",
+  "methods" : [ {
+    "name" : "canAccess"
+  } ]
+}, {
+  "allPublicMethods" : true,
+  "allPublicConstructors" : true,
+  "name" : "clojure.lang.LineNumberingPushbackReader"
+}, {
+  "allPublicConstructors" : true,
+  "name" : "java.net.URL",
+  "methods" : [ {
+    "name" : "equals"
+  }, {
+    "name" : "getAuthority"
+  }, {
+    "name" : "getContent"
+  }, {
+    "name" : "getDefaultPort"
+  }, {
+    "name" : "getFile"
+  }, {
+    "name" : "getHost"
+  }, {
+    "name" : "getPath"
+  }, {
+    "name" : "getPort"
+  }, {
+    "name" : "getProtocol"
+  }, {
+    "name" : "getQuery"
+  }, {
+    "name" : "getRef"
+  }, {
+    "name" : "getUserInfo"
+  }, {
+    "name" : "hashCode"
+  }, {
+    "name" : "openConnection"
+  }, {
+    "name" : "openStream"
+  }, {
+    "name" : "sameFile"
+  }, {
+    "name" : "toExternalForm"
+  }, {
+    "name" : "toString"
+  }, {
+    "name" : "toURI"
+  } ],
+  "allPublicFields" : true
+}, {
+  "name" : "java.util.Arrays",
+  "methods" : [ {
+    "name" : "copyOf"
+  }, {
+    "name" : "copyOfRange"
+  } ]
+}, {
+  "allPublicConstructors" : true,
+  "name" : "java.lang.Thread",
+  "methods" : [ {
+    "name" : "activeCount"
+  }, {
+    "name" : "checkAccess"
+  }, {
+    "name" : "currentThread"
+  }, {
+    "name" : "dumpStack"
+  }, {
+    "name" : "enumerate"
+  }, {
+    "name" : "getAllStackTraces"
+  }, {
+    "name" : "getContextClassLoader"
+  }, {
+    "name" : "getDefaultUncaughtExceptionHandler"
+  }, {
+    "name" : "getId"
+  }, {
+    "name" : "getName"
+  }, {
+    "name" : "getPriority"
+  }, {
+    "name" : "getStackTrace"
+  }, {
+    "name" : "getState"
+  }, {
+    "name" : "getThreadGroup"
+  }, {
+    "name" : "getUncaughtExceptionHandler"
+  }, {
+    "name" : "holdsLock"
+  }, {
+    "name" : "interrupt"
+  }, {
+    "name" : "interrupted"
+  }, {
+    "name" : "isAlive"
+  }, {
+    "name" : "isDaemon"
+  }, {
+    "name" : "isInterrupted"
+  }, {
+    "name" : "join"
+  }, {
+    "name" : "run"
+  }, {
+    "name" : "setContextClassLoader"
+  }, {
+    "name" : "setDaemon"
+  }, {
+    "name" : "setDefaultUncaughtExceptionHandler"
+  }, {
+    "name" : "setName"
+  }, {
+    "name" : "setPriority"
+  }, {
+    "name" : "setUncaughtExceptionHandler"
+  }, {
+    "name" : "sleep"
+  }, {
+    "name" : "start"
+  }, {
+    "name" : "toString"
+  }, {
+    "name" : "yield"
+  } ]}, 
+
+{
+  "name" : "java.io.BufferedInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+},
+{
+  "name" : "java.io.BufferedOutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}
+
+
 
 ]
