@@ -479,9 +479,8 @@
     (doseq [pod pods]
       (let [collectionId (:PODCAST/COLLECTIONID pod)
             episodes (into []
-                           (map #(assoc % "collectiondId" collectionId))
+                           (map #(assoc % "collectionId" collectionId))
                            (parse-rss (:PODCAST/FEEDURL pod)))]
-        (prn (add-episodes episodes))
         (jdbc/execute! db (add-episodes episodes))))))
 
 (defn add-podcast!
@@ -489,7 +488,7 @@
    (let [episodes (parse-rss (get podcast "feedUrl"))
          {:keys [collectionId]} podcast
          episodes (into []
-                        (map #(assoc % "collectiondId" collectionId))
+                        (map #(assoc % "collectionId" collectionId))
                         episodes)]
      (add-podcast! podcast episodes)))
   ([podcast episodes]
