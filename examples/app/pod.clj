@@ -3,6 +3,7 @@
             [org.httpkit.client :as http]
             [membrane.component
              :refer [defui defeffect]]
+            [membrane.skia.paragraph :as para]
             [babashka.fs :as fs]
             [clojure.java.io :as io]
             [tech.v3.datatype.ffi :as dt-ffi ]
@@ -715,6 +716,12 @@
           (on-status(str "failed: " e))
           (throw e))))))
 
+(defop delete-episode [episode on-status]
+  (let [f (episode-file episode)
+        success? (fs/delete-if-exists f)]
+    (on-status (str "Deleted: " (if success? "true" "false")))))
+
+
 (defop load-episode [episode on-status]
   (let [change? (not= (:playing-episode @pod-state)
                       episode)]
@@ -855,6 +862,15 @@
   (skip-forward 30))
 (defeffect ::skip-backward []
   (skip-backward 5))
+(defeffect ::delete-episode [{:keys [episode $status]}]
+  (dispatch! :set $status "")
+  (delete-episode episode #(dispatch! :set $status %)))
+(defeffect ::download-episode [{:keys [episode $status]}]
+  (dispatch! :set $status "")
+  (async/put! player-ch
+              {:op ::download-episode
+               :f download-episode
+               :args [episode #(dispatch! :set $status %)]}))
 
 (defeffect ::refresh-episodes [{}]
   (future
@@ -930,26 +946,131 @@
                                                200 10))
                                ))))))})))
 
-(defui episode-view [{:keys [episode]}]
-  (let [status (get extra :status "")]
-    (ui/vertical-layout
-     (button "<back"
-             (fn []
-               [[::back]]))
-     (button ">>"
-             (fn []
-               [[::skip-forward]]))
-     (button "<<"
-             (fn []
-               [[::skip-backward]]))
-     (ui/label (:EPISODE/TRACKNAME episode))
-     (ui/label (:EPISODE/DESCRIPTION episode))
-     (button "play"
-             (fn []
-               [[::load-episode {:episode episode
-                                 :$status $status}]
-                [::toggle]]))
-     (ui/label status))))
+
+
+(membrane.component/defui
+ episode-view
+ [{:as this, :keys [status width height episode]}]
+ (clojure.core/let
+  [width-128062 width
+   
+   height-128063 height
+   
+   G__128064
+   (membrane.ui/translate
+    (clojure.core/+ 0 9.23828125)
+    (clojure.core/+ 0 10.1484375)
+    (com.phronemophobic.membrandt/button
+     {:on-click (fn [] [[:pod/back]]), :text "<back"}))
+   G__128065
+   (membrane.ui/translate
+    (clojure.core/+ 0 10.27734375)
+    (clojure.core/+ 0 59.81640625)
+    (membrane.skia.paragraph/paragraph
+     (:EPISODE/TRACKNAME episode)
+     width
+     {:paragraph-style/text-style
+      {:text-style/font-size 14,
+       :text-style/height 1.5714285714285714,
+       :text-style/height-override true,
+       :text-style/color [0.0 0.0 0.0 0.88]}}))
+   G__128066
+   (membrane.ui/translate
+    (clojure.core/+ width-128062 -55.59375)
+    (clojure.core/+ height-128063 -41.7265625)
+    (com.phronemophobic.membrandt/button
+     {:on-click (fn [] [[:pod/skip-forward]]), :text ">>"}))
+   G__128069
+   (membrane.ui/translate
+    (clojure.core/+ (membrane.ui/origin-x G__128065) 2.6875)
+    (clojure.core/+
+     (clojure.core/+
+      (membrane.ui/origin-y G__128065)
+      (membrane.ui/height G__128065))
+     6.44140625)
+    (membrane.skia.paragraph/paragraph
+     (str (:EPISODE/PUBDATE episode))
+     width
+     {:paragraph-style/text-style
+      {:text-style/font-size 14,
+       :text-style/height 1.5714285714285714,
+       :text-style/height-override true,
+       :text-style/color [0.0 0.0 0.0 0.88]}}))
+
+   downloaded? (fs/exists? (episode-file episode))
+   G__128067
+   (membrane.ui/translate
+    (clojure.core/+ (membrane.ui/origin-x G__128069) -1.69921875)
+    (clojure.core/+
+     (clojure.core/+
+      (membrane.ui/origin-y G__128069)
+      (membrane.ui/height G__128069))
+     8.15625)
+    (com.phronemophobic.membrandt/button
+     {:on-click (fn []
+                  (if downloaded?
+                    [[::delete-episode {:episode episode :$status $status}]]
+                    [[::download-episode {:episode episode
+                                          :$status $status}]])),
+      :text
+      (if downloaded?
+        "Delete"
+        "Download")}))
+   G__128068
+   (membrane.ui/translate
+    (clojure.core/+ (membrane.ui/origin-x G__128067) 4.99609375)
+    (clojure.core/+
+     (clojure.core/+
+      (membrane.ui/origin-y G__128067)
+      (membrane.ui/height G__128067))
+     10.484375)
+    (membrane.skia.paragraph/paragraph
+     (:EPISODE/DESCRIPTION episode)
+     width
+     {:paragraph-style/text-style
+      {:text-style/font-size 14,
+       :text-style/height 1.5714285714285714,
+       :text-style/height-override true,
+       :text-style/color [0.0 0.0 0.0 0.88]}}))
+   G__128072
+   (membrane.ui/translate
+    (clojure.core/+ 0 10.25)
+    (clojure.core/+ height-128063 -40.3515625)
+    (com.phronemophobic.membrandt/button
+     {:on-click (fn [] [[:pod/skip-backward]]), :text "<<"}))
+   G__128070
+   (membrane.ui/translate
+    (clojure.core/+ (membrane.ui/origin-x G__128072) 4.7578125)
+    (clojure.core/+ (membrane.ui/origin-y G__128072) -36.3984375)
+    (membrane.skia.paragraph/paragraph
+     (str status)
+     nil
+     {:paragraph-style/text-style
+      {:text-style/font-size 14,
+       :text-style/height 1.5714285714285714,
+       :text-style/height-override true,
+       :text-style/color [0.0 0.0 0.0 0.88]}}))
+   G__128071
+   (membrane.ui/translate
+    (clojure.core/+ (membrane.ui/origin-x G__128066) -69.734375)
+    (clojure.core/+ (membrane.ui/origin-y G__128066) -0.94140625)
+    (com.phronemophobic.membrandt/button
+     {:on-click
+      (fn
+       []
+        (prn "hi")
+        [[:pod/load-episode {:episode episode, :$status $status}]
+         [:pod/toggle]]),
+      :text "Play"}))]
+  [G__128072
+   G__128066
+   G__128071
+   G__128064
+   G__128065
+   G__128070
+   G__128069
+   G__128067
+   G__128068]))
 
 (defeffect ::search-podcasts [{:keys [$podcasts
                                       query]}]
@@ -1042,7 +1163,9 @@
          ::back
          (fn []
            [[:set $selected-episode nil]])
-         (episode-view {:episode selected-episode}))
+         (episode-view {:episode selected-episode
+                        :width 290
+                        :height 550}))
         (ui/on
          ::select-episode
          (fn [{:keys [episode]}]
