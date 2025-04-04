@@ -819,13 +819,28 @@
         (let [interval (objc ^double [event :interval])]
           (skip-forward interval))
         MPRemoteCommandHandlerStatusSuccess)])
+    ;; also use next track command to skip
+    ;; so that it can be used in the car.
+    (objc
+     [[commandCenter :nextTrackCommand]
+      :addTargetWithHandler
+      (fn ^long [event]
+        (skip-forward 30)
+        MPRemoteCommandHandlerStatusSuccess)])
     (objc
      [[commandCenter :skipBackwardCommand]
       :addTargetWithHandler
       (fn ^long [event]
-
         (let [interval (objc ^double [event :interval])]
           (skip-backward interval))
+        MPRemoteCommandHandlerStatusSuccess)])
+    ;; also use next track command to skip
+    ;; so that it can be used in the car.
+    (objc
+     [[commandCenter :previousTrackCommand]
+      :addTargetWithHandler
+      (fn ^long [event]
+        (skip-backward 5)
         MPRemoteCommandHandlerStatusSuccess)])))
 
 (let [__init
