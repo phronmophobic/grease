@@ -616,6 +616,11 @@
                      duration-seconds (if (pos? tt)
                                         (double (/ tv tt))
                                         0.0)]
+                 (when (and (not (:EPISODE/DURATION episode))
+                            (pos? tt))
+                   (jdbc/execute! db (add-episodes [{"guid" (:EPISODE/GUID episode)
+                                                     "duration" (int duration-seconds)}])))
+
                  duration-seconds)
                
                MPNowPlayingInfoPropertyDefaultPlaybackRate
