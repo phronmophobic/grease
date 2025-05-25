@@ -502,6 +502,22 @@
                                   "Unique index or primary key violation")
            (throw e)))))))
 
+
+(defn remove-podcast! [collection-id]
+  (jdbc/execute! db
+                 ["delete from `queue` where episodeGuid in (select guid from episode where collectionId=?)" collection-id])
+  (jdbc/execute! db
+                 (sql/format
+                  {:delete-from [:episode]
+                   :where [:= :collectionId collection-id]}))
+
+  (jdbc/execute! db
+                 (sql/format
+                  {:delete-from [:podcast]
+                   :where [:= :collectionId collection-id]})))
+
+
+
 (defn latest-episodes []
   (with-open [conn (jdbc/get-connection db)]
    (let [search-text (:search-text @pod-state)
