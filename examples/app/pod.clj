@@ -488,7 +488,7 @@
 (defn add-podcast!
   ([podcast]
    (let [episodes (parse-rss (get podcast "feedUrl"))
-         {:keys [collectionId]} podcast
+         {:strs [collectionId]} podcast
          episodes (into []
                         (map #(assoc % "collectionId" collectionId))
                         episodes)]
