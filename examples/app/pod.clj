@@ -339,12 +339,13 @@
                     first
                     str/trim
                     parse-rfc1123)
-        duration (-> (find-tag zitem
-                               :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/duration)
-                     :content
-                     first
-                     str/trim
-                     parse-duration)
+        duration (when-let [duration-str (-> (find-tag zitem
+                                                       :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/duration)
+                                             :content
+                                             first)]
+                   (-> duration-str
+                       str/trim
+                       parse-duration))
         image-url (-> (find-tag zitem
                                 :xmlns.http%3A%2F%2Fwww.itunes.com%2Fdtds%2Fpodcast-1.0.dtd/image)
                       :attrs
@@ -947,7 +948,8 @@
                :mouse-down
                (fn [_]
                  [[::select-episode {:episode episode}]])
-               (when-let [duration (:EPISODE/DURATION episode)]
+               (when-let [duration (or (:EPISODE/DURATION episode)
+                                       (* 60 60))]
                  (ui/bordered [5 20]
                               (ui/vertical-layout
                                (ui/label (:EPISODE/TRACKNAME episode))
