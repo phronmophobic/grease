@@ -36,6 +36,13 @@ jobs:
       - name: Build macOS native image
         run: |
           /bin/bash scripts/compile-shared
+          ls -lh library/build/out/bb.o
+          file -lh library/build/out/bb.o
+
+      - uses: actions/upload-artifact@v7
+        with:
+          path: library/build/out/bb.o
+          archive: false
 
       - name: Build app
         run: |
