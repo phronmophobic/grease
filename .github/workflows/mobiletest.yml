@@ -37,7 +37,7 @@ jobs:
         run: |
           /bin/bash scripts/compile-shared
           ls -lh library/build/out/bb.o
-          file -lh library/build/out/bb.o
+          file library/build/out/bb.o
 
       - uses: actions/upload-artifact@v7
         with:
