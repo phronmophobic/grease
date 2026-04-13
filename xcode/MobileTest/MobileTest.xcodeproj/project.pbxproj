@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3A7AABAA2F8D6A2C00E3DE4A /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7AABA52F8D6A1200E3DE4A /* libjvm.a */; };
 		3A7AABAB2F8D6A2F00E3DE4A /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7AAB992F8D69FF00E3DE4A /* libjava.a */; };
-		3A80E39827F675B800C5155C /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A80E39727F675B800C5155C /* bb.o */; };
 		3A9F1D33266E9C4D0013661F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D32266E9C4D0013661F /* AppDelegate.swift */; };
 		3A9F1D35266E9C4D0013661F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D34266E9C4D0013661F /* SceneDelegate.swift */; };
 		3A9F1D37266E9C4D0013661F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D36266E9C4D0013661F /* ContentView.swift */; };
@@ -19,6 +18,7 @@
 		3A9F1D4A266E9C4F0013661F /* MobileTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D49266E9C4F0013661F /* MobileTestTests.swift */; };
 		3A9F1D55266E9C4F0013661F /* MobileTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D54266E9C4F0013661F /* MobileTestUITests.swift */; };
 		3A9F1D7A266EC1300013661F /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D79266EC1300013661F /* Bridge.m */; };
+		3AC74AB92F8DA23D00B7D49B /* bb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC74AB82F8DA23900B7D49B /* bb.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +71,6 @@
 		3A3FC58C2F8C280700C48DBA /* libjava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjava.a; path = "../../../ios-graal-jdk-21/labs-openjdk/build/xcode/Debug-ios-iphoneos/libjava.a"; sourceTree = "<group>"; };
 		3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../third_party/ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
 		3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../third_party/ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
-		3A80E39727F675B800C5155C /* bb.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bb.o; path = ../../library/build/out/bb.o; sourceTree = "<group>"; };
 		3A9F1D2F266E9C4D0013661F /* MobileTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9F1D32266E9C4D0013661F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A9F1D34266E9C4D0013661F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +87,7 @@
 		3A9F1D56266E9C4F0013661F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A9F1D78266EC12F0013661F /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridge.h; path = csource/Bridge.h; sourceTree = "<group>"; };
 		3A9F1D79266EC1300013661F /* Bridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Bridge.m; path = csource/Bridge.m; sourceTree = "<group>"; };
+		3AC74AB82F8DA23900B7D49B /* bb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = bb.a; path = ../../library/build/out/bb.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,9 +95,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AC74AB92F8DA23D00B7D49B /* bb.a in Frameworks */,
 				3A7AABAB2F8D6A2F00E3DE4A /* libjava.a in Frameworks */,
 				3A7AABAA2F8D6A2C00E3DE4A /* libjvm.a in Frameworks */,
-				3A80E39827F675B800C5155C /* bb.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,9 +202,9 @@
 		3A9F1D64266E9CCC0013661F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AC74AB82F8DA23900B7D49B /* bb.a */,
 				3A3FC58C2F8C280700C48DBA /* libjava.a */,
 				3A19E5B32F8C218F00B3EC50 /* libjvm.a */,
-				3A80E39727F675B800C5155C /* bb.o */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
