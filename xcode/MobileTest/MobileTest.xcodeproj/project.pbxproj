@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A7AABAA2F8D6A2C00E3DE4A /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7AABA52F8D6A1200E3DE4A /* libjvm.a */; };
+		3A7AABAB2F8D6A2F00E3DE4A /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7AAB992F8D69FF00E3DE4A /* libjava.a */; };
 		3A80E39827F675B800C5155C /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A80E39727F675B800C5155C /* bb.o */; };
 		3A9F1D33266E9C4D0013661F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D32266E9C4D0013661F /* AppDelegate.swift */; };
 		3A9F1D35266E9C4D0013661F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D34266E9C4D0013661F /* SceneDelegate.swift */; };
@@ -22,6 +24,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3A7AAB982F8D69FF00E3DE4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5ADB99B625B7219B00B42097;
+			remoteInfo = libjava;
+		};
+		3A7AABA42F8D6A1200E3DE4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5A7FF98F261CAE7500129BCA;
+			remoteInfo = libjvm;
+		};
+		3A7AABA62F8D6A1E00E3DE4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A7FF98E261CAE7500129BCA;
+			remoteInfo = libjvm;
+		};
+		3A7AABA82F8D6A2500E3DE4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ADB99B525B7219B00B42097;
+			remoteInfo = libjava;
+		};
 		3A9F1D46266E9C4F0013661F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A9F1D27266E9C4D0013661F /* Project object */;
@@ -39,6 +69,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A19E5B32F8C218F00B3EC50 /* libjvm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjvm.a; path = "../../../ios-graal-jdk-21/svm/build/xcode/Release-ios-iphoneos/libjvm.a"; sourceTree = "<group>"; };
+		3A3FC58C2F8C280700C48DBA /* libjava.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjava.a; path = "../../../ios-graal-jdk-21/labs-openjdk/build/xcode/Debug-ios-iphoneos/libjava.a"; sourceTree = "<group>"; };
+		3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../third_party/ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
+		3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../third_party/ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
 		3A80E39727F675B800C5155C /* bb.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bb.o; path = ../../library/build/out/bb.o; sourceTree = "<group>"; };
 		3A9F1D2F266E9C4D0013661F /* MobileTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9F1D32266E9C4D0013661F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +99,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A7AABAB2F8D6A2F00E3DE4A /* libjava.a in Frameworks */,
+				3A7AABAA2F8D6A2C00E3DE4A /* libjvm.a in Frameworks */,
 				3A80E39827F675B800C5155C /* bb.o in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,9 +122,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A7AAB952F8D69FF00E3DE4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A7AAB992F8D69FF00E3DE4A /* libjava.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A7AABA12F8D6A1200E3DE4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A7AABA52F8D6A1200E3DE4A /* libjvm.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3A9F1D26266E9C4D0013661F = {
 			isa = PBXGroup;
 			children = (
+				3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */,
+				3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */,
 				3A9F1D78266EC12F0013661F /* Bridge.h */,
 				3A9F1D79266EC1300013661F /* Bridge.m */,
 				3A9F1D73266EBD3E0013661F /* FromGluonAppDelegate.c */,
@@ -154,6 +208,8 @@
 		3A9F1D64266E9CCC0013661F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A3FC58C2F8C280700C48DBA /* libjava.a */,
+				3A19E5B32F8C218F00B3EC50 /* libjvm.a */,
 				3A80E39727F675B800C5155C /* bb.o */,
 			);
 			name = Frameworks;
@@ -173,6 +229,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				3A7AABA92F8D6A2500E3DE4A /* PBXTargetDependency */,
+				3A7AABA72F8D6A1E00E3DE4A /* PBXTargetDependency */,
 			);
 			name = MobileTest;
 			productName = MobileTest;
@@ -249,6 +307,16 @@
 			mainGroup = 3A9F1D26266E9C4D0013661F;
 			productRefGroup = 3A9F1D30266E9C4D0013661F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3A7AABA12F8D6A1200E3DE4A /* Products */;
+					ProjectRef = 3A7AABA02F8D6A1200E3DE4A /* svm.graal.xcodeproj */;
+				},
+				{
+					ProductGroup = 3A7AAB952F8D69FF00E3DE4A /* Products */;
+					ProjectRef = 3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				3A9F1D2E266E9C4D0013661F /* MobileTest */,
@@ -257,6 +325,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3A7AAB992F8D69FF00E3DE4A /* libjava.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjava.a;
+			remoteRef = 3A7AAB982F8D69FF00E3DE4A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3A7AABA52F8D6A1200E3DE4A /* libjvm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjvm.a;
+			remoteRef = 3A7AABA42F8D6A1200E3DE4A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3A9F1D2D266E9C4D0013661F /* Resources */ = {
@@ -318,6 +403,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3A7AABA72F8D6A1E00E3DE4A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjvm;
+			targetProxy = 3A7AABA62F8D6A1E00E3DE4A /* PBXContainerItemProxy */;
+		};
+		3A7AABA92F8D6A2500E3DE4A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjava;
+			targetProxy = 3A7AABA82F8D6A2500E3DE4A /* PBXContainerItemProxy */;
+		};
 		3A9F1D47266E9C4F0013661F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3A9F1D2E266E9C4D0013661F /* MobileTest */;
@@ -491,23 +586,6 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"-ljava",
-					"-lnio",
-					"-lzip",
-					"-lnet",
-					"-lprefs",
-					"-ljvm",
-					"-lfdlibm",
-					"-lz",
-					"-ldl",
-					"-lj2pkcs11",
-					"-ljaas",
-					"-lextnet",
-					"-lstdc++",
-					"-lpthread",
-					"-llibchelper",
-					"-lffi",
-					"-ldarwin",
 					"-Wl,-framework,Foundation",
 					"-Wl,-framework,UIKit",
 					"-Wl,-framework,CoreGraphics",
@@ -533,8 +611,6 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
-					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -562,23 +638,6 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = (
-					"-ljava",
-					"-lnio",
-					"-lzip",
-					"-lnet",
-					"-lprefs",
-					"-ljvm",
-					"-lfdlibm",
-					"-lz",
-					"-ldl",
-					"-lj2pkcs11",
-					"-ljaas",
-					"-lextnet",
-					"-lstdc++",
-					"-lpthread",
-					"-llibchelper",
-					"-lffi",
-					"-ldarwin",
 					"-Wl,-framework,Foundation",
 					"-Wl,-framework,UIKit",
 					"-Wl,-framework,CoreGraphics",
@@ -604,8 +663,6 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
-					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
