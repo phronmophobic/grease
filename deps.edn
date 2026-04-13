@@ -65,53 +65,12 @@
 
               http-kit/http-kit {:mvn/version "2.8.0"}
 
-              com.phronemophobic/objcjure {:local/root "../objcjure"
+              com.phronemophobic/objcjure {;;:local/root "../objcjure"
+                                           :mvn/version "1.0-SNAPSHOT"
                                            ;;:git/url "https://github.com/phronmophobic/objcjure.git"
                                            ;;:git/sha "f06b2395a20b44fc626a317a497d1eca815de328"
                                            }
               com.phronemophobic/clong {;; :git/sha "945d9a71c6436938b3bdf11de2e7bf1f1c4c978c"
-                                        :local/root "../clong"
-                                        ;; :mvn/version "1.4.1"
-                                        }}}
-
-  :depstar
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
-   :ns-default hf.depstar
-   :aliases [:graal-compile]
-   :exec-fn hf.depstar/uberjar
-   :exec-args {:group-id "com.phronemophobic"
-               :artifact-id "grease"
-               :version "1.00-beta-1"
-               :sync-pom true
-               :aot true
-               :compile-ns [com.phronemophobic.grease]
-               :main-class com.phronemophobic.grease
-               :jar "target/bb.jar"
-               ;;Disable tensor code generation and ensure direct linking.
-               :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
-                          "-Dclojure.compiler.direct-linking=true"
-                          "-Dclojure.spec.skip-macros=true"]}}
-
-
-  ;; no longer used
-  :depstar-membrane
-  {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
-   :ns-default hf.depstar
-   :aliases [:graal-compile]
-   :exec-fn hf.depstar/uberjar
-   :exec-args {:group-id "com.phronemophobic.grease"
-               :artifact-id "membrane"
-               :version "1.00-beta-1"
-               :sync-pom true
-               :aot true
-               :compile-ns [;;avclj.main avclj.libavclj
-                            com.phronemophobic.grease.membrane
-                            ]
-               :main-class com.phronemophobic.grease.membrane
-               :jar "target/grease-uber.jar"
-               ;;Disable tensor code generation and ensure direct linking.
-               :jvm-opts ["-Dtech.v3.datatype.graal-native=true"
-                          "-Dclojure.compiler.direct-linking=true"
-                          "-Dclojure.spec.skip-macros=true"]}}
-  
-  }}
+                                        ;; :local/root "../clong"
+                                        :mvn/version "1.4.3"
+                                        }}}}}
