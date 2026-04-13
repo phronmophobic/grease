@@ -603,6 +603,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
+					"-Wl,-ld_classic",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -655,6 +656,7 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
+					"-Wl,-ld_classic",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.MobileTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
