@@ -22,6 +22,7 @@
                   :basis basis
                   :java-opts ["-Dtech.v3.datatype.graal-native=true"
                               "-Dclojure.compiler.direct-linking=true"
+                              "-Dmembrane.ios=true"
                               "-Dclojure.spec.skip-macros=true"]
                   :ns-compile '[com.phronemophobic.grease.ios]}))
 
@@ -35,6 +36,23 @@
            :basis basis
            :main 'com.phronemophobic.grease.ios})
   )
+
+(defn uberjar-native-image-shared [opts]
+  (let [shared-basis (b/create-basis {:project "deps.edn"
+                                      :aliases [:native-image]})]
+    (clean nil)
+    (b/copy-dir {:src-dirs ["src" "resources"]
+                 :target-dir class-dir})
+    (b/compile-clj {:class-dir class-dir
+                    :basis shared-basis
+                    :java-opts ["-Dtech.v3.datatype.graal-native=true"
+                                "-Dclojure.compiler.direct-linking=true"
+                                "-Dclojure.spec.skip-macros=true"]
+                    :ns-compile '[com.phronemophobic.grease]})
+    (b/uber {:class-dir class-dir
+             :uber-file "target/bb.jar"
+             :basis shared-basis
+             :main 'com.phronemophobic.grease})))
 
 (defn fix-reflect-config [f]
   (let [config (with-open [rdr (io/reader f)]

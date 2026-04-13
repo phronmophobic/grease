@@ -11,7 +11,7 @@ PROJECT_DIR="$DIR/.."
 
 cd ..
 
-clojure -X:depstar
+clojure -T:build uberjar-native-image-shared
 
 mkdir -p library
 pushd library
