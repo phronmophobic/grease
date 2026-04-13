@@ -89,7 +89,7 @@ void call_prn(long long int id){
   clj_prn(thread,id);
 }
 
-void call_start_server(){
+void call_start_server(void){
     
     if ( !isolate ){
       if (graal_create_isolate(NULL, &isolate, &thread) != 0) {
