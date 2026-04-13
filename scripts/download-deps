@@ -13,7 +13,7 @@ pushd third_party
 
 if ! [ -d graalvm-jdk-21.0.3+7.1 ]; then
     curl -O -sL "https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz"
-    # sudo xattr -r -d com.apple.quarantine graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
+    sudo xattr -r -d com.apple.quarantine graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
     tar xzf graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
     rm graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
 fi
