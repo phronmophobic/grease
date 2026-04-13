@@ -17,6 +17,11 @@ jobs:
         run: |
           scripts/download-deps
 
+      - name: Setup
+        run: |
+          brew install autoconf
+          scripts/setup
+
       - name: Setup Clojure
         # You may pin to the exact commit or the version.
         # uses: DeLaGuardo/setup-clojure@5042876523f30f5efcf1d6feaa48bd1498d7814f
@@ -27,11 +32,6 @@ jobs:
 
       - name: Install dependencies
         run: clojure -P
-
-      - name: Setup
-        run: |
-          brew install autoconf
-          scripts/setup
 
       - name: Build macOS native image
         run: |
