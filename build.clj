@@ -7,9 +7,10 @@
 (def lib 'com.phronemophobic/grease)
 (def version "0.1")
 (def class-dir "target/classes")
-(def basis (b/create-basis {:project "deps.edn"
-                            :aliases [:native-image
-                                      :membrane]}))
+(def basis* (delay
+              (b/create-basis {:project "deps.edn"
+                               :aliases [:native-image
+                                         :membrane]})))
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
 (def uber-file (format "target/%s-uber.jar" (name lib)))
 (def src-pom "./pom-template.xml")
@@ -19,7 +20,7 @@
 
 (defn compile-native-image [_]
   (b/compile-clj {:class-dir class-dir
-                  :basis basis
+                  :basis @basis*
                   :java-opts ["-Dtech.v3.datatype.graal-native=true"
                               "-Dclojure.compiler.direct-linking=true"
                               "-Dmembrane.ios=true"
@@ -33,7 +34,7 @@
   (compile-native-image opts)
   (b/uber {:class-dir class-dir
            :uber-file uber-file
-           :basis basis
+           :basis @basis*
            :main 'com.phronemophobic.grease.ios})
   )
 
