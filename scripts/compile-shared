@@ -36,6 +36,7 @@ $GRAALVM_HOME/bin/native-image \
     -H:ReflectionConfigurationFiles="${PROJECT_DIR}"/conf/reflectionconfig-arm64-ios.json \
     -H:JNIConfigurationFiles="${PROJECT_DIR}"/conf/jniconfig-arm64-ios.json \
     -H:ResourceConfigurationFiles="${PROJECT_DIR}"/conf/resourceconfig-arm64-ios.json \
+    --features=clj_easy.graal_build_time.InitClojureClasses \
     -J-Xmx3G \
     -J-XX:MaxDirectMemorySize=2G \
     -J-Dclojure.spec.skip-macros=true \
