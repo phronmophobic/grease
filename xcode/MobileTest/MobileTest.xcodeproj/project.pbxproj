@@ -18,8 +18,6 @@
 		3A9F1D3F266E9C4F0013661F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A9F1D3D266E9C4F0013661F /* LaunchScreen.storyboard */; };
 		3A9F1D4A266E9C4F0013661F /* MobileTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D49266E9C4F0013661F /* MobileTestTests.swift */; };
 		3A9F1D55266E9C4F0013661F /* MobileTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D54266E9C4F0013661F /* MobileTestUITests.swift */; };
-		3A9F1D72266EBA870013661F /* JvmFuncsFallbacks.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D71266EBA870013661F /* JvmFuncsFallbacks.c */; };
-		3A9F1D74266EBD3E0013661F /* FromGluonAppDelegate.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D73266EBD3E0013661F /* FromGluonAppDelegate.c */; };
 		3A9F1D7A266EC1300013661F /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D79266EC1300013661F /* Bridge.m */; };
 /* End PBXBuildFile section */
 
@@ -88,8 +86,6 @@
 		3A9F1D50266E9C4F0013661F /* MobileTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MobileTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9F1D54266E9C4F0013661F /* MobileTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileTestUITests.swift; sourceTree = "<group>"; };
 		3A9F1D56266E9C4F0013661F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A9F1D71266EBA870013661F /* JvmFuncsFallbacks.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = JvmFuncsFallbacks.c; path = csource/JvmFuncsFallbacks.c; sourceTree = "<group>"; };
-		3A9F1D73266EBD3E0013661F /* FromGluonAppDelegate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = FromGluonAppDelegate.c; path = csource/FromGluonAppDelegate.c; sourceTree = "<group>"; };
 		3A9F1D78266EC12F0013661F /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridge.h; path = csource/Bridge.h; sourceTree = "<group>"; };
 		3A9F1D79266EC1300013661F /* Bridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Bridge.m; path = csource/Bridge.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -145,8 +141,6 @@
 				3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */,
 				3A9F1D78266EC12F0013661F /* Bridge.h */,
 				3A9F1D79266EC1300013661F /* Bridge.m */,
-				3A9F1D73266EBD3E0013661F /* FromGluonAppDelegate.c */,
-				3A9F1D71266EBA870013661F /* JvmFuncsFallbacks.c */,
 				3A9F1D31266E9C4D0013661F /* MobileTest */,
 				3A9F1D48266E9C4F0013661F /* MobileTestTests */,
 				3A9F1D53266E9C4F0013661F /* MobileTestUITests */,
@@ -376,11 +370,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9F1D33266E9C4D0013661F /* AppDelegate.swift in Sources */,
-				3A9F1D74266EBD3E0013661F /* FromGluonAppDelegate.c in Sources */,
 				3A9F1D35266E9C4D0013661F /* SceneDelegate.swift in Sources */,
 				3A9F1D7A266EC1300013661F /* Bridge.m in Sources */,
 				3A9F1D37266E9C4D0013661F /* ContentView.swift in Sources */,
-				3A9F1D72266EBA870013661F /* JvmFuncsFallbacks.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
