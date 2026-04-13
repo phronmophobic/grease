@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -x
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$DIR"
+cd ..
+
+pushd third_party/ios-graal-jdk-21/labs-openjdk/labs-openjdk-21
+
+./configure \
+    --with-conf-name=labsjdk \
+    --with-version-opt=jvmci-23.1-b37 \
+    --with-version-pre= \
+    --with-vendor-name="GraalVM Community" \
+    --with-vendor-url=https://www.graalvm.org/ \
+    --with-vendor-bug-url=https://github.com/oracle/graal/issues \
+    --with-vendor-vm-bug-url=https://github.com/oracle/graal/issues
+
+make CONF_NAME=labsjdk graal-builder-image
+
+popd
