@@ -4,9 +4,14 @@ An example of building a clojure library for iOS with graalvm native-image.
 
 Built with [membrane](https://github.com/phronmophobic/membrane).
 
-# Update - Nov 2024
+# Update - Jan 2026
 
-Grease is in active development and the docs are a bit out of date. For the latest info, check the [#graalvm-mobile](https://clojurians.slack.com/archives/C0260KHN0Q0) channel on the Clojurians Slack (join [here](http://clojurians.net/)).
+Unfortunately, grease has experienced a lot of bitrot.
+- Some of the download links are now broken.
+- Newer releases of gluon's graalvm didn't work for me (I haven't tried the most recent).
+- The github build actions no longer run due to deprecated subactions
+
+If you are still brave enough to attempt targeting iOS with graalvm native image, you can check the [#graalvm-mobile](https://clojurians.slack.com/archives/C0260KHN0Q0) channel on the Clojurians Slack (join [here](http://clojurians.net/)) for any news.
 
 ## Game of Life Example
 
