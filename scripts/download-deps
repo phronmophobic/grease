@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -x
 set -e
 
@@ -12,16 +11,16 @@ mkdir -p build
 
 pushd build
 
-staticjdk='staticjdk'
-target='ios-arm64'
-version='18-ea+prep18-9'
+# staticjdk='staticjdk'
+# target='ios-arm64'
+# version='18-ea+prep18-9'
 
-fname="${staticjdk}-${target}-gvm-${version}.zip"
+# fname="${staticjdk}-${target}-gvm-${version}.zip"
 
-if [ ! -f "$fname" ]; then
-   curl -O "https://download2.gluonhq.com/substrate/staticjdk/${fname}"
-   unzip "$fname"
-fi
+# if [ ! -f "$fname" ]; then
+#    curl -O "https://download2.gluonhq.com/substrate/staticjdk/${fname}"
+#    unzip "$fname"
+# fi
 
 
 # fname="ios-arm64"
