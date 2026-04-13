@@ -26,6 +26,7 @@ jobs:
 
       - name: Setup
         run: |
+          brew install autoconf
           scripts/setup
 
       - name: Download Static JDK
