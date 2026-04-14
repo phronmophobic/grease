@@ -28,7 +28,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13
         with:
           # Clojure CLI version to make available on the path.
-          cli: 1.12.4.1602
+          cli: 1.12.4.1618
 
       - name: Install dependencies
         run: clojure -P
