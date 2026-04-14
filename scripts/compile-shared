@@ -66,6 +66,7 @@ $GRAALVM_HOME/bin/native-image \
 rm -rf ./build/out
 mkdir -p build/out
 
+find ./tmp
 find ./tmp -name 'bb.o' -exec cp {} build/out \;
 
 ar -r build/out/bb.a build/out/*.o
