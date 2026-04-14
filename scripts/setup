@@ -5,6 +5,13 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR"
+
+PROJECT_DIR="$DIR/.."
+
+export JAVA_HOME="$PROJECT_DIR"/third_party/graalvm-jdk-21.0.3+7.1/Contents/Home
+export GRAALVM_HOME="$JAVA_HOME"
+export PATH=$JAVA_HOME/bin:$PATH
+
 cd ..
 
 pushd third_party/ios-graal-jdk-21/labs-openjdk/labs-openjdk-21
