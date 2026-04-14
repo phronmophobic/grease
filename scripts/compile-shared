@@ -29,8 +29,6 @@ pushd library
 
 rm -rf ./tmp
 
-sudo xattr -r -d com.apple.quarantine $GRAALVM_HOME/bin/native-image
-
 $GRAALVM_HOME/bin/native-image \
     --verbose \
     --report-unsupported-elements-at-runtime \
@@ -71,16 +69,9 @@ $GRAALVM_HOME/bin/native-image \
 rm -rf ./build/out
 mkdir -p build/out
 
-find ./tmp
 find ./tmp -name 'bb.o' -exec ln {} build/out/bb.o \;
 
-find ./tmp -name '*.o' -exec lipo -info {} \;
-find ./tmp -name '*.o' -exec file {} \;
-
-lipo -info build/out/bb.o
-
 ar -r build/out/bb.a build/out/*.o
-# find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
 popd
 
