@@ -24,7 +24,10 @@ pushd library
 
 rm -rf ./tmp
 
+sudo xattr -r -d com.apple.quarantine $GRAALVM_HOME/bin/native-image
+
 $GRAALVM_HOME/bin/native-image \
+    --verbose \
     --report-unsupported-elements-at-runtime \
     --no-fallback \
     -H:+ExitAfterRelocatableImageWrite \
