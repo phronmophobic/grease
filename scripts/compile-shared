@@ -13,6 +13,11 @@ export JAVA_HOME="$PROJECT_DIR"/third_party/graalvm-jdk-21.0.3+7.1/Contents/Home
 export GRAALVM_HOME="$JAVA_HOME"
 export PATH=$JAVA_HOME/bin:$PATH
 
+
+echo "old $JAVA_CMD"
+export JAVA_CMD=$GRAALVM_HOME/bin/java
+echo "new $JAVA_CMD"
+
 java -version
 
 cd ..
