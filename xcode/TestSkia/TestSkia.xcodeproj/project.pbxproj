@@ -11,8 +11,6 @@
 		3A110A502676A38A00C5D250 /* MembraneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A110A4F2676A38A00C5D250 /* MembraneView.mm */; };
 		3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A512676B06200C5D250 /* MetalKit.framework */; };
 		3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A532676B0BD00C5D250 /* ModelIO.framework */; };
-		3A16A6DA2F901248005BFF24 /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B082F9011E10061FCE8 /* libjvm.a */; };
-		3A16A6DB2F90124E005BFF24 /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B0E2F9011EC0061FCE8 /* libjava.a */; };
 		3A1A88DA26A79B420005E9C7 /* gol.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3A1A88D926A79B410005E9C7 /* gol.clj */; };
 		3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED02C8E31E4008D67EB /* libskparagraph.a */; };
 		3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED12C8E31E4008D67EB /* libskresources.a */; };
@@ -20,6 +18,8 @@
 		3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED32C8E31E4008D67EB /* libskunicode.a */; };
 		3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED42C8E31E4008D67EB /* libsvg.a */; };
 		3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */; };
+		3A7138392F9181E50032B7B0 /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B082F9011E10061FCE8 /* libjvm.a */; };
+		3A71383A2F9181E80032B7B0 /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B0E2F9011EC0061FCE8 /* libjava.a */; };
 		3A75F289267445BC0015D82C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F288267445BC0015D82C /* AppDelegate.m */; };
 		3A75F28C267445BC0015D82C /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28B267445BC0015D82C /* Renderer.mm */; };
 		3A75F28F267445BC0015D82C /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28E267445BC0015D82C /* GameViewController.mm */; };
@@ -199,9 +199,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A71383A2F9181E80032B7B0 /* libjava.a in Frameworks */,
+				3A7138392F9181E50032B7B0 /* libjvm.a in Frameworks */,
 				3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */,
-				3A16A6DB2F90124E005BFF24 /* libjava.a in Frameworks */,
-				3A16A6DA2F901248005BFF24 /* libjvm.a in Frameworks */,
 				3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */,
 				3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */,
 				3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */,
