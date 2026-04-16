@@ -11,8 +11,9 @@
 		3A110A502676A38A00C5D250 /* MembraneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A110A4F2676A38A00C5D250 /* MembraneView.mm */; };
 		3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A512676B06200C5D250 /* MetalKit.framework */; };
 		3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A532676B0BD00C5D250 /* ModelIO.framework */; };
+		3A16A6DA2F901248005BFF24 /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B082F9011E10061FCE8 /* libjvm.a */; };
+		3A16A6DB2F90124E005BFF24 /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B0E2F9011EC0061FCE8 /* libjava.a */; };
 		3A1A88DA26A79B420005E9C7 /* gol.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3A1A88D926A79B410005E9C7 /* gol.clj */; };
-		3A2C43762C93CD30009D8338 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2C436D2C93CD26009D8338 /* libffi.a */; };
 		3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED02C8E31E4008D67EB /* libskparagraph.a */; };
 		3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED12C8E31E4008D67EB /* libskresources.a */; };
 		3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED22C8E31E4008D67EB /* libskshaper.a */; };
@@ -26,7 +27,6 @@
 		3A75F295267445BC0015D82C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A75F293267445BC0015D82C /* Main.storyboard */; };
 		3A75F297267445BD0015D82C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A75F296267445BD0015D82C /* Assets.xcassets */; };
 		3A75F29A267445BD0015D82C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F299267445BD0015D82C /* main.m */; };
-		3A75F2BD2675B3860015D82C /* JvmFuncCallbacks.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F2BC2675B3860015D82C /* JvmFuncCallbacks.c */; };
 		3A75F2C72675C7B70015D82C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2C62675C7B70015D82C /* ImageIO.framework */; };
 		3A75F2CB2675C7CB0015D82C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2CA2675C7CB0015D82C /* CoreGraphics.framework */; };
 		3A75F2CD2675C7D70015D82C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2CC2675C7D60015D82C /* CoreText.framework */; };
@@ -37,44 +37,90 @@
 		3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759A726A646A20014EA55 /* SwiftUI.framework */; };
 		3A7759AA26A649810014EA55 /* libmembraneiosskia.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759A926A649810014EA55 /* libmembraneiosskia.o */; };
 		3A7759AC26A649E70014EA55 /* libskia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7759AB26A649E70014EA55 /* libskia.a */; };
+		3A9C44022F9040F6004700E3 /* libjpeg16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43F72F9040F5004700E3 /* libjpeg16.a */; };
+		3A9C44032F9040F6004700E3 /* libharfbuzz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43F82F9040F5004700E3 /* libharfbuzz.a */; };
+		3A9C44042F9040F6004700E3 /* libdng_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43F92F9040F6004700E3 /* libdng_sdk.a */; };
+		3A9C44052F9040F6004700E3 /* libskcms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FA2F9040F6004700E3 /* libskcms.a */; };
+		3A9C44062F9040F6004700E3 /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FB2F9040F6004700E3 /* libexpat.a */; };
+		3A9C44072F9040F6004700E3 /* libicu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FC2F9040F6004700E3 /* libicu.a */; };
+		3A9C44082F9040F6004700E3 /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FD2F9040F6004700E3 /* libjpeg.a */; };
+		3A9C44092F9040F6004700E3 /* libbentleyottmann.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FE2F9040F6004700E3 /* libbentleyottmann.a */; };
+		3A9C440A2F9040F6004700E3 /* libjpeg12.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C43FF2F9040F6004700E3 /* libjpeg12.a */; };
+		3A9C440B2F9040F6004700E3 /* libpiex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C44002F9040F6004700E3 /* libpiex.a */; };
+		3A9C440C2F9040F6004700E3 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C44012F9040F6004700E3 /* libpng.a */; };
+		3A9C44132F904353004700E3 /* libwuffs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C440D2F904353004700E3 /* libwuffs.a */; };
+		3A9C44142F904353004700E3 /* libwebp_sse41.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C440E2F904353004700E3 /* libwebp_sse41.a */; };
+		3A9C44152F904353004700E3 /* libskunicode_icu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C440F2F904353004700E3 /* libskunicode_icu.a */; };
+		3A9C44162F904353004700E3 /* libskunicode_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C44102F904353004700E3 /* libskunicode_core.a */; };
+		3A9C44172F904353004700E3 /* libwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C44112F904353004700E3 /* libwebp.a */; };
+		3A9C44182F904353004700E3 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9C44122F904353004700E3 /* libzlib.a */; };
 		3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */; };
 		3AC59C93269A422B00E9D1B8 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2D42675C7FA0015D82C /* CoreServices.framework */; };
 		3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC80E7D27F7FFAA006D165F /* bb.o */; };
 		3ACBC1B92CACB17F00DBAAFF /* app.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3ACBC1B82CACB17F00DBAAFF /* app.clj */; };
+		3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A16A6E42F9016B4005BFF24 /* libffi.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A2C436C2C93CD26009D8338 /* PBXContainerItemProxy */ = {
+		3A16A6D42F90122C005BFF24 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+			containerPortal = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ADB99B525B7219B00B42097;
+			remoteInfo = libjava;
+		};
+		3A16A6D82F901230005BFF24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A7FF98E261CAE7500129BCA;
+			remoteInfo = libjvm;
+		};
+		3A16A6E32F9016B4005BFF24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB13B1661849DF1E0010F42D;
 			remoteInfo = "libffi-iOS";
 		};
-		3A2C436E2C93CD26009D8338 /* PBXContainerItemProxy */ = {
+		3A16A6E52F9016B4005BFF24 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FDB52FC51F6144FA00AA92E6;
 			remoteInfo = "libffi-tvOS";
 		};
-		3A2C43702C93CD26009D8338 /* PBXContainerItemProxy */ = {
+		3A16A6E72F9016B4005BFF24 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB13B1911849DF510010F42D;
 			remoteInfo = "libffi-Mac";
 		};
-		3A2C43722C93CD26009D8338 /* PBXContainerItemProxy */ = {
+		3A16A6E92F9016B4005BFF24 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FDDB2F621F5D846400EF414E;
 			remoteInfo = "libffi-static-Mac";
 		};
-		3A2C43742C93CD2B009D8338 /* PBXContainerItemProxy */ = {
+		3A594B072F9011E10061FCE8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+			containerPortal = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5A7FF98F261CAE7500129BCA;
+			remoteInfo = libjvm;
+		};
+		3A594B0D2F9011EC0061FCE8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5ADB99B625B7219B00B42097;
+			remoteInfo = libjava;
+		};
+		3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = DB13B1651849DF1E0010F42D;
 			remoteInfo = "libffi-iOS";
@@ -87,13 +133,15 @@
 		3A110A4F2676A38A00C5D250 /* MembraneView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MembraneView.mm; sourceTree = "<group>"; };
 		3A110A512676B06200C5D250 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A110A532676B0BD00C5D250 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
+		3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libffi.xcodeproj; path = "../../third_party/libffi-3.4.6/libffi.xcodeproj"; sourceTree = "<group>"; };
 		3A1A88D926A79B410005E9C7 /* gol.clj */ = {isa = PBXFileReference; lastKnownFileType = text; name = gol.clj; path = ../../examples/gol/gol.clj; sourceTree = "<group>"; };
-		3A2C43652C93CD26009D8338 /* libffi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libffi.xcodeproj; path = "../../third_party/libffi-3.4.6/libffi.xcodeproj"; sourceTree = "<group>"; };
 		3A43FED02C8E31E4008D67EB /* libskparagraph.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskparagraph.a; sourceTree = "<group>"; };
 		3A43FED12C8E31E4008D67EB /* libskresources.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskresources.a; sourceTree = "<group>"; };
 		3A43FED22C8E31E4008D67EB /* libskshaper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskshaper.a; sourceTree = "<group>"; };
 		3A43FED32C8E31E4008D67EB /* libskunicode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskunicode.a; sourceTree = "<group>"; };
 		3A43FED42C8E31E4008D67EB /* libsvg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsvg.a; sourceTree = "<group>"; };
+		3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../../ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
+		3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../../ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
 		3A6C99A326B0CB7C000479D4 /* clj_objc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clj_objc.o; sourceTree = "<group>"; };
 		3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		3A75F284267445BC0015D82C /* LearnLisp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnLisp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,7 +158,6 @@
 		3A75F298267445BD0015D82C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A75F299267445BD0015D82C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A75F2B0267535460015D82C /* skia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skia.h; sourceTree = "<group>"; };
-		3A75F2BC2675B3860015D82C /* JvmFuncCallbacks.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = JvmFuncCallbacks.c; sourceTree = "<group>"; };
 		3A75F2C62675C7B70015D82C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		3A75F2C82675C7C30015D82C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		3A75F2CA2675C7CB0015D82C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -122,6 +169,23 @@
 		3A7759A726A646A20014EA55 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		3A7759A926A649810014EA55 /* libmembraneiosskia.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = libmembraneiosskia.o; sourceTree = "<group>"; };
 		3A7759AB26A649E70014EA55 /* libskia.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskia.a; sourceTree = "<group>"; };
+		3A9C43F72F9040F5004700E3 /* libjpeg16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjpeg16.a; sourceTree = "<group>"; };
+		3A9C43F82F9040F5004700E3 /* libharfbuzz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libharfbuzz.a; sourceTree = "<group>"; };
+		3A9C43F92F9040F6004700E3 /* libdng_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdng_sdk.a; sourceTree = "<group>"; };
+		3A9C43FA2F9040F6004700E3 /* libskcms.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskcms.a; sourceTree = "<group>"; };
+		3A9C43FB2F9040F6004700E3 /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libexpat.a; sourceTree = "<group>"; };
+		3A9C43FC2F9040F6004700E3 /* libicu.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libicu.a; sourceTree = "<group>"; };
+		3A9C43FD2F9040F6004700E3 /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjpeg.a; sourceTree = "<group>"; };
+		3A9C43FE2F9040F6004700E3 /* libbentleyottmann.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbentleyottmann.a; sourceTree = "<group>"; };
+		3A9C43FF2F9040F6004700E3 /* libjpeg12.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjpeg12.a; sourceTree = "<group>"; };
+		3A9C44002F9040F6004700E3 /* libpiex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpiex.a; sourceTree = "<group>"; };
+		3A9C44012F9040F6004700E3 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpng.a; sourceTree = "<group>"; };
+		3A9C440D2F904353004700E3 /* libwuffs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwuffs.a; sourceTree = "<group>"; };
+		3A9C440E2F904353004700E3 /* libwebp_sse41.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp_sse41.a; sourceTree = "<group>"; };
+		3A9C440F2F904353004700E3 /* libskunicode_icu.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskunicode_icu.a; sourceTree = "<group>"; };
+		3A9C44102F904353004700E3 /* libskunicode_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskunicode_core.a; sourceTree = "<group>"; };
+		3A9C44112F904353004700E3 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
+		3A9C44122F904353004700E3 /* libzlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzlib.a; sourceTree = "<group>"; };
 		3AA59F742C964CAE000CF11F /* TestSkia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestSkia.entitlements; sourceTree = "<group>"; };
 		3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		3AC80E7D27F7FFAA006D165F /* bb.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bb.o; path = ../../library/build/out/bb.o; sourceTree = "<group>"; };
@@ -135,8 +199,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */,
+				3A16A6DB2F90124E005BFF24 /* libjava.a in Frameworks */,
+				3A16A6DA2F901248005BFF24 /* libjvm.a in Frameworks */,
 				3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */,
-				3A2C43762C93CD30009D8338 /* libffi.a in Frameworks */,
 				3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */,
 				3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */,
 				3A7759AA26A649810014EA55 /* libmembraneiosskia.o in Frameworks */,
@@ -144,13 +210,30 @@
 				3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */,
 				3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */,
 				3A75F2D52675C7FA0015D82C /* CoreServices.framework in Frameworks */,
-				3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */,
-				3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */,
-				3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */,
-				3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */,
+				3A9C44022F9040F6004700E3 /* libjpeg16.a in Frameworks */,
+				3A9C44032F9040F6004700E3 /* libharfbuzz.a in Frameworks */,
+				3A9C44042F9040F6004700E3 /* libdng_sdk.a in Frameworks */,
+				3A9C44052F9040F6004700E3 /* libskcms.a in Frameworks */,
+				3A9C44062F9040F6004700E3 /* libexpat.a in Frameworks */,
+				3A9C44072F9040F6004700E3 /* libicu.a in Frameworks */,
+				3A9C44082F9040F6004700E3 /* libjpeg.a in Frameworks */,
+				3A9C44092F9040F6004700E3 /* libbentleyottmann.a in Frameworks */,
+				3A9C440A2F9040F6004700E3 /* libjpeg12.a in Frameworks */,
+				3A9C44132F904353004700E3 /* libwuffs.a in Frameworks */,
+				3A9C44142F904353004700E3 /* libwebp_sse41.a in Frameworks */,
+				3A9C44152F904353004700E3 /* libskunicode_icu.a in Frameworks */,
+				3A9C44162F904353004700E3 /* libskunicode_core.a in Frameworks */,
+				3A9C44172F904353004700E3 /* libwebp.a in Frameworks */,
+				3A9C44182F904353004700E3 /* libzlib.a in Frameworks */,
 				3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */,
-				3A75F2D32675C7F40015D82C /* Foundation.framework in Frameworks */,
+				3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */,
+				3A9C440B2F9040F6004700E3 /* libpiex.a in Frameworks */,
+				3A9C440C2F9040F6004700E3 /* libpng.a in Frameworks */,
+				3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */,
+				3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */,
 				3A7759AC26A649E70014EA55 /* libskia.a in Frameworks */,
+				3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */,
+				3A75F2D32675C7F40015D82C /* Foundation.framework in Frameworks */,
 				3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */,
 				3AC59C93269A422B00E9D1B8 /* CoreServices.framework in Frameworks */,
 				3A75F2D12675C7EA0015D82C /* UIKit.framework in Frameworks */,
@@ -164,13 +247,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3A2C43662C93CD26009D8338 /* Products */ = {
+		3A16A6DD2F9016B4005BFF24 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A2C436D2C93CD26009D8338 /* libffi.a */,
-				3A2C436F2C93CD26009D8338 /* libffi.a */,
-				3A2C43712C93CD26009D8338 /* ffi.dylib */,
-				3A2C43732C93CD26009D8338 /* libffi.a */,
+				3A16A6E42F9016B4005BFF24 /* libffi.a */,
+				3A16A6E62F9016B4005BFF24 /* libffi.a */,
+				3A16A6E82F9016B4005BFF24 /* ffi.dylib */,
+				3A16A6EA2F9016B4005BFF24 /* libffi.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A594B042F9011E10061FCE8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A594B082F9011E10061FCE8 /* libjvm.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A594B0A2F9011EC0061FCE8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A594B0E2F9011EC0061FCE8 /* libjava.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,7 +277,9 @@
 		3A75F27B267445BB0015D82C = {
 			isa = PBXGroup;
 			children = (
-				3A2C43652C93CD26009D8338 /* libffi.xcodeproj */,
+				3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */,
+				3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */,
+				3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */,
 				3A75F286267445BC0015D82C /* TestSkia */,
 				3A1A88D926A79B410005E9C7 /* gol.clj */,
 				3ACBC1B82CACB17F00DBAAFF /* app.clj */,
@@ -212,7 +313,6 @@
 				3A75F296267445BD0015D82C /* Assets.xcassets */,
 				3A75F298267445BD0015D82C /* Info.plist */,
 				3A75F299267445BD0015D82C /* main.m */,
-				3A75F2BC2675B3860015D82C /* JvmFuncCallbacks.c */,
 				3A110A4E2676A38A00C5D250 /* MembraneView.h */,
 				3A110A4F2676A38A00C5D250 /* MembraneView.mm */,
 			);
@@ -222,6 +322,23 @@
 		3A75F2A72674696C0015D82C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A9C44102F904353004700E3 /* libskunicode_core.a */,
+				3A9C440F2F904353004700E3 /* libskunicode_icu.a */,
+				3A9C440E2F904353004700E3 /* libwebp_sse41.a */,
+				3A9C44112F904353004700E3 /* libwebp.a */,
+				3A9C440D2F904353004700E3 /* libwuffs.a */,
+				3A9C44122F904353004700E3 /* libzlib.a */,
+				3A9C43FE2F9040F6004700E3 /* libbentleyottmann.a */,
+				3A9C43F92F9040F6004700E3 /* libdng_sdk.a */,
+				3A9C43FB2F9040F6004700E3 /* libexpat.a */,
+				3A9C43F82F9040F5004700E3 /* libharfbuzz.a */,
+				3A9C43FC2F9040F6004700E3 /* libicu.a */,
+				3A9C43FD2F9040F6004700E3 /* libjpeg.a */,
+				3A9C43FF2F9040F6004700E3 /* libjpeg12.a */,
+				3A9C43F72F9040F5004700E3 /* libjpeg16.a */,
+				3A9C44002F9040F6004700E3 /* libpiex.a */,
+				3A9C44012F9040F6004700E3 /* libpng.a */,
+				3A9C43FA2F9040F6004700E3 /* libskcms.a */,
 				3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */,
 				3AD3FEA22C935686007A5155 /* libffi-trampolines.tbd */,
 				3AD3FEA32C935686007A5155 /* libffi.tbd */,
@@ -265,7 +382,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				3A2C43752C93CD2B009D8338 /* PBXTargetDependency */,
+				3AE5DE442F9016DE0036E72E /* PBXTargetDependency */,
+				3A16A6D92F901230005BFF24 /* PBXTargetDependency */,
+				3A16A6D52F90122C005BFF24 /* PBXTargetDependency */,
 			);
 			name = LearnLisp;
 			productName = TestSkia;
@@ -298,8 +417,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 3A2C43662C93CD26009D8338 /* Products */;
-					ProjectRef = 3A2C43652C93CD26009D8338 /* libffi.xcodeproj */;
+					ProductGroup = 3A16A6DD2F9016B4005BFF24 /* Products */;
+					ProjectRef = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
+				},
+				{
+					ProductGroup = 3A594B042F9011E10061FCE8 /* Products */;
+					ProjectRef = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
+				},
+				{
+					ProductGroup = 3A594B0A2F9011EC0061FCE8 /* Products */;
+					ProjectRef = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -310,32 +437,46 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3A2C436D2C93CD26009D8338 /* libffi.a */ = {
+		3A16A6E42F9016B4005BFF24 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libffi.a;
-			remoteRef = 3A2C436C2C93CD26009D8338 /* PBXContainerItemProxy */;
+			remoteRef = 3A16A6E32F9016B4005BFF24 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A2C436F2C93CD26009D8338 /* libffi.a */ = {
+		3A16A6E62F9016B4005BFF24 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libffi.a;
-			remoteRef = 3A2C436E2C93CD26009D8338 /* PBXContainerItemProxy */;
+			remoteRef = 3A16A6E52F9016B4005BFF24 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A2C43712C93CD26009D8338 /* ffi.dylib */ = {
+		3A16A6E82F9016B4005BFF24 /* ffi.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
 			path = ffi.dylib;
-			remoteRef = 3A2C43702C93CD26009D8338 /* PBXContainerItemProxy */;
+			remoteRef = 3A16A6E72F9016B4005BFF24 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A2C43732C93CD26009D8338 /* libffi.a */ = {
+		3A16A6EA2F9016B4005BFF24 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
 			path = libffi.a;
-			remoteRef = 3A2C43722C93CD26009D8338 /* PBXContainerItemProxy */;
+			remoteRef = 3A16A6E92F9016B4005BFF24 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3A594B082F9011E10061FCE8 /* libjvm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjvm.a;
+			remoteRef = 3A594B072F9011E10061FCE8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3A594B0E2F9011EC0061FCE8 /* libjava.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjava.a;
+			remoteRef = 3A594B0D2F9011EC0061FCE8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -362,7 +503,6 @@
 				3A75F29A267445BD0015D82C /* main.m in Sources */,
 				3A110A502676A38A00C5D250 /* MembraneView.mm in Sources */,
 				3A75F291267445BC0015D82C /* Shaders.metal in Sources */,
-				3A75F2BD2675B3860015D82C /* JvmFuncCallbacks.c in Sources */,
 				3A75F28C267445BC0015D82C /* Renderer.mm in Sources */,
 				3A75F28F267445BC0015D82C /* GameViewController.mm in Sources */,
 				3A75F289267445BC0015D82C /* AppDelegate.m in Sources */,
@@ -372,10 +512,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3A2C43752C93CD2B009D8338 /* PBXTargetDependency */ = {
+		3A16A6D52F90122C005BFF24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjava;
+			targetProxy = 3A16A6D42F90122C005BFF24 /* PBXContainerItemProxy */;
+		};
+		3A16A6D92F901230005BFF24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjvm;
+			targetProxy = 3A16A6D82F901230005BFF24 /* PBXContainerItemProxy */;
+		};
+		3AE5DE442F9016DE0036E72E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "libffi-iOS";
-			targetProxy = 3A2C43742C93CD2B009D8338 /* PBXContainerItemProxy */;
+			targetProxy = 3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -596,23 +746,6 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ljava",
-					"-lnio",
-					"-lzip",
-					"-lnet",
-					"-lprefs",
-					"-ljvm",
-					"-lfdlibm",
-					"-lz",
-					"-ldl",
-					"-lj2pkcs11",
-					"-ljaas",
-					"-lextnet",
-					"-lstdc++",
-					"-lpthread",
-					"-llibchelper",
-					"-ldarwin",
-					"-lffi",
 					"-Wl,-framework,Foundation",
 					"-Wl,-framework,UIKit",
 					"-Wl,-framework,CoreGraphics",
@@ -638,8 +771,6 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
-					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -670,23 +801,6 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
-					"-ljava",
-					"-lnio",
-					"-lzip",
-					"-lnet",
-					"-lprefs",
-					"-ljvm",
-					"-lfdlibm",
-					"-lz",
-					"-ldl",
-					"-lj2pkcs11",
-					"-ljaas",
-					"-lextnet",
-					"-lstdc++",
-					"-lpthread",
-					"-llibchelper",
-					"-ldarwin",
-					"-lffi",
 					"-Wl,-framework,Foundation",
 					"-Wl,-framework,UIKit",
 					"-Wl,-framework,CoreGraphics",
@@ -712,8 +826,6 @@
 					"-Wl,-framework,StoreKit",
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
-					"-L\"$(SRCROOT)/../../lib/ios-arm64\"",
-					"-L\"$(SRCROOT)/../../build/staticjdk/lib/static\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
