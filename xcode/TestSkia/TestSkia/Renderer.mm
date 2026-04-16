@@ -5,8 +5,12 @@
 //  Created by Adrian Smith on 6/11/21.
 //
 
-#import "GrDirectContext.h"
-#import "gl/GrGLInterface.h"
+#include <ganesh/GrBackendSurface.h>
+#include <ganesh/mtl/GrMtlBackendContext.h>
+#include <ganesh/mtl/GrMtlBackendSurface.h>
+#include <ganesh/mtl/GrMtlDirectContext.h>
+#include <ganesh/mtl/SkSurfaceMetal.h>
+
 #import "SkData.h"
 #import "SkImage.h"
 #import "SkStream.h"
@@ -15,6 +19,7 @@
 #import "SkPaint.h"
 #import "SkTextBlob.h"
 #import "SkFont.h"
+#import "SkColorSpace.h"
 
 #import "skia.h"
 #import "bb.h"
@@ -46,13 +51,13 @@ sk_sp<SkSurface> SkMtkViewToSurface(MTKView* mtkView, GrRecordingContext* rConte
     const SkSurfaceProps surfaceProps;
     int sampleCount = (int)[mtkView sampleCount];
 
-    return SkSurface::MakeFromMTKView(rContext, (__bridge GrMTLHandle)mtkView, origin, sampleCount,
+    return SkSurfaces::WrapMTKView(rContext, (__bridge GrMTLHandle)mtkView, origin, sampleCount,
                                       colorType, colorSpace, &surfaceProps);
 }
 
 void testDraw(SkCanvas* canvas){
     canvas->clear(SK_ColorWHITE);
-    
+    canvas->translate(10, 100);
     SkPaint fillPaint;
     SkPaint strokePaint;
     strokePaint.setStyle(SkPaint::kStroke_Style);
@@ -130,72 +135,13 @@ void testDraw(SkCanvas* canvas){
     [view setColorPixelFormat:MTLPixelFormatBGRA8Unorm];
     [view setSampleCount:1];
     
-    
-    
-//    const GrMtlBackendContext interface;
-    // Leaving interface as null makes Skia extract pointers to OpenGL functions for the current
-    // context in a platform-specific way. Alternatively, you may create your own GrGLInterface and
-    // initialize it however you like to attach to an alternate OpenGL implementation or intercept
-    // Skia's OpenGL calls.
     _commandQueue = [_device newCommandQueue];
-    sk_sp<GrDirectContext> context = GrDirectContext::MakeMetal((void*)CFBridgingRetain(_device), (void*)CFBridgingRetain(_commandQueue));
-    grContext = context;
+    
+    GrMtlBackendContext backend_context;
+    backend_context.fDevice.retain((__bridge void*)_device);
+    backend_context.fQueue.retain((__bridge void*)_commandQueue);
 
-
-//    _mtlVertexDescriptor = [[MTLVertexDescriptor alloc] init];
-//
-//    _mtlVertexDescriptor.attributes[VertexAttributePosition].format = MTLVertexFormatFloat3;
-//    _mtlVertexDescriptor.attributes[VertexAttributePosition].offset = 0;
-//    _mtlVertexDescriptor.attributes[VertexAttributePosition].bufferIndex = BufferIndexMeshPositions;
-//
-//    _mtlVertexDescriptor.attributes[VertexAttributeTexcoord].format = MTLVertexFormatFloat2;
-//    _mtlVertexDescriptor.attributes[VertexAttributeTexcoord].offset = 0;
-//    _mtlVertexDescriptor.attributes[VertexAttributeTexcoord].bufferIndex = BufferIndexMeshGenerics;
-//
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshPositions].stride = 12;
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshPositions].stepRate = 1;
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshPositions].stepFunction = MTLVertexStepFunctionPerVertex;
-//
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshGenerics].stride = 8;
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshGenerics].stepRate = 1;
-//    _mtlVertexDescriptor.layouts[BufferIndexMeshGenerics].stepFunction = MTLVertexStepFunctionPerVertex;
-//
-//    id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
-//
-//    id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
-//
-//    id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
-//
-//    MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
-//    pipelineStateDescriptor.label = @"MyPipeline";
-//    pipelineStateDescriptor.sampleCount = view.sampleCount;
-//    pipelineStateDescriptor.vertexFunction = vertexFunction;
-//    pipelineStateDescriptor.fragmentFunction = fragmentFunction;
-//    pipelineStateDescriptor.vertexDescriptor = _mtlVertexDescriptor;
-//    pipelineStateDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat;
-//    pipelineStateDescriptor.depthAttachmentPixelFormat = view.depthStencilPixelFormat;
-//    pipelineStateDescriptor.stencilAttachmentPixelFormat = view.depthStencilPixelFormat;
-//
-//    NSError *error = NULL;
-//    _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor error:&error];
-//    if (!_pipelineState)
-//    {
-//        NSLog(@"Failed to created pipeline state, error %@", error);
-//    }
-//
-//    MTLDepthStencilDescriptor *depthStateDesc = [[MTLDepthStencilDescriptor alloc] init];
-//    depthStateDesc.depthCompareFunction = MTLCompareFunctionLess;
-//    depthStateDesc.depthWriteEnabled = YES;
-//    _depthState = [_device newDepthStencilStateWithDescriptor:depthStateDesc];
-//
-//    for(NSUInteger i = 0; i < MaxBuffersInFlight; i++)
-//    {
-//        _dynamicUniformBuffer[i] = [_device newBufferWithLength:sizeof(Uniforms)
-//                                                        options:MTLResourceStorageModeShared];
-//
-//        _dynamicUniformBuffer[i].label = @"UniformBuffer";
-//    }
-//
+    grContext = GrDirectContexts::MakeMetal(backend_context);
 
 }
 
@@ -313,75 +259,12 @@ void testDraw(SkCanvas* canvas){
 	graal_detach_thread(thread);
 
     // Must flush *and* present for this to work!
-    surface->flushAndSubmit();
+    grContext->flushAndSubmit(surface.get());
 
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     [commandBuffer presentDrawable:[view currentDrawable]];
     [commandBuffer commit];
 
-    
-   
-    
-
-
-    /// Delay getting the currentRenderPassDescriptor until absolutely needed. This avoids
-    ///   holding onto the drawable and blocking the display pipeline any longer than necessary
-//    MTLRenderPassDescriptor* renderPassDescriptor = view.currentRenderPassDescriptor;
-//
-//    if(renderPassDescriptor != nil)
-//    {
-//        /// Final pass rendering code here
-//
-//        id <MTLRenderCommandEncoder> renderEncoder =
-//        [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-//        renderEncoder.label = @"MyRenderEncoder";
-//
-//        [renderEncoder pushDebugGroup:@"DrawBox"];
-//
-//        [renderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
-//        [renderEncoder setCullMode:MTLCullModeBack];
-//        [renderEncoder setRenderPipelineState:_pipelineState];
-//        [renderEncoder setDepthStencilState:_depthState];
-//
-//        [renderEncoder setVertexBuffer:_dynamicUniformBuffer[_uniformBufferIndex]
-//                                offset:0
-//                               atIndex:BufferIndexUniforms];
-//
-//        [renderEncoder setFragmentBuffer:_dynamicUniformBuffer[_uniformBufferIndex]
-//                                  offset:0
-//                                 atIndex:BufferIndexUniforms];
-//
-//        for (NSUInteger bufferIndex = 0; bufferIndex < _mesh.vertexBuffers.count; bufferIndex++)
-//        {
-//            MTKMeshBuffer *vertexBuffer = _mesh.vertexBuffers[bufferIndex];
-//            if((NSNull*)vertexBuffer != [NSNull null])
-//            {
-//                [renderEncoder setVertexBuffer:vertexBuffer.buffer
-//                                        offset:vertexBuffer.offset
-//                                       atIndex:bufferIndex];
-//            }
-//        }
-//
-//        [renderEncoder setFragmentTexture:_colorMap
-//                                  atIndex:TextureIndexColor];
-//
-//        for(MTKSubmesh *submesh in _mesh.submeshes)
-//        {
-//            [renderEncoder drawIndexedPrimitives:submesh.primitiveType
-//                                      indexCount:submesh.indexCount
-//                                       indexType:submesh.indexType
-//                                     indexBuffer:submesh.indexBuffer.buffer
-//                               indexBufferOffset:submesh.indexBuffer.offset];
-//        }
-//
-//        [renderEncoder popDebugGroup];
-//
-//        [renderEncoder endEncoding];
-//
-//        [commandBuffer presentDrawable:view.currentDrawable];
-//    }
-//
-//    [commandBuffer commit];
 }
 
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
