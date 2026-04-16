@@ -42,8 +42,7 @@
                                                                   }
               com.phronemophobic/membrandt {;; :local/root "../membrandt"
                                             :git/url "https://github.com/phronmophobic/membrandt/"
-                                            :git/sha :d573684248138065a4ebae2b7f43170d75735c4a}
-
+                                            :git/sha "d573684248138065a4ebae2b7f43170d75735c4a"}
               babashka/babashka.nrepl { ;;:mvn/version "0.0.7"
                                        :local/root "third_party/babashka/babashka.nrepl"
                                        }
