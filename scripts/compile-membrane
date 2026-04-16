@@ -21,7 +21,9 @@ clojure -T:build uberjar-native-image
 
 mkdir -p library
 
-rm -rf ./library/tmp
+pushd library
+
+rm -rf ./tmp
 
 time \
     $GRAALVM_HOME/bin/native-image \
@@ -61,16 +63,12 @@ time \
     -H:CompilerBackend=lir \
     -H:Name=bb \
     '-Dsvm.platform=org.graalvm.nativeimage.Platform$IOS_AARCH64' \
-    -jar ./target/grease-uber.jar \
+    -jar ../target/grease-uber.jar \
     bb
 
-rm -rf ./library/build/out
-mkdir -p ./library/build/out
+rm -rf ./build/out
+mkdir -p ./build/out
 
-mv bb.h library/bb.h
-find ./library/tmp -name 'bb.o' -exec ln {} ./library/build/out/bb.o \;
-# find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
+find ./tmp -name 'bb.o' -exec ln {} ./build/out/bb.o \;
 
-# This is where xcode will look for headers
-# ln -s "$GRAALVM_HOME" build/graalvm
-date
+popd
