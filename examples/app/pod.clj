@@ -1242,3 +1242,11 @@
 
 
 
+(comment
+  (def backup-path
+    (str
+     (fs/path (scripts-dir)
+              "backup-04-14-2026.zip")))
+  (fs/list-dir (documents-dir))
+  (jdbc/execute! db [(str "BACKUP TO '" backup-path "'")])
+  ,)
