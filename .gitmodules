@@ -10,3 +10,6 @@
 [submodule "third_party/ios-graal-jdk-21"]
 	path = third_party/ios-graal-jdk-21
 	url = git@github.com:phronmophobic/ios-graal-jdk-21.git
+[submodule "third_party/skia"]
+	path = third_party/skia
+	url = https://skia.googlesource.com/skia.git
