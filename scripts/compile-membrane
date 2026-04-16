@@ -8,8 +8,15 @@ cd "$DIR"
 
 PROJECT_DIR="$DIR/.."
 
+export JAVA_HOME="$PROJECT_DIR"/third_party/graalvm-jdk-21.0.3+7.1/Contents/Home
+export GRAALVM_HOME="$JAVA_HOME"
+export PATH=$JAVA_HOME/bin:$PATH
+
+java -version
+
 cd ..
 
+rm -rf "${PROJECT_DIR}/target/"
 clojure -T:build uberjar-native-image
 
 mkdir -p library
@@ -18,6 +25,7 @@ rm -rf ./library/tmp
 
 time \
     $GRAALVM_HOME/bin/native-image \
+    --verbose \
     --report-unsupported-elements-at-runtime \
     '--initialize-at-run-time=org.httpkit.client.ClientSslEngineFactory$SSLHolder' \
     --initialize-at-build-time=java.sql.SQLException \
@@ -45,6 +53,7 @@ time \
     -J-XX:MaxDirectMemorySize=8G \
     -J-Dclojure.compiler.direct-linking=true \
     -J-Dtech.v3.datatype.graal-native=true \
+    -J-Dmembrane.ios=true \
     -Dsvm.targetName=iOS \
     -Dsvm.targetArch=arm64 \
     -H:+UseCAPCache \
@@ -59,7 +68,7 @@ rm -rf ./library/build/out
 mkdir -p ./library/build/out
 
 mv bb.h library/bb.h
-find ./library/tmp -name 'bb.o' -exec cp {} ./library/build/out \;
+find ./library/tmp -name 'bb.o' -exec ln {} ./library/build/out/bb.o \;
 # find ./tmp -name 'grease-uber.o' -exec cp {} build/out \;
 
 # This is where xcode will look for headers
