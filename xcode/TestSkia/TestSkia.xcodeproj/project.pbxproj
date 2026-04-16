@@ -18,8 +18,6 @@
 		3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED32C8E31E4008D67EB /* libskunicode.a */; };
 		3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED42C8E31E4008D67EB /* libsvg.a */; };
 		3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */; };
-		3A7138392F9181E50032B7B0 /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B082F9011E10061FCE8 /* libjvm.a */; };
-		3A71383A2F9181E80032B7B0 /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A594B0E2F9011EC0061FCE8 /* libjava.a */; };
 		3A75F289267445BC0015D82C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F288267445BC0015D82C /* AppDelegate.m */; };
 		3A75F28C267445BC0015D82C /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28B267445BC0015D82C /* Renderer.mm */; };
 		3A75F28F267445BC0015D82C /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28E267445BC0015D82C /* GameViewController.mm */; };
@@ -59,23 +57,11 @@
 		3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC80E7D27F7FFAA006D165F /* bb.o */; };
 		3ACBC1B92CACB17F00DBAAFF /* app.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3ACBC1B82CACB17F00DBAAFF /* app.clj */; };
 		3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A16A6E42F9016B4005BFF24 /* libffi.a */; };
+		3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D8A2F918B15003FEE4E /* libjvm.a */; };
+		3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D902F918B1C003FEE4E /* libjava.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A16A6D42F90122C005BFF24 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 5ADB99B525B7219B00B42097;
-			remoteInfo = libjava;
-		};
-		3A16A6D82F901230005BFF24 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 5A7FF98E261CAE7500129BCA;
-			remoteInfo = libjvm;
-		};
 		3A16A6E32F9016B4005BFF24 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
@@ -104,26 +90,40 @@
 			remoteGlobalIDString = FDDB2F621F5D846400EF414E;
 			remoteInfo = "libffi-static-Mac";
 		};
-		3A594B072F9011E10061FCE8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5A7FF98F261CAE7500129BCA;
-			remoteInfo = libjvm;
-		};
-		3A594B0D2F9011EC0061FCE8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5ADB99B625B7219B00B42097;
-			remoteInfo = libjava;
-		};
 		3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = DB13B1651849DF1E0010F42D;
 			remoteInfo = "libffi-iOS";
+		};
+		3AFA8D892F918B15003FEE4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5A7FF98F261CAE7500129BCA;
+			remoteInfo = libjvm;
+		};
+		3AFA8D8F2F918B1C003FEE4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5ADB99B625B7219B00B42097;
+			remoteInfo = libjava;
+		};
+		3AFA8D912F918B3D003FEE4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5ADB99B525B7219B00B42097;
+			remoteInfo = libjava;
+		};
+		3AFA8D932F918B41003FEE4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A7FF98E261CAE7500129BCA;
+			remoteInfo = libjvm;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -140,8 +140,6 @@
 		3A43FED22C8E31E4008D67EB /* libskshaper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskshaper.a; sourceTree = "<group>"; };
 		3A43FED32C8E31E4008D67EB /* libskunicode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskunicode.a; sourceTree = "<group>"; };
 		3A43FED42C8E31E4008D67EB /* libsvg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsvg.a; sourceTree = "<group>"; };
-		3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../../ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
-		3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../../ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
 		3A6C99A326B0CB7C000479D4 /* clj_objc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clj_objc.o; sourceTree = "<group>"; };
 		3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		3A75F284267445BC0015D82C /* LearnLisp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnLisp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,6 +190,8 @@
 		3ACBC1B82CACB17F00DBAAFF /* app.clj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app.clj; path = ../../examples/app/app.clj; sourceTree = "<group>"; };
 		3AD3FEA22C935686007A5155 /* libffi-trampolines.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libffi-trampolines.tbd"; path = "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.5.sdk/usr/lib/libffi-trampolines.tbd"; sourceTree = DEVELOPER_DIR; };
 		3AD3FEA32C935686007A5155 /* libffi.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libffi.tbd; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.5.sdk/usr/lib/libffi.tbd; sourceTree = DEVELOPER_DIR; };
+		3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../third_party/ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
+		3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../third_party/ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,8 +199,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A71383A2F9181E80032B7B0 /* libjava.a in Frameworks */,
-				3A7138392F9181E50032B7B0 /* libjvm.a in Frameworks */,
+				3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */,
+				3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */,
 				3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */,
 				3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */,
 				3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */,
@@ -258,28 +258,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3A594B042F9011E10061FCE8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3A594B082F9011E10061FCE8 /* libjvm.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		3A594B0A2F9011EC0061FCE8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3A594B0E2F9011EC0061FCE8 /* libjava.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		3A75F27B267445BB0015D82C = {
 			isa = PBXGroup;
 			children = (
+				3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */,
+				3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */,
 				3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */,
-				3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */,
-				3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */,
 				3A75F286267445BC0015D82C /* TestSkia */,
 				3A1A88D926A79B410005E9C7 /* gol.clj */,
 				3ACBC1B82CACB17F00DBAAFF /* app.clj */,
@@ -368,6 +352,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3AFA8D862F918B15003FEE4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3AFA8D8A2F918B15003FEE4E /* libjvm.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3AFA8D8C2F918B1C003FEE4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3AFA8D902F918B1C003FEE4E /* libjava.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -382,9 +382,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				3AFA8D942F918B41003FEE4E /* PBXTargetDependency */,
+				3AFA8D922F918B3D003FEE4E /* PBXTargetDependency */,
 				3AE5DE442F9016DE0036E72E /* PBXTargetDependency */,
-				3A16A6D92F901230005BFF24 /* PBXTargetDependency */,
-				3A16A6D52F90122C005BFF24 /* PBXTargetDependency */,
 			);
 			name = LearnLisp;
 			productName = TestSkia;
@@ -421,12 +421,12 @@
 					ProjectRef = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 				},
 				{
-					ProductGroup = 3A594B042F9011E10061FCE8 /* Products */;
-					ProjectRef = 3A594B032F9011E10061FCE8 /* svm.graal.xcodeproj */;
+					ProductGroup = 3AFA8D862F918B15003FEE4E /* Products */;
+					ProjectRef = 3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */;
 				},
 				{
-					ProductGroup = 3A594B0A2F9011EC0061FCE8 /* Products */;
-					ProjectRef = 3A594B092F9011EC0061FCE8 /* svm.openjdk.xcodeproj */;
+					ProductGroup = 3AFA8D8C2F918B1C003FEE4E /* Products */;
+					ProjectRef = 3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -465,18 +465,18 @@
 			remoteRef = 3A16A6E92F9016B4005BFF24 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A594B082F9011E10061FCE8 /* libjvm.a */ = {
+		3AFA8D8A2F918B15003FEE4E /* libjvm.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libjvm.a;
-			remoteRef = 3A594B072F9011E10061FCE8 /* PBXContainerItemProxy */;
+			remoteRef = 3AFA8D892F918B15003FEE4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A594B0E2F9011EC0061FCE8 /* libjava.a */ = {
+		3AFA8D902F918B1C003FEE4E /* libjava.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libjava.a;
-			remoteRef = 3A594B0D2F9011EC0061FCE8 /* PBXContainerItemProxy */;
+			remoteRef = 3AFA8D8F2F918B1C003FEE4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -512,20 +512,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3A16A6D52F90122C005BFF24 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libjava;
-			targetProxy = 3A16A6D42F90122C005BFF24 /* PBXContainerItemProxy */;
-		};
-		3A16A6D92F901230005BFF24 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libjvm;
-			targetProxy = 3A16A6D82F901230005BFF24 /* PBXContainerItemProxy */;
-		};
 		3AE5DE442F9016DE0036E72E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "libffi-iOS";
 			targetProxy = 3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */;
+		};
+		3AFA8D922F918B3D003FEE4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjava;
+			targetProxy = 3AFA8D912F918B3D003FEE4E /* PBXContainerItemProxy */;
+		};
+		3AFA8D942F918B41003FEE4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libjvm;
+			targetProxy = 3AFA8D932F918B41003FEE4E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
