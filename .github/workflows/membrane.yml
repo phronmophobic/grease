@@ -39,5 +39,5 @@ jobs:
 
       - name: Build app
         run: |
-          scripts/build-membrane
+          /bin/bash scripts/build-membrane
 
