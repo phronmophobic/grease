@@ -5,6 +5,8 @@
             membrane.components.code-editor.code-editor
             liq.buffer
             membrane.basic-components
+            membrane.skia.paragraph
+            com.phronemophobic.membrandt
             [babashka.fs :as fs]
             babashka.nrepl.server
             [babashka.nrepl.server.middleware :as middleware]
@@ -577,12 +579,15 @@
               'java.lang.System System
               'java.lang.Long Long
               'java.util.Date java.util.Date
+              'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
               'java.net.InetAddress java.net.InetAddress
               'java.io.ByteArrayInputStream java.io.ByteArrayInputStream
               'java.io.PushbackReader java.io.PushbackReader
               'java.time.ZonedDateTime java.time.ZonedDateTime
               'java.util.Locale java.util.Locale
+              'java.util.Map java.util.Map
+              'java.util.function.Function java.util.function.Function
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
               'java.security.MessageDigest java.security.MessageDigest
               }
@@ -601,6 +606,10 @@
                     (scify/ns->ns-map 'membrane.component)
                     (scify/ns->ns-map 'membrane.basic-components)
                     (scify/ns->ns-map 'membrane.components.code-editor.code-editor)
+
+                    (scify/ns->ns-map 'membrane.skia.paragraph)
+                    (scify/ns->ns-map 'com.phronemophobic.membrandt)
+
                     (scify/ns->ns-map 'liq.buffer)
                     (scify/ns->ns-map 'membrane.ios)
                     (scify/ns->ns-map 'clojure.java.io)
