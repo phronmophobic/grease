@@ -32,13 +32,21 @@
                            ]
              :extra-deps
              {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
-                                           :local/root "../membrane"
+                                           ;; :local/root "../membrane"
+                                           :git/sha "93835080c35b86409e6a9ef416ef0e3eae353ac6"
+                                           :git/url "https://github.com/phronmophobic/membrane.git"
                                            }
+              
               com.phronemophobic.membrane/skialib-macosx-aarch64 {:mvn/version "RELEASE"
-                                                                    ;; :local/root "csource/macos-aarch64"
-                                                                    }
+                                                                  ;; :local/root "csource/macos-aarch64"
+                                                                  }
+              com.phronemophobic/membrandt {;; :local/root "../membrandt"
+                                            :git/url "https://github.com/phronmophobic/membrandt/"
+                                            :git/sha :d573684248138065a4ebae2b7f43170d75735c4a}
 
-              babashka/babashka.nrepl {:mvn/version "0.0.7"}
+              babashka/babashka.nrepl { ;;:mvn/version "0.0.7"
+                                       :local/root "third_party/babashka/babashka.nrepl"
+                                       }
               org.clojure/data.xml {:mvn/version "0.2.0-alpha8"}
               com.h2database/h2 {:mvn/version "2.2.224"}
               seancorfield/next.jdbc {:mvn/version "1.1.610"}
