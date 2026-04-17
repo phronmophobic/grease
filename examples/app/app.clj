@@ -132,6 +132,7 @@
       (let [s (buffer/text buf)
             is (ByteArrayInputStream. (.getBytes s "utf-8"))
             eof (Object.)]
+        (sci.ctx-store/reset-ctx! (ios/get-sci-ctx))
         (with-open [is is
                     rdr (io/reader is)
                     rdr (PushbackReader. rdr)]

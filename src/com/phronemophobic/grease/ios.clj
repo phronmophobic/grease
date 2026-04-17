@@ -644,6 +644,7 @@
 
                     (scify/ns->ns-map 'babashka.fs)
                     (scify/ns->ns-map 'babashka.nrepl.server)
+                    (scify/ns->ns-map 'sci.ctx-store)
                     
                     (scify/ns->ns-map 'honey.sql)
                     (scify/ns->ns-map 'honey.sql.protocols)
