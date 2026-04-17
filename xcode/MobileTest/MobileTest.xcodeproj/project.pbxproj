@@ -19,6 +19,7 @@
 		3A9F1D55266E9C4F0013661F /* MobileTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D54266E9C4F0013661F /* MobileTestUITests.swift */; };
 		3A9F1D7A266EC1300013661F /* Bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F1D79266EC1300013661F /* Bridge.m */; };
 		3AC74AB92F8DA23D00B7D49B /* bb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC74AB82F8DA23900B7D49B /* bb.a */; };
+		3AFA8DA32F91C414003FEE4E /* SubstrateHack.c in Sources */ = {isa = PBXBuildFile; fileRef = 3AFA8DA22F91C414003FEE4E /* SubstrateHack.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		3A9F1D78266EC12F0013661F /* Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bridge.h; path = csource/Bridge.h; sourceTree = "<group>"; };
 		3A9F1D79266EC1300013661F /* Bridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Bridge.m; path = csource/Bridge.m; sourceTree = "<group>"; };
 		3AC74AB82F8DA23900B7D49B /* bb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = bb.a; path = ../../library/build/out/bb.a; sourceTree = "<group>"; };
+		3AFA8DA22F91C414003FEE4E /* SubstrateHack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SubstrateHack.c; path = csource/SubstrateHack.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				3A7AAB942F8D69FF00E3DE4A /* svm.openjdk.xcodeproj */,
 				3A9F1D78266EC12F0013661F /* Bridge.h */,
 				3A9F1D79266EC1300013661F /* Bridge.m */,
+				3AFA8DA22F91C414003FEE4E /* SubstrateHack.c */,
 				3A9F1D31266E9C4D0013661F /* MobileTest */,
 				3A9F1D48266E9C4F0013661F /* MobileTestTests */,
 				3A9F1D53266E9C4F0013661F /* MobileTestUITests */,
@@ -369,6 +372,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AFA8DA32F91C414003FEE4E /* SubstrateHack.c in Sources */,
 				3A9F1D33266E9C4D0013661F /* AppDelegate.swift in Sources */,
 				3A9F1D35266E9C4D0013661F /* SceneDelegate.swift in Sources */,
 				3A9F1D7A266EC1300013661F /* Bridge.m in Sources */,
