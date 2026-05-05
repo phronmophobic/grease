@@ -85,11 +85,13 @@
                               :void [:pointer])))
 
 
-(defn file-row [f]
+(defn file-row [f width]
   (let [view (ui/bordered
-              20
-              (ui/label (fs/file-name f)
-                        (ui/font nil 22)))
+              [(ui/spacer width 0)
+               (ui/padding
+                20
+                [(ui/label (fs/file-name f)
+                           (ui/font nil 22))])])
         view (ui/on
               :mouse-down
               (fn [_]
@@ -174,8 +176,7 @@
          padding 18
          rect-width (+ text-width padding)
          rect-height (+ text-height padding)
-         border-radius 3
-         ]
+         border-radius 3]
      [
       (ui/with-style ::ui/style-stroke
         [
@@ -242,7 +243,8 @@
       (dispatch! :set $last-update (java.util.Date.)))))
 
 (defui dir-viewer [{:keys [dir nrepl-server]}]
-  (let [last-update (get extra ::last-update)]
+  (let [last-update (get extra ::last-update)
+        scrollview-width (- main-width scroll-button-size)]
     (ui/vertical-layout
      (if nrepl-server
        (ui/horizontal-layout
@@ -281,7 +283,7 @@
                              (iterate fs/parent dir)))))]
        (ui/label (str "dir: " relative-path)))
      (gcomp/scrollview
-      {:scroll-bounds [250 500]
+      {:scroll-bounds [scrollview-width 500]
        :extra (get extra [::scroll dir])
        :$body nil
        :body(let [files (sort-by
@@ -299,7 +301,7 @@
                    20
                    (ui/label ".."))))
                (for [f files]
-                 (file-row f))))}))))
+                 (file-row f scrollview-width))))}))))
 
 (defui file-viewer [{:keys [dir selected-file buffers nrepl-server last-updated]}]
   (ui/translate
