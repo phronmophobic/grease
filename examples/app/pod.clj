@@ -6,7 +6,7 @@
             [membrane.skia.paragraph :as para]
             [babashka.fs :as fs]
             [clojure.java.io :as io]
-            [tech.v3.datatype.ffi :as dt-ffi ]
+            [tech.v3.datatype.ffi :as dt-ffi]
             [com.phronemophobic.clj-libffi :as ffi]
             [membrane.ui :as ui]
             [tech.v3.datatype.struct :as dt-struct]
