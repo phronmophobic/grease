@@ -1,0 +1,46 @@
+name: mobiletestnew
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  mac:
+    runs-on: macos-15
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: 'recursive'
+
+      - name: Download Dependencies
+        run: |
+          scripts/download-deps
+
+      - name: Setup
+        run: |
+          brew install autoconf
+          scripts/setup
+
+      - name: Setup Clojure
+        # You may pin to the exact commit or the version.
+        # uses: DeLaGuardo/setup-clojure@5042876523f30f5efcf1d6feaa48bd1498d7814f
+        uses: DeLaGuardo/setup-clojure@13
+        with:
+          # Clojure CLI version to make available on the path.
+          cli: 1.12.4.1618
+
+      - name: Install dependencies
+        run: clojure -P
+
+      - name: Build macOS native image
+        run: |
+          /bin/bash scripts/compile-shared
+
+      - name: Build app
+        run: |
+          scripts/build-shared
+
+
+
+
