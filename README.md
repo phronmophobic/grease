@@ -26,7 +26,7 @@ Watch the project in action on the [Apropos Clojure Podcast](https://apropos-sit
 1. Download and update all submodules
 
 ```sh
-git submodule update --init
+git submodule update --init --recursive
 ```
 
 2. Download dependencies
