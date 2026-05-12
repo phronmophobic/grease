@@ -569,6 +569,10 @@
               'java.util.zip.ZipInputStream java.util.zip.ZipInputStream
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
               'java.security.MessageDigest java.security.MessageDigest}
+
+             :imports
+             {'Throwable 'java.lang.Throwable}
+
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
                           fns (sci/create-ns ns-name nil)]
