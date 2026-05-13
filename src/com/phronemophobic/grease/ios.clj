@@ -11,7 +11,6 @@
             babashka.nrepl.server
             [babashka.nrepl.server.middleware :as middleware]
             clojure.data.json
-            [clojure.string :as str]
             [sci.core :as sci]
             [sci.addons :as addons]
 
@@ -23,7 +22,8 @@
             honey.sql.helpers
 
             [com.phronemophobic.scify :as scify]
-            [com.phronemophobic.grease.ios :as ios]
+            [com.phronemophobic.grease.ios.utils :as ios-utils]
+            com.phronemophobic.grease.ios.webview
             [com.phronemophobic.grease.replog :as replog]
             com.phronemophobic.grease.component
             [com.phronemophobic.objcjure :as objc
@@ -109,20 +109,13 @@
 (def UIAlertActionStyleCancel 1)
 (def UIAlertActionStyleDestructive 2)
 
-(def main-queue (delay (ffi/dlsym ffi/RTLD_DEFAULT (dt-ffi/string->c "_dispatch_main_q"))))
-
 (defn NSSetUncaughtExceptionHandler [handler]
   (ffi/call "NSSetUncaughtExceptionHandler" :void :pointer handler))
 
 (defn dispatch-main-async
   "Run `f` on the main queue."
   [f]
-  (ffi/call "dispatch_async" :void :pointer @main-queue :pointer (objc
-                                                                  (fn ^void []
-                                                                    (try
-                                                                      (f)
-                                                                      (catch Exception e
-                                                                        (println e)))))))
+  (ios-utils/dispatch-main-async f))
 
 (defn prompt-bool
   "Displayes a prompt. Blocks until a response is given.
@@ -132,12 +125,8 @@
   (let [p (promise)]
     (dispatch-main-async
      (fn []
-       (let [title (if title
-                     (objc/str->nsstring title)
-                     (ffi/long->pointer 0))
-             message (if message
-                       (objc/str->nsstring message)
-                       (ffi/long->pointer 0))
+       (let [title (ios-utils/nullable-nsstring title)
+             message (ios-utils/nullable-nsstring message)
              ok-text (objc/str->nsstring (or ok-text "OK"))
              cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
 
@@ -195,12 +184,8 @@
   [{:keys [title message placeholder on-cancel on-ok cancel-text ok-text]}]
   (dispatch-main-async
    (fn []
-     (let [title (if title
-                   (objc/str->nsstring title)
-                   (ffi/long->pointer 0))
-           message (if message
-                     (objc/str->nsstring message)
-                     (ffi/long->pointer 0))
+     (let [title (ios-utils/nullable-nsstring title)
+           message (ios-utils/nullable-nsstring message)
            ok-text (objc/str->nsstring (or ok-text "OK"))
            cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
 
@@ -275,80 +260,13 @@
   If already running on the main thread, executes the body directly.
   Otherwise, enqueues the body on the main thread and waits for a result."
   [& body]
-  `(if (objc ~(with-meta '[NSThread isMainThread]
-                {:tag 'boolean}))
-     (do ~@body)
-     (let [p# (promise)]
-       (dispatch-main-async
-        (fn []
-          (let [ret# (do ~@body)]
-            (deliver p# ret#))))
-       @p#)))
+  `(ios-utils/on-main ~@body))
 
 (defn copy-to-clipboard! [s]
   (on-main
    (objc ^void [[UIPasteboard generalPasteboard] :setString
                 ~(objc/str->nsstring (str s))]))
   nil)
-
-(defn- web-view-url [{:keys [url] :as args}]
-  (let [url (some-> url str)]
-    (when (str/blank? url)
-      (throw (ex-info "open-web-view! requires a non-blank :url."
-                      {:args args})))
-    url))
-
-(defn- load-web-view-url! [controller args]
-  (let [url (web-view-url args)
-        loaded? (on-main
-                 (objc ^byte [controller :loadURLString
-                              ~(objc/str->nsstring url)]))]
-    (when (zero? (long loaded?))
-      (throw (ex-info "open-web-view! could not load :url."
-                      {:args args})))
-    nil))
-
-(defn open-web-view!
-  "Opens a full-screen WKWebView.
-
-  Accepts a map with `:url`.
-  Returns a handle with functions for controlling the web view."
-  [args]
-  (let [url (web-view-url args)
-        {:keys [controller] :as handle}
-        (on-main
-         (let [controller (objc [[GreaseWebOverlayController :alloc]
-                                 :initWithURLString
-                                 ~(objc/str->nsstring url)])
-               loaded? (objc ^byte [controller :loadURLString
-                                    ~(objc/str->nsstring url)])]
-           (when (zero? (long loaded?))
-             (throw (ex-info "open-web-view! could not load :url."
-                             {:args args})))
-           (let [presented? (objc ^byte [controller :presentInViewController
-                                         ~(objc [[[UIApplication :sharedApplication]
-                                                  :keyWindow]
-                                                 :rootViewController])])]
-             (when (zero? (long presented?))
-               (throw (ex-info "open-web-view! could not find a root view controller."
-                               {:args args}))))
-           {:controller controller
-            :web-view (objc [controller :webView])}))]
-    (assoc handle
-           :close! (fn []
-                     (on-main
-                      (objc ^void [controller :close]))
-                     nil)
-           :load-url! (fn [args]
-                        (load-web-view-url! controller args))
-           :reload! (fn []
-                      (on-main
-                       (objc ^void [controller :reload]))
-                      nil)
-           :go-back! (fn []
-                       (on-main
-                        (objc ^void [controller :goBack]))
-                       nil))))
 
 (def ^:private screen-bounds*
   (delay
@@ -629,11 +547,14 @@
 (def repl-requires
   '[[clojure.repl :refer [dir doc]]])
 
+
+
 (def opts (addons/future
             {:classes
              {:allow :all
               'java.lang.System System
               'java.lang.Long Long
+              'java.lang.Throwable Throwable
               'java.util.Date java.util.Date
               'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
@@ -671,6 +592,8 @@
                     (scify/ns->ns-map 'clojure.data.json)
                     (scify/ns->ns-map 'clojure.stacktrace)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.utils)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.webview)
                     (scify/ns->ns-map 'com.phronemophobic.grease.component)
                     (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
                           sci-ns-var (-> ns-map

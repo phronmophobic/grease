@@ -1,23 +1,32 @@
 #import "GreaseWebOverlayController.h"
 
-#import "GreaseBridge.h"
-
 #import <WebKit/WebKit.h>
 
 @interface GreaseWebOverlayController () <WKScriptMessageHandler>
 
 @property (nonatomic, strong) GreaseBridge *bridge;
+@property (nonatomic, assign, readwrite, getter=isClosed) BOOL closed;
 @property (nonatomic, strong, readwrite) WKWebView *webView;
 @property (nonatomic, copy) NSString *initialURLString;
+@property (nonatomic, copy) NSDictionary *functionTree;
+@property (nonatomic, copy, nullable) GreaseBridgeFunctionHandler functionHandler;
 
 @end
 
 @implementation GreaseWebOverlayController
 
 - (instancetype)initWithURLString:(NSString *)urlString {
+  return [self initWithURLString:urlString functionTree:@{} handler:nil];
+}
+
+- (instancetype)initWithURLString:(NSString *)urlString
+                     functionTree:(NSDictionary *)functionTree
+                          handler:(nullable GreaseBridgeFunctionHandler)handler {
   self = [super initWithNibName:nil bundle:nil];
   if (self) {
     _initialURLString = [urlString copy];
+    _functionTree = [functionTree copy] ?: @{};
+    _functionHandler = [handler copy];
   }
   return self;
 }
@@ -25,13 +34,14 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  self.bridge = [[GreaseBridge alloc] init];
+  self.bridge = [[GreaseBridge alloc] initWithFunctionTree:self.functionTree
+                                                   handler:self.functionHandler];
   self.view.backgroundColor = UIColor.systemBackgroundColor;
 
   WKUserContentController *contentController = [[WKUserContentController alloc] init];
   [contentController addScriptMessageHandler:self name:GreaseBridgeScriptMessageName];
   WKUserScript *bridgeScript =
-      [[WKUserScript alloc] initWithSource:[GreaseBridge bootstrapJavaScript]
+      [[WKUserScript alloc] initWithSource:[self.bridge bootstrapJavaScript]
                              injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                           forMainFrameOnly:NO];
   [contentController addUserScript:bridgeScript];
@@ -61,6 +71,10 @@
 }
 
 - (BOOL)presentInViewController:(UIViewController *)parentViewController {
+  if (self.closed) {
+    return NO;
+  }
+
   if (!parentViewController) {
     return NO;
   }
@@ -86,6 +100,10 @@
 }
 
 - (BOOL)loadURLString:(NSString *)urlString {
+  if (self.closed) {
+    return NO;
+  }
+
   NSURL *url = [self.class normalizedURLFromString:urlString];
   if (!url) {
     return NO;
@@ -100,19 +118,42 @@
   return YES;
 }
 
-- (void)close {
+- (BOOL)evaluateJavaScriptString:(NSString *)javaScriptString {
+  if (self.closed || !self.webView || javaScriptString.length == 0) {
+    return NO;
+  }
+
+  [self.webView evaluateJavaScript:javaScriptString completionHandler:nil];
+  return YES;
+}
+
+- (BOOL)close {
+  if (self.closed) {
+    return NO;
+  }
+
+  self.closed = YES;
   [self willMoveToParentViewController:nil];
   [self.view removeFromSuperview];
   [self removeFromParentViewController];
+  return YES;
 }
 
 - (void)reload {
+  if (self.closed) {
+    return;
+  }
+
   if (self.webView.URL) {
     [self.webView reload];
   }
 }
 
 - (void)goBack {
+  if (self.closed) {
+    return;
+  }
+
   if (self.webView.canGoBack) {
     [self.webView goBack];
   }
