@@ -17,6 +17,58 @@ if ! [ -d graalvm-jdk-21.0.3+7.1 ]; then
     rm graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
 fi
 
+WHISPER_VERSION="${WHISPER_VERSION:-1.8.4}"
+WHISPER_DIR="whisper"
+WHISPER_FRAMEWORK="$WHISPER_DIR/whisper.xcframework"
+WHISPER_ZIP="whisper-v$WHISPER_VERSION-xcframework.zip"
+WHISPER_URL="https://github.com/ggml-org/whisper.cpp/releases/download/v$WHISPER_VERSION/$WHISPER_ZIP"
+WHISPER_MARKER="$WHISPER_DIR/.whisper-version"
+
+extract_zip() {
+    zip_file="$1"
+    output_dir="$2"
+
+    rm -rf "$output_dir"
+    mkdir -p "$output_dir"
+
+    if command -v ditto >/dev/null 2>&1; then
+        ditto -x -k "$zip_file" "$output_dir"
+    elif command -v unzip >/dev/null 2>&1; then
+        unzip -q "$zip_file" -d "$output_dir"
+    else
+        echo "Cannot extract $zip_file: install ditto or unzip." >&2
+        exit 1
+    fi
+}
+
+if ! [ -d "$WHISPER_FRAMEWORK" ] || \
+   ! [ -f "$WHISPER_MARKER" ] || \
+   ! [ "$(cat "$WHISPER_MARKER")" = "$WHISPER_VERSION" ]; then
+    mkdir -p "$WHISPER_DIR"
+
+    if ! [ -f "$WHISPER_DIR/$WHISPER_ZIP" ]; then
+        curl -L --fail -o "$WHISPER_DIR/$WHISPER_ZIP.tmp" "$WHISPER_URL"
+        mv "$WHISPER_DIR/$WHISPER_ZIP.tmp" "$WHISPER_DIR/$WHISPER_ZIP"
+    fi
+
+    extract_zip "$WHISPER_DIR/$WHISPER_ZIP" "$WHISPER_DIR/extract"
+
+    extracted_framework="$(find "$WHISPER_DIR/extract" \
+        -type d \
+        -name "whisper.xcframework" \
+        -print \
+        | head -n 1)"
+    if [ -z "$extracted_framework" ]; then
+        echo "Could not find whisper.xcframework in $WHISPER_DIR/$WHISPER_ZIP" >&2
+        exit 1
+    fi
+
+    rm -rf "$WHISPER_FRAMEWORK"
+    mv "$extracted_framework" "$WHISPER_FRAMEWORK"
+    printf "%s" "$WHISPER_VERSION" > "$WHISPER_MARKER"
+    rm -rf "$WHISPER_DIR/extract"
+fi
+
 # staticjdk='staticjdk'
 # target='ios-arm64'
 # version='18-ea+prep18-9'

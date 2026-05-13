@@ -29,6 +29,8 @@
 	<string>Allow learning to build apps that access Health Kit</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Allow learning to build apps that access Health Kit</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Grease records audio for on-device dictation.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

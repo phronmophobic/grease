@@ -59,6 +59,9 @@
 		3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A16A6E42F9016B4005BFF24 /* libffi.a */; };
 		3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D8A2F918B15003FEE4E /* libjvm.a */; };
 		3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D902F918B1C003FEE4E /* libjava.a */; };
+		A20000012F9B000000000003 /* GreaseWhisper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000002 /* GreaseWhisper.mm */; };
+		A20000012F9B000000000005 /* whisper.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000004 /* whisper.xcframework */; };
+		A20000012F9B000000000006 /* whisper.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000004 /* whisper.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A10000012F9A000000000005 /* GreaseBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000002 /* GreaseBridge.m */; };
 		A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000004 /* GreaseWebOverlayController.m */; };
 /* End PBXBuildFile section */
@@ -129,6 +132,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A20000012F9B000000000007 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A20000012F9B000000000006 /* whisper.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3A0761A8269A94E900E90293 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		3A110A4E2676A38A00C5D250 /* MembraneView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MembraneView.h; sourceTree = "<group>"; };
@@ -198,6 +215,9 @@
 		A10000012F9A000000000002 /* GreaseBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GreaseBridge.m; sourceTree = "<group>"; };
 		A10000012F9A000000000003 /* GreaseWebOverlayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GreaseWebOverlayController.h; sourceTree = "<group>"; };
 		A10000012F9A000000000004 /* GreaseWebOverlayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GreaseWebOverlayController.m; sourceTree = "<group>"; };
+		A20000012F9B000000000001 /* GreaseWhisper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GreaseWhisper.h; sourceTree = "<group>"; };
+		A20000012F9B000000000002 /* GreaseWhisper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GreaseWhisper.mm; sourceTree = "<group>"; };
+		A20000012F9B000000000004 /* whisper.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = whisper.xcframework; path = ../../third_party/whisper/whisper.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -241,6 +261,7 @@
 				3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */,
 				3A75F2D32675C7F40015D82C /* Foundation.framework in Frameworks */,
 				3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */,
+				A20000012F9B000000000005 /* whisper.xcframework in Frameworks */,
 				3AC59C93269A422B00E9D1B8 /* CoreServices.framework in Frameworks */,
 				3A75F2D12675C7EA0015D82C /* UIKit.framework in Frameworks */,
 				3A75F2CF2675C7E60015D82C /* Metal.framework in Frameworks */,
@@ -301,6 +322,8 @@
 				A10000012F9A000000000002 /* GreaseBridge.m */,
 				A10000012F9A000000000003 /* GreaseWebOverlayController.h */,
 				A10000012F9A000000000004 /* GreaseWebOverlayController.m */,
+				A20000012F9B000000000001 /* GreaseWhisper.h */,
+				A20000012F9B000000000002 /* GreaseWhisper.mm */,
 				3A75F290267445BC0015D82C /* Shaders.metal */,
 				3A75F292267445BC0015D82C /* ShaderTypes.h */,
 				3A75F293267445BC0015D82C /* Main.storyboard */,
@@ -344,6 +367,7 @@
 				3AC80E7D27F7FFAA006D165F /* bb.o */,
 				3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */,
 				3A6C99A326B0CB7C000479D4 /* clj_objc.o */,
+				A20000012F9B000000000004 /* whisper.xcframework */,
 				3A7759AB26A649E70014EA55 /* libskia.a */,
 				3A7759A926A649810014EA55 /* libmembraneiosskia.o */,
 				3A7759A726A646A20014EA55 /* SwiftUI.framework */,
@@ -387,6 +411,7 @@
 			buildPhases = (
 				3A75F280267445BB0015D82C /* Sources */,
 				3A75F281267445BB0015D82C /* Frameworks */,
+				A20000012F9B000000000007 /* Embed Frameworks */,
 				3A75F282267445BB0015D82C /* Resources */,
 			);
 			buildRules = (
@@ -515,6 +540,7 @@
 				3A75F291267445BC0015D82C /* Shaders.metal in Sources */,
 				3A75F28C267445BC0015D82C /* Renderer.mm in Sources */,
 				A10000012F9A000000000005 /* GreaseBridge.m in Sources */,
+				A20000012F9B000000000003 /* GreaseWhisper.mm in Sources */,
 				A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */,
 				3A75F28F267445BC0015D82C /* GameViewController.mm in Sources */,
 				3A75F289267445BC0015D82C /* AppDelegate.m in Sources */,
@@ -605,6 +631,10 @@
 					"TARGET_OS_IOS=1",
 					"SK_METAL=1",
 				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../third_party/whisper\"",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -694,6 +724,10 @@
 					"$(inherited)",
 					"TARGET_OS_IOS=1",
 					"SK_METAL=1",
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../third_party/whisper\"",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

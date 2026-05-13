@@ -24,6 +24,7 @@
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.ios.utils :as ios-utils]
             com.phronemophobic.grease.ios.webview
+            com.phronemophobic.grease.ios.whisper
             [com.phronemophobic.grease.replog :as replog]
             com.phronemophobic.grease.component
             [com.phronemophobic.objcjure :as objc
@@ -565,6 +566,7 @@
               'java.util.Locale java.util.Locale
               'java.util.Map java.util.Map
               'java.util.function.Function java.util.function.Function
+              'java.util.zip.ZipInputStream java.util.zip.ZipInputStream
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
               'java.security.MessageDigest java.security.MessageDigest}
              :namespaces
@@ -594,6 +596,7 @@
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios.utils)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios.webview)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.whisper)
                     (scify/ns->ns-map 'com.phronemophobic.grease.component)
                     (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
                           sci-ns-var (-> ns-map
