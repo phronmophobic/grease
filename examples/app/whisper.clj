@@ -1,8 +1,10 @@
 (ns examples.app.whisper
   (:require [babashka.fs :as fs]
+            [clojure.data.json :as json]
             [clojure.java.io :as io]
             [clojure.string :as str]
             [com.phronemophobic.grease.ios :as ios]
+            [com.phronemophobic.grease.ios.webview :as webview]
             [com.phronemophobic.grease.ios.whisper :as whisper])
   (:import [java.net URL]
            [java.util.zip ZipInputStream]))
@@ -155,6 +157,237 @@
 (defn stop-example-dictation! []
   (whisper/stop-dictation!))
 
+(defonce web-dictation-state
+  (atom {:handle nil
+         :meter-future nil
+         :state "idle"}))
+
+(defn- browser-json-value [x]
+  (cond
+    (nil? x) nil
+    (or (string? x)
+        (number? x)
+        (true? x)
+        (false? x)) x
+    (keyword? x) (name x)
+    (map? x) (into {}
+                   (map (fn [[k v]]
+                          [(if (keyword? k) (name k) (str k))
+                           (browser-json-value v)]))
+                   x)
+    (sequential? x) (mapv browser-json-value x)
+    :else (str x)))
+
+(defn- event-js [event]
+  (str "window.dispatchEvent(new CustomEvent('grease:whisper',{detail:"
+       (json/write-str (browser-json-value event))
+       "}));"))
+
+(defn- dispatch-web-event! [handle event]
+  (webview/eval-js! handle (event-js (assoc event :version 1))))
+
+(defn- set-web-state! [state]
+  (swap! web-dictation-state assoc :state state))
+
+(defn- stop-meter-loop! []
+  (when-let [fut (:meter-future @web-dictation-state)]
+    (future-cancel fut))
+  (swap! web-dictation-state assoc :meter-future nil))
+
+(defn- report-meter-error? [e]
+  (and (not (instance? InterruptedException e))
+       (= "listening" (:state @web-dictation-state))))
+
+(defn- start-meter-loop! [handle]
+  (stop-meter-loop!)
+  (let [fut (future
+              (try
+                (loop []
+                  (when-not (webview/closed? handle)
+                    (let [status (whisper/dictation-status)
+                          event (merge {:type "meter"}
+                                       status)]
+                      (dispatch-web-event! handle event)
+                      (when (true? (get status "recording"))
+                        (ios/sleep 50)
+                        (recur)))))
+                (catch Exception e
+                  (when (and (report-meter-error? e)
+                             (not (webview/closed? handle)))
+                    (dispatch-web-event! handle {:type "error"
+                                                 :state "error"
+                                                 :message (or (ex-message e)
+                                                              (str e))})))))]
+    (swap! web-dictation-state assoc :meter-future fut)
+    nil))
+
+(defn- start-web-dictation! [handle]
+  (if (not= "idle" (:state @web-dictation-state))
+    {:accepted false
+     :state (:state @web-dictation-state)}
+    (do
+      (set-web-state! "preparing")
+      (dispatch-web-event! handle {:type "state"
+                                   :state "preparing"})
+      (future
+        (try
+          (let [progress! (fn [progress]
+                            (dispatch-web-event! handle
+                                                 (assoc progress
+                                                        :type "download"
+                                                        :state "preparing")))
+                model-path (ensure-whisper-model! progress!)]
+            (when (= "preparing" (:state @web-dictation-state))
+              (whisper/start-dictation! {:model-path model-path})
+              (set-web-state! "listening")
+              (dispatch-web-event! handle {:type "state"
+                                           :state "listening"})
+              (start-meter-loop! handle)))
+          (catch Exception e
+            (stop-meter-loop!)
+            (set-web-state! "idle")
+            (dispatch-web-event! handle {:type "error"
+                                         :state "error"
+                                         :message (or (ex-message e)
+                                                      (str e))}))))
+      {:accepted true
+       :state "preparing"})))
+
+(defn- stop-web-dictation! [handle]
+  (let [state (:state @web-dictation-state)]
+    (if (not= "listening" state)
+      {:accepted false
+       :state state}
+      (do
+        (stop-meter-loop!)
+        (set-web-state! "transcribing")
+        (dispatch-web-event! handle {:type "state"
+                                     :state "transcribing"})
+        (future
+          (try
+            (let [transcript (whisper/stop-dictation!)]
+              (set-web-state! "idle")
+              (dispatch-web-event! handle {:type "result"
+                                           :state "idle"
+                                           :transcript transcript}))
+            (catch Exception e
+              (set-web-state! "idle")
+              (dispatch-web-event! handle {:type "error"
+                                           :state "error"
+                                           :message (or (ex-message e)
+                                                        (str e))}))))
+        {:accepted true
+         :state "transcribing"}))))
+
+(defn- cancel-web-dictation! [handle]
+  (if (= "transcribing" (:state @web-dictation-state))
+    {:accepted false
+     :state "transcribing"}
+    (do
+      (stop-meter-loop!)
+      (set-web-state! "idle")
+      (future
+        (try
+          (whisper/cancel-dictation!)
+          (catch Exception _))
+        (dispatch-web-event! handle {:type "state"
+                                     :state "idle"}))
+      {:accepted true
+       :state "idle"})))
+
+(def web-dictation-html
+  "<!doctype html>
+<html>
+<head>
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+<style>
+html,body{margin:0;height:100%;font:16px -apple-system,BlinkMacSystemFont,sans-serif;background:#101113;color:#f5f5f5}
+main{height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:18px;padding:24px;box-sizing:border-box}
+.status{font-size:18px;font-weight:600}
+.meter{display:flex;align-items:center;justify-content:center;gap:6px;min-height:220px}
+.bar{width:10px;height:12px;border-radius:5px;background:#33d17a;transition:height 80ms linear,opacity 120ms linear;opacity:.45}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+button{appearance:none;border:0;border-radius:8px;padding:14px 10px;font:inherit;font-weight:700;background:#e8e8e8;color:#111}
+button.primary{background:#33d17a}
+pre{white-space:pre-wrap;min-height:90px;margin:0;color:#d0d0d0}
+</style>
+</head>
+<body>
+<main>
+  <div class=\"status\" id=\"status\">Idle</div>
+  <div class=\"meter\" id=\"meter\"></div>
+  <pre id=\"transcript\"></pre>
+  <div class=\"controls\">
+    <button class=\"primary\" id=\"start\">Start</button>
+    <button id=\"stop\">Stop</button>
+    <button id=\"cancel\">Cancel</button>
+  </div>
+</main>
+<script>
+const meter = document.getElementById('meter');
+const statusEl = document.getElementById('status');
+const transcriptEl = document.getElementById('transcript');
+const bars = Array.from({length: 24}, () => {
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  meter.appendChild(bar);
+  return bar;
+});
+let levels = bars.map(() => 0);
+function setStatus(text){ statusEl.textContent = text; }
+function render(level){
+  levels.push(Math.max(0, Math.min(1, Number(level) || 0)));
+  levels = levels.slice(-bars.length);
+  levels.forEach((value, index) => {
+    bars[index].style.height = (12 + value * 190) + 'px';
+    bars[index].style.opacity = String(.35 + value * .65);
+  });
+}
+window.addEventListener('grease:whisper', (event) => {
+  const detail = event.detail || {};
+  if (detail.type === 'meter') {
+    setStatus('Listening');
+    render(detail.level);
+  } else if (detail.type === 'download') {
+    setStatus('Downloading ' + (detail.label || 'model') + ' ' + detail.downloaded);
+  } else if (detail.type === 'state') {
+    setStatus((detail.state || 'idle').replace(/^./, c => c.toUpperCase()));
+    if (detail.state === 'idle') render(0);
+  } else if (detail.type === 'result') {
+    setStatus('Idle');
+    transcriptEl.textContent = detail.transcript || '';
+    render(0);
+  } else if (detail.type === 'error') {
+    setStatus('Error');
+    transcriptEl.textContent = detail.message || 'Unknown error';
+    render(0);
+  }
+});
+document.getElementById('start').onclick = () => Grease.dictation.start();
+document.getElementById('stop').onclick = () => Grease.dictation.stop();
+document.getElementById('cancel').onclick = () => Grease.dictation.cancel();
+render(0);
+</script>
+</body>
+</html>")
+
+(defn open-web-dictation-example! []
+  (let [handle* (atom nil)
+        handle (webview/open! {:url "https://grease.local"
+                               :functions {"dictation"
+                                           {"start" (fn []
+                                                      (start-web-dictation! @handle*))
+                                            "stop" (fn []
+                                                     (stop-web-dictation! @handle*))
+                                            "cancel" (fn []
+                                                       (cancel-web-dictation! @handle*))
+                                            "status" (fn []
+                                                       (whisper/dictation-status))}}})]
+    (reset! handle* handle)
+    (swap! web-dictation-state assoc :handle handle)
+    (webview/load-html! handle web-dictation-html "https://grease.local/")
+    handle))
+
 
 (comment
   (ensure-whisper-model!)
@@ -162,5 +395,6 @@
 
   (start-example-dictation!)
   (stop-example-dictation!)
+  (open-web-dictation-example!)
   ;;
   )

@@ -5,6 +5,8 @@
 
 (declare grease_whisper_start_dictation
          grease_whisper_stop_dictation
+         grease_whisper_cancel_dictation
+         grease_whisper_status
          grease_whisper_free_string)
 
 (dt-ffi/define-library-interface
@@ -13,6 +15,14 @@
     :argtypes [['model-path :string]]}
 
    :grease_whisper_stop_dictation
+   {:rettype :pointer
+    :argtypes []}
+
+   :grease_whisper_cancel_dictation
+   {:rettype :pointer
+    :argtypes []}
+
+   :grease_whisper_status
    {:rettype :pointer
     :argtypes []}
 
@@ -37,6 +47,14 @@
   (read-native-response
    (grease_whisper_stop_dictation)))
 
+(defn- cancel-native []
+  (read-native-response
+   (grease_whisper_cancel_dictation)))
+
+(defn- status-native []
+  (read-native-response
+   (grease_whisper_status)))
+
 (defn- unwrap-response [response]
   (if (true? (get response "ok"))
     response
@@ -59,6 +77,17 @@
                       {:model-path model-path})))
     (unwrap-response (start-native model-path))
     nil))
+
+(defn dictation-status
+  "Returns current dictation recording state and microphone levels."
+  []
+  (unwrap-response (status-native)))
+
+(defn cancel-dictation!
+  "Stops microphone dictation without transcribing the recording."
+  []
+  (unwrap-response (cancel-native))
+  nil)
 
 (defn stop-dictation!
   "Stops microphone dictation and returns the transcribed text."

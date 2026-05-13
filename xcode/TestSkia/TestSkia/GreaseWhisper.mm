@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
 
@@ -12,12 +13,15 @@
 
 - (NSDictionary *)startWithModelPath:(NSString *)modelPath;
 - (NSDictionary *)stop;
+- (NSDictionary *)cancel;
+- (NSDictionary *)status;
 
 @end
 
 @implementation GreaseWhisperDictation {
   AVAudioRecorder *_recorder;
   NSURL *_recordingURL;
+  NSDate *_recordingStartedAt;
   struct whisper_context *_context;
   NSString *_contextModelPath;
 }
@@ -99,12 +103,17 @@
   }
 
   _recorder.delegate = self;
+  _recorder.meteringEnabled = YES;
+  [_recorder prepareToRecord];
   if (![_recorder record]) {
     _recorder = nil;
+    _recordingURL = nil;
+    _recordingStartedAt = nil;
     return [self error:@"Could not start audio recording"];
   }
 
-  return @{@"ok" : @YES};
+  _recordingStartedAt = [NSDate date];
+  return [self status];
 }
 
 - (NSDictionary *)stop {
@@ -116,6 +125,7 @@
   [_recorder stop];
   _recorder = nil;
   _recordingURL = nil;
+  _recordingStartedAt = nil;
   [AVAudioSession.sharedInstance setActive:NO
                                withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
                                      error:nil];
@@ -142,7 +152,71 @@
 
   NSString *trimmedTranscript =
       [transcript stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-  return @{@"ok" : @YES, @"transcript" : trimmedTranscript ?: @""};
+  return @{
+    @"ok" : @YES,
+    @"state" : @"idle",
+    @"recording" : @NO,
+    @"transcript" : trimmedTranscript ?: @""
+  };
+}
+
+- (NSDictionary *)cancel {
+  if (_recorder) {
+    [_recorder stop];
+  }
+
+  NSURL *recordingURL = _recordingURL;
+  _recorder = nil;
+  _recordingURL = nil;
+  _recordingStartedAt = nil;
+  if (recordingURL) {
+    [NSFileManager.defaultManager removeItemAtURL:recordingURL error:nil];
+  }
+  [AVAudioSession.sharedInstance setActive:NO
+                               withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                     error:nil];
+  return @{@"ok" : @YES, @"state" : @"idle", @"recording" : @NO};
+}
+
+- (NSDictionary *)status {
+  if (!_recorder) {
+    return @{
+      @"ok" : @YES,
+      @"state" : @"idle",
+      @"recording" : @NO,
+      @"level" : @0.0,
+      @"peak" : @0.0,
+      @"averagePowerDb" : @(-160.0),
+      @"peakPowerDb" : @(-160.0),
+      @"elapsedMs" : @0
+    };
+  }
+
+  [_recorder updateMeters];
+  float averagePower = [_recorder averagePowerForChannel:0];
+  float peakPower = [_recorder peakPowerForChannel:0];
+  NSTimeInterval elapsed =
+      _recordingStartedAt ? [[NSDate date] timeIntervalSinceDate:_recordingStartedAt] : 0;
+
+  return @{
+    @"ok" : @YES,
+    @"state" : @"listening",
+    @"recording" : @YES,
+    @"level" : @([self normalizedLevelForPower:averagePower]),
+    @"peak" : @([self normalizedLevelForPower:peakPower]),
+    @"averagePowerDb" : @(averagePower),
+    @"peakPowerDb" : @(peakPower),
+    @"elapsedMs" : @((long long)(elapsed * 1000.0))
+  };
+}
+
+- (double)normalizedLevelForPower:(float)power {
+  if (!std::isfinite(power)) {
+    return 0.0;
+  }
+
+  double clamped = std::max(-60.0, std::min(0.0, (double)power));
+  return (clamped + 60.0) / 60.0;
 }
 
 - (NSDictionary *)loadContextForModelPath:(NSString *)modelPath {
@@ -358,13 +432,37 @@ static char *GreaseWhisperCopyJSON(NSDictionary *response) {
 char *grease_whisper_start_dictation(const char *model_path) {
   @autoreleasepool {
     NSString *path = model_path ? [NSString stringWithUTF8String:model_path] : @"";
-    return GreaseWhisperCopyJSON([GreaseWhisperSharedDictation() startWithModelPath:path]);
+    GreaseWhisperDictation *dictation = GreaseWhisperSharedDictation();
+    @synchronized(dictation) {
+      return GreaseWhisperCopyJSON([dictation startWithModelPath:path]);
+    }
   }
 }
 
 char *grease_whisper_stop_dictation(void) {
   @autoreleasepool {
-    return GreaseWhisperCopyJSON([GreaseWhisperSharedDictation() stop]);
+    GreaseWhisperDictation *dictation = GreaseWhisperSharedDictation();
+    @synchronized(dictation) {
+      return GreaseWhisperCopyJSON([dictation stop]);
+    }
+  }
+}
+
+char *grease_whisper_cancel_dictation(void) {
+  @autoreleasepool {
+    GreaseWhisperDictation *dictation = GreaseWhisperSharedDictation();
+    @synchronized(dictation) {
+      return GreaseWhisperCopyJSON([dictation cancel]);
+    }
+  }
+}
+
+char *grease_whisper_status(void) {
+  @autoreleasepool {
+    GreaseWhisperDictation *dictation = GreaseWhisperSharedDictation();
+    @synchronized(dictation) {
+      return GreaseWhisperCopyJSON([dictation status]);
+    }
   }
 }
 
