@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const GreaseBridgeScriptMessageName;
+extern NSString *const GreaseBridgeScriptMessageName;
 
 @interface GreaseBridge : NSObject
 

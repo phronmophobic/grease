@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 long long int call_sub(long long int a, long long int b);

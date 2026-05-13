@@ -4,214 +4,170 @@
 
 #import <WebKit/WebKit.h>
 
-@interface GreaseWebOverlayController () <WKScriptMessageHandler, WKNavigationDelegate>
+@interface GreaseWebOverlayController () <WKScriptMessageHandler>
 
 @property (nonatomic, strong) GreaseBridge *bridge;
-@property (nonatomic, strong) WKWebView *webView;
-@property (nonatomic, strong) UILabel *statusLabel;
+@property (nonatomic, strong, readwrite) WKWebView *webView;
+@property (nonatomic, copy) NSString *initialURLString;
 
 @end
 
 @implementation GreaseWebOverlayController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-    self.bridge = [[GreaseBridge alloc] init];
-    self.view.backgroundColor = UIColor.systemBackgroundColor;
-
-    WKUserContentController *contentController = [[WKUserContentController alloc] init];
-    [contentController addScriptMessageHandler:self name:GreaseBridgeScriptMessageName];
-    WKUserScript *bridgeScript = [[WKUserScript alloc] initWithSource:[GreaseBridge bootstrapJavaScript]
-                                                        injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                     forMainFrameOnly:NO];
-    [contentController addUserScript:bridgeScript];
-
-    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
-    configuration.userContentController = contentController;
-
-    self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
-    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.webView.navigationDelegate = self;
-
-    UIView *toolbar = [self makeToolbar];
-    toolbar.translatesAutoresizingMaskIntoConstraints = NO;
-
-    self.statusLabel = [[UILabel alloc] init];
-    self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.statusLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightRegular];
-    self.statusLabel.textColor = UIColor.secondaryLabelColor;
-    self.statusLabel.numberOfLines = 1;
-    self.statusLabel.text = @"Paste a URL to load web content.";
-
-    [self.view addSubview:toolbar];
-    [self.view addSubview:self.statusLabel];
-    [self.view addSubview:self.webView];
-
-    UILayoutGuide *safeArea = self.view.safeAreaLayoutGuide;
-    [NSLayoutConstraint activateConstraints:@[
-        [toolbar.topAnchor constraintEqualToAnchor:safeArea.topAnchor],
-        [toolbar.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [toolbar.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [toolbar.heightAnchor constraintEqualToConstant:48],
-
-        [self.statusLabel.topAnchor constraintEqualToAnchor:toolbar.bottomAnchor],
-        [self.statusLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:12],
-        [self.statusLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-12],
-        [self.statusLabel.heightAnchor constraintEqualToConstant:24],
-
-        [self.webView.topAnchor constraintEqualToAnchor:self.statusLabel.bottomAnchor],
-        [self.webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
-    ]];
+- (instancetype)initWithURLString:(NSString *)urlString {
+  self = [super initWithNibName:nil bundle:nil];
+  if (self) {
+    _initialURLString = [urlString copy];
+  }
+  return self;
 }
 
-- (void)dealloc
-{
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:GreaseBridgeScriptMessageName];
+- (void)viewDidLoad {
+  [super viewDidLoad];
+
+  self.bridge = [[GreaseBridge alloc] init];
+  self.view.backgroundColor = UIColor.systemBackgroundColor;
+
+  WKUserContentController *contentController = [[WKUserContentController alloc] init];
+  [contentController addScriptMessageHandler:self name:GreaseBridgeScriptMessageName];
+  WKUserScript *bridgeScript =
+      [[WKUserScript alloc] initWithSource:[GreaseBridge bootstrapJavaScript]
+                             injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                          forMainFrameOnly:NO];
+  [contentController addUserScript:bridgeScript];
+
+  WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+  configuration.userContentController = contentController;
+
+  self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
+  self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+
+  [self.view addSubview:self.webView];
+  [NSLayoutConstraint activateConstraints:@[
+    [self.webView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+    [self.webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+    [self.webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+    [self.webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+  ]];
+
+  if (self.initialURLString.length > 0) {
+    [self loadURLString:self.initialURLString];
+  }
 }
 
-- (UIView *)makeToolbar
-{
-    UIStackView *stack = [[UIStackView alloc] init];
-    stack.axis = UILayoutConstraintAxisHorizontal;
-    stack.alignment = UIStackViewAlignmentCenter;
-    stack.distribution = UIStackViewDistributionFill;
-    stack.spacing = 8;
-    stack.layoutMargins = UIEdgeInsetsMake(6, 8, 6, 8);
-    stack.layoutMarginsRelativeArrangement = YES;
-    stack.backgroundColor = UIColor.secondarySystemBackgroundColor;
-
-    [stack addArrangedSubview:[self buttonWithTitle:@"Close" action:@selector(closeTapped:)]];
-    [stack addArrangedSubview:[self buttonWithTitle:@"Back" action:@selector(backTapped:)]];
-    [stack addArrangedSubview:[self buttonWithTitle:@"Reload" action:@selector(reloadTapped:)]];
-    [stack addArrangedSubview:[self buttonWithTitle:@"Paste URL" action:@selector(pasteURLTapped:)]];
-
-    UIView *spacer = [[UIView alloc] init];
-    [spacer setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [stack addArrangedSubview:spacer];
-
-    return stack;
+- (void)dealloc {
+  [self.webView.configuration.userContentController
+      removeScriptMessageHandlerForName:GreaseBridgeScriptMessageName];
 }
 
-- (UIButton *)buttonWithTitle:(NSString *)title action:(SEL)action
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setTitle:title forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
-    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-    return button;
+- (BOOL)presentInViewController:(UIViewController *)parentViewController {
+  if (!parentViewController) {
+    return NO;
+  }
+
+  if (self.parentViewController != nil) {
+    [self.parentViewController.view bringSubviewToFront:self.view];
+    return YES;
+  }
+
+  [parentViewController addChildViewController:self];
+  self.view.translatesAutoresizingMaskIntoConstraints = NO;
+  [parentViewController.view addSubview:self.view];
+
+  [NSLayoutConstraint activateConstraints:@[
+    [self.view.topAnchor constraintEqualToAnchor:parentViewController.view.topAnchor],
+    [self.view.leadingAnchor constraintEqualToAnchor:parentViewController.view.leadingAnchor],
+    [self.view.trailingAnchor constraintEqualToAnchor:parentViewController.view.trailingAnchor],
+    [self.view.bottomAnchor constraintEqualToAnchor:parentViewController.view.bottomAnchor]
+  ]];
+
+  [self didMoveToParentViewController:parentViewController];
+  return YES;
 }
 
-- (void)closeTapped:(id)sender
-{
-    [self willMoveToParentViewController:nil];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
-}
+- (BOOL)loadURLString:(NSString *)urlString {
+  NSURL *url = [self.class normalizedURLFromString:urlString];
+  if (!url) {
+    return NO;
+  }
 
-- (void)backTapped:(id)sender
-{
-    if (self.webView.canGoBack) {
-        [self.webView goBack];
-    }
-}
+  self.initialURLString = url.absoluteString;
 
-- (void)reloadTapped:(id)sender
-{
-    if (self.webView.URL) {
-        [self.webView reload];
-    }
-}
-
-- (void)pasteURLTapped:(id)sender
-{
-    NSString *pasteboardText = UIPasteboard.generalPasteboard.string;
-    NSURL *url = [self normalizedURLFromString:pasteboardText];
-
-    if (!url) {
-        [self setStatus:@"Pasteboard does not contain a valid URL."];
-        return;
-    }
-
-    [self setStatus:[NSString stringWithFormat:@"Loading %@", url.absoluteString]];
+  if (self.webView) {
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+  }
+
+  return YES;
 }
 
-- (NSURL *)normalizedURLFromString:(NSString *)text
-{
-    NSString *trimmed = [text stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-    if (trimmed.length == 0) {
-        return nil;
-    }
-
-    NSString *urlString = trimmed;
-    if ([trimmed rangeOfString:@"://"].location == NSNotFound) {
-        urlString = [@"http://" stringByAppendingString:trimmed];
-    }
-
-    NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
-
-    if (components.scheme.length == 0 || components.host.length == 0) {
-        return nil;
-    }
-
-    return components.URL;
+- (void)close {
+  [self willMoveToParentViewController:nil];
+  [self.view removeFromSuperview];
+  [self removeFromParentViewController];
 }
 
-- (void)setStatus:(NSString *)status
-{
-    self.statusLabel.text = status;
+- (void)reload {
+  if (self.webView.URL) {
+    [self.webView reload];
+  }
+}
+
+- (void)goBack {
+  if (self.webView.canGoBack) {
+    [self.webView goBack];
+  }
+}
+
++ (NSURL *)normalizedURLFromString:(NSString *)text {
+  NSString *trimmed =
+      [text stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+  if (trimmed.length == 0) {
+    return nil;
+  }
+
+  NSString *urlString = trimmed;
+  if ([trimmed rangeOfString:@"://"].location == NSNotFound) {
+    urlString = [@"http://" stringByAppendingString:trimmed];
+  }
+
+  NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+
+  if (components.scheme.length == 0 || components.host.length == 0) {
+    return nil;
+  }
+
+  return components.URL;
 }
 
 #pragma mark - WKScriptMessageHandler
 
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
-{
-    if (![message.name isEqualToString:GreaseBridgeScriptMessageName]) {
-        return;
-    }
+- (void)userContentController:(WKUserContentController *)userContentController
+      didReceiveScriptMessage:(WKScriptMessage *)message {
+  if (![message.name isEqualToString:GreaseBridgeScriptMessageName]) {
+    return;
+  }
 
-    NSDictionary *response = [self.bridge responseForScriptMessageBody:message.body];
-    [self sendBridgeResponse:response];
+  NSDictionary *response = [self.bridge responseForScriptMessageBody:message.body];
+  [self sendBridgeResponse:response];
 }
 
-- (void)sendBridgeResponse:(NSDictionary *)response
-{
-    if (![NSJSONSerialization isValidJSONObject:response]) {
-        NSLog(@"Invalid bridge response: %@", response);
-        return;
-    }
+- (void)sendBridgeResponse:(NSDictionary *)response {
+  if (![NSJSONSerialization isValidJSONObject:response]) {
+    NSLog(@"Invalid bridge response: %@", response);
+    return;
+  }
 
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:response options:0 error:&error];
-    if (!jsonData) {
-        NSLog(@"Failed to encode bridge response: %@", error);
-        return;
-    }
+  NSError *error = nil;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:response options:0 error:&error];
+  if (!jsonData) {
+    NSLog(@"Failed to encode bridge response: %@", error);
+    return;
+  }
 
-    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSString *script = [NSString stringWithFormat:@"window.Grease&&window.Grease._nativeCallback(%@);", json];
-    [self.webView evaluateJavaScript:script completionHandler:nil];
-}
-
-#pragma mark - WKNavigationDelegate
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
-{
-    [self setStatus:webView.URL.absoluteString ?: @"Loaded."];
-}
-
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
-{
-    [self setStatus:error.localizedDescription ?: @"Navigation failed."];
-}
-
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
-{
-    [self setStatus:error.localizedDescription ?: @"Navigation failed."];
+  NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  NSString *script =
+      [NSString stringWithFormat:@"window.Grease&&window.Grease._nativeCallback(%@);", json];
+  [self.webView evaluateJavaScript:script completionHandler:nil];
 }
 
 @end

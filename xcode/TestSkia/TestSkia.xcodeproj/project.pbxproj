@@ -743,7 +743,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestSkia/TestSkia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = 4HTP8553GU;
+				DEVELOPMENT_TEAM = 3P282US4XL;
 				INFOPLIST_FILE = TestSkia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -784,7 +784,7 @@
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keminglabs.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -798,7 +798,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestSkia/TestSkia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = 4HTP8553GU;
+				DEVELOPMENT_TEAM = 3P282US4XL;
 				INFOPLIST_FILE = TestSkia/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -839,7 +839,7 @@
 					"-Wl,-framework,ModelIO",
 					"-Wl,-framework,WebKit",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phronemophobic.LearnLisp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keminglabs.LearnLisp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

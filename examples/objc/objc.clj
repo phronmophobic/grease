@@ -23,8 +23,7 @@
 (defn show-alert [title body ok-text]
   (objc/dispatch-main
    (fn []
-     (let [
-           ;; UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"My Alert"
+     (let [           ;; UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"My Alert"
            ;;                                message:@"This is an alert."
            ;;                                preferredStyle:UIAlertControllerStyleAlert];
            alert (-> (objc/string->class "UIAlertController")
@@ -34,7 +33,7 @@
                                      :pointer (objc/->nsstring (str body))
                                      :int32 1))
 
-           
+
            ;; UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
            ;;    handler:^(UIAlertAction * action) {}];           
            ok-handler (objc/make-block (fn [action])
@@ -45,8 +44,7 @@
                                             :pointer
                                             :pointer (objc/->nsstring (str ok-text))
                                             :int32 0
-                                            :pointer ok-handler))
-           ]
+                                            :pointer ok-handler))]
        ;; [alert addAction:defaultAction];
 
        (objc/call-objc alert "addAction:"
@@ -58,13 +56,10 @@
                        :void
                        :pointer alert
                        :int8 1
-                       :int64 0))))
-  )
+                       :int64 0)))))
 
 (comment
-  (show-alert "Hey!" "Check out clojure on mobile!" "Okie dokie!")
-  ,
-  )
+  (show-alert "Hey!" "Check out clojure on mobile!" "Okie dokie!"))
 
 
 ;; Create an array 
