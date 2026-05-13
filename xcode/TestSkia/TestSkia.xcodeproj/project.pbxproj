@@ -59,6 +59,8 @@
 		3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A16A6E42F9016B4005BFF24 /* libffi.a */; };
 		3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D8A2F918B15003FEE4E /* libjvm.a */; };
 		3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D902F918B1C003FEE4E /* libjava.a */; };
+		A10000012F9A000000000005 /* GreaseBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000002 /* GreaseBridge.m */; };
+		A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000004 /* GreaseWebOverlayController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +194,10 @@
 		3AD3FEA32C935686007A5155 /* libffi.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libffi.tbd; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.5.sdk/usr/lib/libffi.tbd; sourceTree = DEVELOPER_DIR; };
 		3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.graal.xcodeproj; path = "../../third_party/ios-graal-jdk-21/svm/svm.graal.xcodeproj"; sourceTree = "<group>"; };
 		3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = svm.openjdk.xcodeproj; path = "../../third_party/ios-graal-jdk-21/labs-openjdk/svm.openjdk.xcodeproj"; sourceTree = "<group>"; };
+		A10000012F9A000000000001 /* GreaseBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GreaseBridge.h; sourceTree = "<group>"; };
+		A10000012F9A000000000002 /* GreaseBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GreaseBridge.m; sourceTree = "<group>"; };
+		A10000012F9A000000000003 /* GreaseWebOverlayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GreaseWebOverlayController.h; sourceTree = "<group>"; };
+		A10000012F9A000000000004 /* GreaseWebOverlayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GreaseWebOverlayController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +297,10 @@
 				3A75F28B267445BC0015D82C /* Renderer.mm */,
 				3A75F28D267445BC0015D82C /* GameViewController.h */,
 				3A75F28E267445BC0015D82C /* GameViewController.mm */,
+				A10000012F9A000000000001 /* GreaseBridge.h */,
+				A10000012F9A000000000002 /* GreaseBridge.m */,
+				A10000012F9A000000000003 /* GreaseWebOverlayController.h */,
+				A10000012F9A000000000004 /* GreaseWebOverlayController.m */,
 				3A75F290267445BC0015D82C /* Shaders.metal */,
 				3A75F292267445BC0015D82C /* ShaderTypes.h */,
 				3A75F293267445BC0015D82C /* Main.storyboard */,
@@ -504,6 +514,8 @@
 				3A110A502676A38A00C5D250 /* MembraneView.mm in Sources */,
 				3A75F291267445BC0015D82C /* Shaders.metal in Sources */,
 				3A75F28C267445BC0015D82C /* Renderer.mm in Sources */,
+				A10000012F9A000000000005 /* GreaseBridge.m in Sources */,
+				A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */,
 				3A75F28F267445BC0015D82C /* GameViewController.mm in Sources */,
 				3A75F289267445BC0015D82C /* AppDelegate.m in Sources */,
 			);
