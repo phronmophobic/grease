@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+cd "$DIR/../"
+
+cljfmt --no-remove-consecutive-blank-lines fix src/ examples/
+
+find xcode/          \
+     -name '*.m' -o  \
+     -name '*.mm' -o \
+     -name '*.h'     \
+     | xargs clang-format -style=file -i

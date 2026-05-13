@@ -1,0 +1,3 @@
+[tools]
+clang-format = "latest"
+"github:weavejester/cljfmt" = "latest"
