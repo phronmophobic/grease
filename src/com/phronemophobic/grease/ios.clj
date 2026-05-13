@@ -293,6 +293,12 @@
             (deliver p# ret#))))
        @p#)))
 
+(defn copy-to-clipboard! [s]
+  (on-main
+   (objc ^void [[UIPasteboard generalPasteboard] :setString
+                ~(objc/str->nsstring (str s))]))
+  nil)
+
 (def ^:private screen-bounds*
   (delay
     (on-main

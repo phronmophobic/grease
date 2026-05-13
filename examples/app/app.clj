@@ -431,11 +431,13 @@
   (dispatch! ::stop-nrepl-server)
   (let [host (.getHostAddress (ios/get-local-address))
         port 22345
+        address (str host ":" port)
         sci-ctx (ios/get-sci-ctx)
         server (babashka.nrepl.server/start-server!
                 sci-ctx
                 {:host host :port port
                  :xform ios/server-xform})]
+    (ios/copy-to-clipboard! address)
     (swap! app-state assoc :nrepl-server server))
 
   nil)
@@ -483,6 +485,5 @@
                      (compare-and-set! app-state old new)))]
     (repaint!)
     {:repaint! repaint!}))
-
 
 
