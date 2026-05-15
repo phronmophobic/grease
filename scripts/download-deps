@@ -17,5 +17,11 @@ if ! [ -d graalvm-jdk-21.0.3+7.1 ]; then
     rm graalvm-jdk-21.0.3_macos-aarch64_bin.tar.gz
 fi
 
+if ! [ -d libffi-3.4.8 ]; then
+    curl -O -sL "https://github.com/libffi/libffi/releases/download/v3.4.8/libffi-3.4.8.tar.gz"
+    tar xzf libffi-3.4.8.tar.gz
+    rm libffi-3.4.8.tar.gz
+
+fi
 
 popd

@@ -1,0 +1,30 @@
+--- ../libffi-3.4.8/generate-darwin-source-and-headers.py.bak	2026-05-15 14:57:00
++++ ../libffi-3.4.8/generate-darwin-source-and-headers.py	2026-05-15 14:58:00
+@@ -248,10 +248,10 @@
+     copy_files('include', 'darwin_common/include', pattern='*.h')
+ 
+     if generate_ios:
+-        copy_src_platform_files(ios_simulator_i386_platform)
+-        copy_src_platform_files(ios_simulator_x86_64_platform)
++        # copy_src_platform_files(ios_simulator_i386_platform)
++        # copy_src_platform_files(ios_simulator_x86_64_platform)
+         copy_src_platform_files(ios_simulator_arm64_platform)
+-        copy_src_platform_files(ios_device_armv7_platform)
++        # copy_src_platform_files(ios_device_armv7_platform)
+         copy_src_platform_files(ios_device_arm64_platform)
+     if generate_osx:
+         copy_src_platform_files(desktop_x86_64_platform)
+@@ -270,10 +270,10 @@
+     platform_headers = collections.defaultdict(set)
+ 
+     if generate_ios:
+-        build_target(ios_simulator_i386_platform, platform_headers)
+-        build_target(ios_simulator_x86_64_platform, platform_headers)
++        # build_target(ios_simulator_i386_platform, platform_headers)
++        # build_target(ios_simulator_x86_64_platform, platform_headers)
+         build_target(ios_simulator_arm64_platform, platform_headers)
+-        build_target(ios_device_armv7_platform, platform_headers)
++        # build_target(ios_device_armv7_platform, platform_headers)
+         build_target(ios_device_arm64_platform, platform_headers)
+     if generate_osx:
+         build_target(desktop_x86_64_platform, platform_headers)

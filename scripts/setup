@@ -28,3 +28,14 @@ pushd third_party/ios-graal-jdk-21/labs-openjdk/labs-openjdk-21
 make CONF_NAME=labsjdk graal-builder-image
 
 popd
+
+# prep libffi
+
+pushd third_party/libffi-3.4.8
+
+patch -N ./generate-darwin-source-and-headers.py < ../patches/libffi-only-arm64.patch  || true
+python3 ./generate-darwin-source-and-headers.py --only-ios
+
+patch -N ./libffi.xcodeproj/project.pbxproj < ../patches/libffi-only-arm64-2.patch
+
+popd
