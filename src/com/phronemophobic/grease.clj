@@ -7,7 +7,7 @@
   (:import org.graalvm.nativeimage.c.function.CEntryPointLiteral
            tech.v3.datatype.ffi.Pointer
            org.graalvm.word.WordBase)
-  
+
   (:gen-class))
 (set! *warn-on-reflection* true)
 
@@ -67,11 +67,9 @@
    (compile-interface-class nil))
   ([opts]
    ((requiring-resolve 'tech.v3.datatype.ffi.graalvm/expose-clojure-functions)
-    {
-     #'clj_sub {:rettype :int64
+    {#'clj_sub {:rettype :int64
                 :argtypes [['a :int64]
-                           ['b :int64]
-                           ]}
+                           ['b :int64]]}
 
      #'clj_add {:rettype :int64
                 :argtypes [['a :int64]
@@ -93,8 +91,7 @@
 
      #'clj_callback_fn {:rettype :void
                         :argtypes []}}
-    'com.phronemophobic.grease.interface nil))
-  )
+    'com.phronemophobic.grease.interface nil)))
 
 (when *compile-files*
   (compile-interface-class))

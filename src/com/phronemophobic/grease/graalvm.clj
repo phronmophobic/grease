@@ -18,7 +18,7 @@
 
 
 (defn list-resources [path]
-  (let [jar (java.util.jar.JarFile. path)  
+  (let [jar (java.util.jar.JarFile. path)
         entries (.entries jar)]
     (loop [result  []]
       (if (.hasMoreElements entries)
@@ -35,8 +35,7 @@
 (defn class-path->namespace-key [fname]
   (-> fname
       (clojure.string/replace #"(\$[^.]+)?.class$" "")
-      (clojure.string/split #"/"))
-  )
+      (clojure.string/split #"/")))
 
 (defn class-path->classname [fname]
   (-> (subs fname 0 (- (count fname)

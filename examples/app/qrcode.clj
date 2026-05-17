@@ -24,11 +24,11 @@
         _ (objc ^void [qrgen :setMessage nsdata])
         _ (objc ^void [qrgen :setCorrectionLevel @"H"])
         img (objc [qrgen :outputImage])
-    
+
         context (objc [CIContext :contextWithOptions nil])
         extent (objc ^CGRect [img :extent])
         cgimg (objc [context :createCGImage:fromRect img extent])
-    
+
         uiimg (objc [UIImage :imageWithCGImage cgimg])
         _ (ffi/call "CGImageRelease" :void :pointer cgimg)
         pngData (ffi/call "UIImagePNGRepresentation"
@@ -58,5 +58,5 @@
               (ui/image bs [size size])
               [(:width app/screen-size)
                (:height app/screen-size)])]
-    
+
     (app/show! {:view-fn (constantly view)})))

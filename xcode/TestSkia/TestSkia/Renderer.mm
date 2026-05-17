@@ -11,22 +11,22 @@
 #include <ganesh/mtl/GrMtlDirectContext.h>
 #include <ganesh/mtl/SkSurfaceMetal.h>
 
+#import "SkCanvas.h"
+#import "SkColorSpace.h"
 #import "SkData.h"
+#import "SkFont.h"
 #import "SkImage.h"
+#import "SkPaint.h"
 #import "SkStream.h"
 #import "SkSurface.h"
-#import "SkCanvas.h"
-#import "SkPaint.h"
 #import "SkTextBlob.h"
-#import "SkFont.h"
-#import "SkColorSpace.h"
 
-#import "skia.h"
-#import "bb.h"
 #import "MembraneView.h"
+#import "bb.h"
+#import "skia.h"
 
-#import <simd/simd.h>
 #import <ModelIO/ModelIO.h>
+#import <simd/simd.h>
 
 #import "Renderer.h"
 
@@ -35,286 +35,252 @@
 
 #import <CoreMotion/CoreMotion.h>
 
-
 static const NSUInteger MaxBuffersInFlight = 3;
 
-sk_sp<SkSurface> SkMtkViewToSurface(MTKView* mtkView, GrRecordingContext* rContext) {
-    if (!rContext ||
-        MTLPixelFormatDepth32Float_Stencil8 != [mtkView depthStencilPixelFormat] ||
-        MTLPixelFormatBGRA8Unorm != [mtkView colorPixelFormat]) {
-        return nullptr;
-    }
+sk_sp<SkSurface> SkMtkViewToSurface(MTKView *mtkView, GrRecordingContext *rContext) {
+  if (!rContext || MTLPixelFormatDepth32Float_Stencil8 != [mtkView depthStencilPixelFormat] ||
+      MTLPixelFormatBGRA8Unorm != [mtkView colorPixelFormat]) {
+    return nullptr;
+  }
 
-    const SkColorType colorType = kBGRA_8888_SkColorType;  // MTLPixelFormatBGRA8Unorm
-    sk_sp<SkColorSpace> colorSpace = nullptr;  // MTLPixelFormatBGRA8Unorm
-    const GrSurfaceOrigin origin = kTopLeft_GrSurfaceOrigin;
-    const SkSurfaceProps surfaceProps;
-    int sampleCount = (int)[mtkView sampleCount];
+  const SkColorType colorType = kBGRA_8888_SkColorType;  // MTLPixelFormatBGRA8Unorm
+  sk_sp<SkColorSpace> colorSpace = nullptr;              // MTLPixelFormatBGRA8Unorm
+  const GrSurfaceOrigin origin = kTopLeft_GrSurfaceOrigin;
+  const SkSurfaceProps surfaceProps;
+  int sampleCount = (int)[mtkView sampleCount];
 
-    return SkSurfaces::WrapMTKView(rContext, (__bridge GrMTLHandle)mtkView, origin, sampleCount,
-                                      colorType, colorSpace, &surfaceProps);
+  return SkSurfaces::WrapMTKView(rContext, (__bridge GrMTLHandle)mtkView, origin, sampleCount,
+                                 colorType, colorSpace, &surfaceProps);
 }
 
-void testDraw(SkCanvas* canvas){
-    canvas->clear(SK_ColorWHITE);
-    canvas->translate(10, 100);
-    SkPaint fillPaint;
-    SkPaint strokePaint;
-    strokePaint.setStyle(SkPaint::kStroke_Style);
-    strokePaint.setStrokeWidth(3.0f);
+void testDraw(SkCanvas *canvas) {
+  canvas->clear(SK_ColorWHITE);
+  canvas->translate(10, 100);
+  SkPaint fillPaint;
+  SkPaint strokePaint;
+  strokePaint.setStyle(SkPaint::kStroke_Style);
+  strokePaint.setStrokeWidth(3.0f);
 
+  canvas->drawRect(SkRect::MakeXYWH(10, 10, 60, 20), fillPaint);
+  canvas->drawRect(SkRect::MakeXYWH(80, 10, 60, 20), strokePaint);
 
-    canvas->drawRect(SkRect::MakeXYWH(10, 10, 60, 20), fillPaint);
-    canvas->drawRect(SkRect::MakeXYWH(80, 10, 60, 20), strokePaint);
+  strokePaint.setStrokeWidth(5.0f);
+  canvas->drawOval(SkRect::MakeXYWH(150, 10, 60, 20), strokePaint);
 
-    strokePaint.setStrokeWidth(5.0f);
-    canvas->drawOval(SkRect::MakeXYWH(150, 10, 60, 20), strokePaint);
+  sk_sp<SkTextBlob> blob = SkTextBlob::MakeFromString("SKIA", SkFont(nullptr, 80));
 
-    sk_sp<SkTextBlob> blob = SkTextBlob::MakeFromString("SKIA", SkFont(nullptr, 80));
+  fillPaint.setColor(SkColorSetARGB(0xFF, 0xFF, 0x00, 0x00));
+  canvas->drawTextBlob(blob.get(), 20, 120, fillPaint);
 
-    fillPaint.setColor(SkColorSetARGB(0xFF, 0xFF, 0x00, 0x00));
-    canvas->drawTextBlob(blob.get(), 20, 120, fillPaint);
-
-    fillPaint.setColor(SkColorSetARGB(0xFF, 0x00, 0x00, 0xFF));
-    canvas->drawTextBlob(blob.get(), 20, 220, fillPaint);
-    
-
+  fillPaint.setColor(SkColorSetARGB(0xFF, 0x00, 0x00, 0xFF));
+  canvas->drawTextBlob(blob.get(), 20, 220, fillPaint);
 }
 
+@implementation Renderer {
+  dispatch_semaphore_t _inFlightSemaphore;
+  id<MTLDevice> _device;
+  id<MTLCommandQueue> _commandQueue;
 
-@implementation Renderer
+  id<MTLBuffer> _dynamicUniformBuffer[MaxBuffersInFlight];
+  id<MTLRenderPipelineState> _pipelineState;
+  id<MTLDepthStencilState> _depthState;
+  id<MTLTexture> _colorMap;
+  MTLVertexDescriptor *_mtlVertexDescriptor;
+
+  uint8_t _uniformBufferIndex;
+
+  matrix_float4x4 _projectionMatrix;
+
+  float _rotation;
+
+  MTKMesh *_mesh;
+
+  sk_sp<GrDirectContext> grContext;
+  //    sk_sp<SkSurface> surface;
+}
+
+- (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)view;
 {
-    dispatch_semaphore_t _inFlightSemaphore;
-    id <MTLDevice> _device;
-    id <MTLCommandQueue> _commandQueue;
+  self = [super init];
+  if (self) {
+    _device = view.device;
+    //        _inFlightSemaphore = dispatch_semaphore_create(MaxBuffersInFlight);
+    grContext = nullptr;
+    [self _loadMetalWithView:view];
 
-    id <MTLBuffer> _dynamicUniformBuffer[MaxBuffersInFlight];
-    id <MTLRenderPipelineState> _pipelineState;
-    id <MTLDepthStencilState> _depthState;
-    id <MTLTexture> _colorMap;
-    MTLVertexDescriptor *_mtlVertexDescriptor;
+    set_main_view(((MembraneView *)view));
+  }
 
-    uint8_t _uniformBufferIndex;
-
-    matrix_float4x4 _projectionMatrix;
-
-    float _rotation;
-
-    MTKMesh *_mesh;
-    
-    sk_sp<GrDirectContext> grContext;
-//    sk_sp<SkSurface> surface;
-}
-
--(nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)view;
-{
-    self = [super init];
-    if(self)
-    {
-        _device = view.device;
-//        _inFlightSemaphore = dispatch_semaphore_create(MaxBuffersInFlight);
-        grContext= nullptr;
-        [self _loadMetalWithView:view];
-        
-        set_main_view(((MembraneView*)view));
-
-    }
-
-    return self;
+  return self;
 }
 
 - (void)_loadMetalWithView:(nonnull MTKView *)view;
 {
-    /// Load Metal state objects and initialize renderer dependent view properties
+  /// Load Metal state objects and initialize renderer dependent view properties
 
-//    view.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
-//    view.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
-//    view.sampleCount = 1;
-    
-    [view setDepthStencilPixelFormat:MTLPixelFormatDepth32Float_Stencil8];
-    [view setColorPixelFormat:MTLPixelFormatBGRA8Unorm];
-    [view setSampleCount:1];
-    
-    _commandQueue = [_device newCommandQueue];
-    
-    GrMtlBackendContext backend_context;
-    backend_context.fDevice.retain((__bridge void*)_device);
-    backend_context.fQueue.retain((__bridge void*)_commandQueue);
+  //    view.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+  //    view.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
+  //    view.sampleCount = 1;
 
-    grContext = GrDirectContexts::MakeMetal(backend_context);
+  [view setDepthStencilPixelFormat:MTLPixelFormatDepth32Float_Stencil8];
+  [view setColorPixelFormat:MTLPixelFormatBGRA8Unorm];
+  [view setSampleCount:1];
 
+  _commandQueue = [_device newCommandQueue];
+
+  GrMtlBackendContext backend_context;
+  backend_context.fDevice.retain((__bridge void *)_device);
+  backend_context.fQueue.retain((__bridge void *)_commandQueue);
+
+  grContext = GrDirectContexts::MakeMetal(backend_context);
 }
 
-- (void)_loadAssets
-{
-    /// Load assets into metal objects
+- (void)_loadAssets {
+  /// Load assets into metal objects
 
-    NSError *error;
+  NSError *error;
 
-    MTKMeshBufferAllocator *metalAllocator = [[MTKMeshBufferAllocator alloc]
-                                              initWithDevice: _device];
+  MTKMeshBufferAllocator *metalAllocator = [[MTKMeshBufferAllocator alloc] initWithDevice:_device];
 
-    MDLMesh *mdlMesh = [MDLMesh newBoxWithDimensions:(vector_float3){4, 4, 4}
-                                            segments:(vector_uint3){2, 2, 2}
-                                        geometryType:MDLGeometryTypeTriangles
-                                       inwardNormals:NO
-                                           allocator:metalAllocator];
+  MDLMesh *mdlMesh = [MDLMesh newBoxWithDimensions:(vector_float3){4, 4, 4}
+                                          segments:(vector_uint3){2, 2, 2}
+                                      geometryType:MDLGeometryTypeTriangles
+                                     inwardNormals:NO
+                                         allocator:metalAllocator];
 
-    MDLVertexDescriptor *mdlVertexDescriptor =
-    MTKModelIOVertexDescriptorFromMetal(_mtlVertexDescriptor);
+  MDLVertexDescriptor *mdlVertexDescriptor =
+      MTKModelIOVertexDescriptorFromMetal(_mtlVertexDescriptor);
 
-    mdlVertexDescriptor.attributes[VertexAttributePosition].name  = MDLVertexAttributePosition;
-    mdlVertexDescriptor.attributes[VertexAttributeTexcoord].name  = MDLVertexAttributeTextureCoordinate;
+  mdlVertexDescriptor.attributes[VertexAttributePosition].name = MDLVertexAttributePosition;
+  mdlVertexDescriptor.attributes[VertexAttributeTexcoord].name =
+      MDLVertexAttributeTextureCoordinate;
 
-    mdlMesh.vertexDescriptor = mdlVertexDescriptor;
+  mdlMesh.vertexDescriptor = mdlVertexDescriptor;
 
-    _mesh = [[MTKMesh alloc] initWithMesh:mdlMesh
-                                   device:_device
-                                    error:&error];
+  _mesh = [[MTKMesh alloc] initWithMesh:mdlMesh device:_device error:&error];
 
-    if(!_mesh || error)
-    {
-        NSLog(@"Error creating MetalKit mesh %@", error.localizedDescription);
-    }
+  if (!_mesh || error) {
+    NSLog(@"Error creating MetalKit mesh %@", error.localizedDescription);
+  }
 
-    MTKTextureLoader* textureLoader = [[MTKTextureLoader alloc] initWithDevice:_device];
+  MTKTextureLoader *textureLoader = [[MTKTextureLoader alloc] initWithDevice:_device];
 
-    NSDictionary *textureLoaderOptions =
-    @{
-      MTKTextureLoaderOptionTextureUsage       : @(MTLTextureUsageShaderRead),
-      MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
-      };
+  NSDictionary *textureLoaderOptions = @{
+    MTKTextureLoaderOptionTextureUsage : @(MTLTextureUsageShaderRead),
+    MTKTextureLoaderOptionTextureStorageMode : @(MTLStorageModePrivate)
+  };
 
-    _colorMap = [textureLoader newTextureWithName:@"ColorMap"
-                                      scaleFactor:1.0
-                                           bundle:nil
-                                          options:textureLoaderOptions
-                                            error:&error];
+  _colorMap = [textureLoader newTextureWithName:@"ColorMap"
+                                    scaleFactor:1.0
+                                         bundle:nil
+                                        options:textureLoaderOptions
+                                          error:&error];
 
-    if(!_colorMap || error)
-    {
-        NSLog(@"Error creating texture %@", error.localizedDescription);
-    }
+  if (!_colorMap || error) {
+    NSLog(@"Error creating texture %@", error.localizedDescription);
+  }
 }
 
-- (void)_updateGameState
-{
-    /// Update any game state before encoding renderint commands to our drawable
+- (void)_updateGameState {
+  /// Update any game state before encoding renderint commands to our drawable
 
-    Uniforms * uniforms = (Uniforms*)_dynamicUniformBuffer[_uniformBufferIndex].contents;
+  Uniforms *uniforms = (Uniforms *)_dynamicUniformBuffer[_uniformBufferIndex].contents;
 
-    uniforms->projectionMatrix = _projectionMatrix;
+  uniforms->projectionMatrix = _projectionMatrix;
 
-    vector_float3 rotationAxis = {1, 1, 0};
-    matrix_float4x4 modelMatrix = matrix4x4_rotation(_rotation, rotationAxis);
-    matrix_float4x4 viewMatrix = matrix4x4_translation(0.0, 0.0, -8.0);
+  vector_float3 rotationAxis = {1, 1, 0};
+  matrix_float4x4 modelMatrix = matrix4x4_rotation(_rotation, rotationAxis);
+  matrix_float4x4 viewMatrix = matrix4x4_translation(0.0, 0.0, -8.0);
 
-    uniforms->modelViewMatrix = matrix_multiply(viewMatrix, modelMatrix);
+  uniforms->modelViewMatrix = matrix_multiply(viewMatrix, modelMatrix);
 
-    _rotation += .01;
+  _rotation += .01;
 }
 
-- (void)drawInMTKView:(nonnull MTKView *)view
-{
-    /// Per frame updates here
+- (void)drawInMTKView:(nonnull MTKView *)view {
+  /// Per frame updates here
 
-//    dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
-//
-//    _uniformBufferIndex = (_uniformBufferIndex + 1) % MaxBuffersInFlight;
-//
-//    id <MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-//    commandBuffer.label = @"MyCommand";
-//
-//    __block dispatch_semaphore_t block_sema = _inFlightSemaphore;
-//    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer)
-//     {
-//         dispatch_semaphore_signal(block_sema);
-//     }];
+  //    dispatch_semaphore_wait(_inFlightSemaphore, DISPATCH_TIME_FOREVER);
+  //
+  //    _uniformBufferIndex = (_uniformBufferIndex + 1) % MaxBuffersInFlight;
+  //
+  //    id <MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+  //    commandBuffer.label = @"MyCommand";
+  //
+  //    __block dispatch_semaphore_t block_sema = _inFlightSemaphore;
+  //    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer)
+  //     {
+  //         dispatch_semaphore_signal(block_sema);
+  //     }];
 
-//    [self _updateGameState];
+  //    [self _updateGameState];
 
-    graal_isolatethread_t* thread;
-    graal_attach_thread(_isolate, &thread);
-    if (!clj_needs_redraw(thread)){
-        return;
-    }
+  graal_isolatethread_t *thread;
+  graal_attach_thread(_isolate, &thread);
+  if (!clj_needs_redraw(thread)) {
+    return;
+  }
 
-    
-    sk_sp<SkSurface> surface = SkMtkViewToSurface(view, grContext.get());
-    CGFloat contentScale = [[UIScreen mainScreen] nativeScale];
-    surface->getCanvas()->scale(contentScale, contentScale);
+  sk_sp<SkSurface> surface = SkMtkViewToSurface(view, grContext.get());
+  CGFloat contentScale = [[UIScreen mainScreen] nativeScale];
+  surface->getCanvas()->scale(contentScale, contentScale);
 
-    if (!surface) {
-        NSLog(@"error: no sksurface");
-        return;
-    }
-    
-    SkiaResource resource(grContext, surface);
-//surface->getCanvas()->clear(SK_ColorWHITE);
-    
-//    testDraw(surface->getCanvas());
-    
-    clj_draw(thread,&resource);
+  if (!surface) {
+    NSLog(@"error: no sksurface");
+    return;
+  }
 
-	graal_detach_thread(thread);
+  SkiaResource resource(grContext, surface);
+  // surface->getCanvas()->clear(SK_ColorWHITE);
 
-    // Must flush *and* present for this to work!
-    grContext->flushAndSubmit(surface.get());
+  //    testDraw(surface->getCanvas());
 
-    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    [commandBuffer presentDrawable:[view currentDrawable]];
-    [commandBuffer commit];
+  clj_draw(thread, &resource);
 
+  graal_detach_thread(thread);
+
+  // Must flush *and* present for this to work!
+  grContext->flushAndSubmit(surface.get());
+
+  id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+  [commandBuffer presentDrawable:[view currentDrawable]];
+  [commandBuffer commit];
 }
 
-- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
-{
-    /// Respond to drawable size or orientation changes here
+- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size {
+  /// Respond to drawable size or orientation changes here
 
-//    float aspect = size.width / (float)size.height;
-//    _projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f, 100.0f);
+  //    float aspect = size.width / (float)size.height;
+  //    _projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f,
+  //    100.0f);
 }
 
 #pragma mark Matrix Math Utilities
 
-matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
-{
-    return (matrix_float4x4) {{
-        { 1,   0,  0,  0 },
-        { 0,   1,  0,  0 },
-        { 0,   0,  1,  0 },
-        { tx, ty, tz,  1 }
-    }};
+matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz) {
+  return (matrix_float4x4){{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {tx, ty, tz, 1}}};
 }
 
-static matrix_float4x4 matrix4x4_rotation(float radians, vector_float3 axis)
-{
-    axis = vector_normalize(axis);
-    float ct = cosf(radians);
-    float st = sinf(radians);
-    float ci = 1 - ct;
-    float x = axis.x, y = axis.y, z = axis.z;
+static matrix_float4x4 matrix4x4_rotation(float radians, vector_float3 axis) {
+  axis = vector_normalize(axis);
+  float ct = cosf(radians);
+  float st = sinf(radians);
+  float ci = 1 - ct;
+  float x = axis.x, y = axis.y, z = axis.z;
 
-    return (matrix_float4x4) {{
-        { ct + x * x * ci,     y * x * ci + z * st, z * x * ci - y * st, 0},
-        { x * y * ci - z * st,     ct + y * y * ci, z * y * ci + x * st, 0},
-        { x * z * ci + y * st, y * z * ci - x * st,     ct + z * z * ci, 0},
-        {                   0,                   0,                   0, 1}
-    }};
+  return (matrix_float4x4){{{ct + x * x * ci, y * x * ci + z * st, z * x * ci - y * st, 0},
+                            {x * y * ci - z * st, ct + y * y * ci, z * y * ci + x * st, 0},
+                            {x * z * ci + y * st, y * z * ci - x * st, ct + z * z * ci, 0},
+                            {0, 0, 0, 1}}};
 }
 
-matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, float aspect, float nearZ, float farZ)
-{
-    float ys = 1 / tanf(fovyRadians * 0.5);
-    float xs = ys / aspect;
-    float zs = farZ / (nearZ - farZ);
+matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, float aspect, float nearZ,
+                                              float farZ) {
+  float ys = 1 / tanf(fovyRadians * 0.5);
+  float xs = ys / aspect;
+  float zs = farZ / (nearZ - farZ);
 
-    return (matrix_float4x4) {{
-        { xs,   0,          0,  0 },
-        {  0,  ys,          0,  0 },
-        {  0,   0,         zs, -1 },
-        {  0,   0, nearZ * zs,  0 }
-    }};
+  return (matrix_float4x4){{{xs, 0, 0, 0}, {0, ys, 0, 0}, {0, 0, zs, -1}, {0, 0, nearZ * zs, 0}}};
 }
 
 @end

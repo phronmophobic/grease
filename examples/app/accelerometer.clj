@@ -64,12 +64,12 @@
       "start"
       (fn []
         (objc ^void
-              [motion :startAccelerometerUpdatesToQueue:withHandler
-               main-queue
-               (fn ^void [data error]
-                 (let [acceleration (objc ^cm_accleration [data :acceleration])]
-                   (swap! app-state update :accelerations
-                          push acceleration 100)))])
+         [motion :startAccelerometerUpdatesToQueue:withHandler
+          main-queue
+          (fn ^void [data error]
+            (let [acceleration (objc ^cm_accleration [data :acceleration])]
+              (swap! app-state update :accelerations
+                     push acceleration 100)))])
         nil))
      (ui/spacer 50 0)
      (button

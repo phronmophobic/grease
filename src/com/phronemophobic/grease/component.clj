@@ -56,8 +56,8 @@
         y1 (nth a 1)
         x2 (nth b 0)
         y2 (nth b 1)]
-   (Math/sqrt (+ (Math/pow (- x2 x1) 2)
-                 (Math/pow (- y2 y1) 2)))))
+    (Math/sqrt (+ (Math/pow (- x2 x1) 2)
+                  (Math/pow (- y2 y1) 2)))))
 
 (defn vertical-scrollbar [total-height height offset-y]
   [(filled-rectangle scroll-background-color
@@ -112,22 +112,20 @@
                 scroll-start-offset
                 scroll-mpos]
          :as scrolling} (dispatch! :get $scrolling)]
-   (when (exceed-scroll-threshold? scrolling mpos)
-     (dispatch! :set $offset
-                [(clampx (+ (nth scroll-start-offset 0)
-                            (- (nth scroll-start-mpos 0)
-                               (nth mpos 0)
-                               )))
-                 (clampy (+ (nth scroll-start-offset 1)
-                            (- (nth scroll-start-mpos 1)
-                               (nth mpos 1)
-                               )))]))
+    (when (exceed-scroll-threshold? scrolling mpos)
+      (dispatch! :set $offset
+                 [(clampx (+ (nth scroll-start-offset 0)
+                             (- (nth scroll-start-mpos 0)
+                                (nth mpos 0))))
+                  (clampy (+ (nth scroll-start-offset 1)
+                             (- (nth scroll-start-mpos 1)
+                                (nth mpos 1))))]))
 
-   (dispatch! :update $scrolling
-              assoc
-              :scroll-dist (+ scroll-dist
-                              (euclidean-distance scroll-mpos mpos))
-              :scroll-mpos mpos)))
+    (dispatch! :update $scrolling
+               assoc
+               :scroll-dist (+ scroll-dist
+                               (euclidean-distance scroll-mpos mpos))
+               :scroll-mpos mpos)))
 
 (defeffect ::cancel-scroll [{:keys [$scrolling]}]
   (dispatch! :set $scrolling nil))
@@ -210,16 +208,15 @@
                           (cons
                            [::cancel-scroll {:$scrolling $scrolling
                                              :mpos mpos}]
-                           (ui/mouse-down body mpos))
-                          ))
-                      
+                           (ui/mouse-down body mpos))))
+
                       (ui/no-events body))
                ;; else
                (ui/on :mouse-down
                       (fn [mpos]
                         [[::start-scroll {:$scrolling $scrolling
-                                         :$offset $offset
-                                         :mpos mpos}]])
+                                          :$offset $offset
+                                          :mpos mpos}]])
                       body))]
     body))
 
@@ -232,24 +229,19 @@
 
         w 500
         h 100
-        body2 (ui/bordered border-size (ui/rectangle (- w border-size) (- h border-size)))
-              ]
+        body2 (ui/bordered border-size (ui/rectangle (- w border-size) (- h border-size)))]
     (ui/padding 30
-     (ui/bordered (scrollview {:scroll-bounds [300 300]
-                               :body
-                               
-                               (apply
-                                ui/vertical-layout
-                                (for [i (range 30)]
-                                  (ui/button (str "alsdjf;lasjdf-" i)
-                                             )))})))))
+                (ui/bordered (scrollview {:scroll-bounds [300 300]
+                                          :body
+
+                                          (apply
+                                           ui/vertical-layout
+                                           (for [i (range 30)]
+                                             (ui/button (str "alsdjf;lasjdf-" i))))})))))
 
 (comment
 
   (require '[membrane.skia :as backend])
-  (def winfo (backend/run (component/make-app #'scroll-test {} ) ))
-  
-
-  ,)
+  (def winfo (backend/run (component/make-app #'scroll-test {}))))
 
 

@@ -22,7 +22,9 @@
             honey.sql.helpers
 
             [com.phronemophobic.scify :as scify]
-            [com.phronemophobic.grease.ios :as ios]
+            [com.phronemophobic.grease.ios.utils :as ios-utils]
+            com.phronemophobic.grease.ios.webview
+            com.phronemophobic.grease.ios.whisper
             [com.phronemophobic.grease.replog :as replog]
             com.phronemophobic.grease.component
             [com.phronemophobic.objcjure :as objc
@@ -47,8 +49,7 @@
             babashka.impl.httpkit-server
             babashka.impl.xml
             babashka.impl.jdbc
-            babashka.impl.clojure.instant
-            )
+            babashka.impl.clojure.instant)
   (:import java.net.URL
            java.net.NetworkInterface
            java.net.InetAddress
@@ -76,8 +77,7 @@
 
    :clj_debug {:rettype :pointer
                :doc "Used for development. Noop."
-               :argtypes [['data :pointer]]}
-   ,})
+               :argtypes [['data :pointer]]}})
 
 
 (dt-struct/define-datatype!
@@ -110,21 +110,13 @@
 (def UIAlertActionStyleCancel 1)
 (def UIAlertActionStyleDestructive 2)
 
-(def main-queue (delay (ffi/dlsym ffi/RTLD_DEFAULT (dt-ffi/string->c "_dispatch_main_q"))))
-
 (defn NSSetUncaughtExceptionHandler [handler]
-  (ffi/call "NSSetUncaughtExceptionHandler" :void :pointer handler)
-  )
+  (ffi/call "NSSetUncaughtExceptionHandler" :void :pointer handler))
 
 (defn dispatch-main-async
   "Run `f` on the main queue."
   [f]
-  (ffi/call "dispatch_async" :void :pointer @main-queue :pointer (objc
-                                                                  (fn ^void []
-                                                                    (try
-                                                                      (f)
-                                                                      (catch Exception e
-                                                                        (println e)))))))
+  (ios-utils/dispatch-main-async f))
 
 (defn prompt-bool
   "Displayes a prompt. Blocks until a response is given.
@@ -134,20 +126,16 @@
   (let [p (promise)]
     (dispatch-main-async
      (fn []
-       (let [title (if title
-                     (objc/str->nsstring title)
-                     (ffi/long->pointer 0))
-             message (if message
-                       (objc/str->nsstring message)
-                       (ffi/long->pointer 0))
+       (let [title (ios-utils/nullable-nsstring title)
+             message (ios-utils/nullable-nsstring message)
              ok-text (objc/str->nsstring (or ok-text "OK"))
              cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
-             
+
              alertController (objc [UIAlertController :alertControllerWithTitle:message:preferredStyle
                                     title
                                     message
                                     UIAlertControllerStyleAlert])
-             
+
              cancelAction (objc
                            [UIAlertAction :actionWithTitle:style:handler
                             cancel-text
@@ -164,9 +152,7 @@
                  (objc [alertController :addAction cancelAction])
                  (objc [alertController :addAction okAction]))
 
-             vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])
-
-             ]
+             vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])]
          (objc [vc :presentViewController:animated:completion
                 alertController true nil]))))
     @p))
@@ -175,19 +161,19 @@
   "Displays the keyboard."
   []
   (objc ^void
-        [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
-         nil
-         ~(byte 0)]))
+   [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
+    ~(objc/sel_registerName (dt-ffi/string->c "becomeFirstResponder"))
+    nil
+    ~(byte 0)]))
 
 (defn hide-keyboard
   "Hides the keyboard."
   []
   (objc ^void
-        [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
-         ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
-         nil
-         ~(byte 0)]))
+   [~(clj_main_view) :performSelectorOnMainThread:withObject:waitUntilDone
+    ~(objc/sel_registerName (dt-ffi/string->c "resignFirstResponder"))
+    nil
+    ~(byte 0)]))
 
 (defn prompt-for-text
   "Shows an alert prompt with a text field.
@@ -199,20 +185,16 @@
   [{:keys [title message placeholder on-cancel on-ok cancel-text ok-text]}]
   (dispatch-main-async
    (fn []
-     (let [title (if title
-                   (objc/str->nsstring title)
-                   (ffi/long->pointer 0))
-           message (if message
-                     (objc/str->nsstring message)
-                     (ffi/long->pointer 0))
+     (let [title (ios-utils/nullable-nsstring title)
+           message (ios-utils/nullable-nsstring message)
            ok-text (objc/str->nsstring (or ok-text "OK"))
            cancel-text (objc/str->nsstring (or cancel-text "Cancel"))
-        
+
            alertController (objc [UIAlertController :alertControllerWithTitle:message:preferredStyle
                                   title
                                   message
                                   UIAlertControllerStyleAlert])
-          
+
            _ (objc [alertController :addTextFieldWithConfigurationHandler
                     (fn ^void [textField]
                       (when placeholder
@@ -242,9 +224,7 @@
                (objc [alertController :addAction cancelAction])
                (objc [alertController :addAction okAction]))
 
-           vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])
-
-           ]
+           vc (objc [[[UIApplication :sharedApplication] :keyWindow] :rootViewController])]
        (objc [vc :presentViewController:animated:completion
               alertController true nil])))))
 
@@ -265,11 +245,9 @@
     (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
              ;; (int 14) ;; application support
              (int 9) ;; documents
-             (int 1)
-             ]
+             (int 1)]
             :objectAtIndex 0]
-           fileSystemRepresentation])))
-  )
+           fileSystemRepresentation]))))
 
 (defn scripts-dir
   "Returns a file for the directory where the scripts are stored."
@@ -283,15 +261,13 @@
   If already running on the main thread, executes the body directly.
   Otherwise, enqueues the body on the main thread and waits for a result."
   [& body]
-  `(if (objc ~(with-meta '[NSThread isMainThread]
-                {:tag 'boolean}))
-     (do ~@body)
-     (let [p# (promise)]
-       (dispatch-main-async
-        (fn []
-          (let [ret# (do ~@body)]
-            (deliver p# ret#))))
-       @p#)))
+  `(ios-utils/on-main ~@body))
+
+(defn copy-to-clipboard! [s]
+  (on-main
+   (objc ^void [[UIPasteboard generalPasteboard] :setString
+                ~(objc/str->nsstring (str s))]))
+  nil)
 
 (def ^:private screen-bounds*
   (delay
@@ -312,7 +288,7 @@
   The safe area of a view reflects the area not covered by navigation bars, tab bars, toolbars, and other ancestors that obscure a view controller's view."
   []
   (on-main
-    (objc ^UIEdgeInsets [~(clj_main_view) :safeAreaInsets])))
+   (objc ^UIEdgeInsets [~(clj_main_view) :safeAreaInsets])))
 
 (defn sleep [msecs]
   (Thread/sleep (long msecs)))
@@ -393,28 +369,28 @@
         ;; // call the passed block if the source is modified
         ;; dispatch_source_set_event_handler(_source, _block);
         _ (ffi/call "dispatch_source_set_event_handler"
-                  :void
-                  :pointer source
-                  :pointer (objc/make-block
-                            (fn []
-                              (f))
-                            :void
-                            []))
- 
+                    :void
+                    :pointer source
+                    :pointer (objc/make-block
+                              (fn []
+                                (f))
+                              :void
+                              []))
+
         ;; // close the file descriptor when the dispatch source is cancelled
         ;; dispatch_source_set_cancel_handler(_source, ^{
- 
+
         ;; 	close(_fileDescriptor);
         ;; });
         _ (ffi/call "dispatch_source_set_cancel_handler"
-                  :void
-                  :pointer source
-                  :pointer (objc/make-block
-                            (fn []
-                              (ffi/call "close" :void :int32 fd))
-                            :void
-                            []))
- 
+                    :void
+                    :pointer source
+                    :pointer (objc/make-block
+                              (fn []
+                                (ffi/call "close" :void :int32 fd))
+                              :void
+                              []))
+
         ;; // at this point the dispatch source is paused, so start watching
         ;; dispatch_resume(_source);
         _ (ffi/call "dispatch_resume"
@@ -426,7 +402,7 @@
       (ffi/call "dispatch_source_cancel"
                 :void
                 :pointer source)
-      
+
       ;; #if !OS_OBJECT_USE_OBJC
       ;; dispatch_release(_source);
       ;; #endif
@@ -489,8 +465,7 @@
         (catch Throwable e
           (binding [*out* @*out*-original]
             (println e))
-          (swap! sessions dissoc k)
-          )))))
+          (swap! sessions dissoc k))))))
 
 (defn- to-char-array
   ^chars
@@ -520,7 +495,7 @@
     pw))
 
 (defn setup-nrepl-logging! []
-  
+
   (let [new-out (wrap-writer "out" *out*)
         new-err (wrap-writer "err" *err*)]
     ;; make sure these get set first
@@ -573,11 +548,14 @@
 (def repl-requires
   '[[clojure.repl :refer [dir doc]]])
 
+
+
 (def opts (addons/future
             {:classes
              {:allow :all
               'java.lang.System System
               'java.lang.Long Long
+              'java.lang.Throwable Throwable
               'java.util.Date java.util.Date
               'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
@@ -588,9 +566,13 @@
               'java.util.Locale java.util.Locale
               'java.util.Map java.util.Map
               'java.util.function.Function java.util.function.Function
+              'java.util.zip.ZipInputStream java.util.zip.ZipInputStream
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
-              'java.security.MessageDigest java.security.MessageDigest
-              }
+              'java.security.MessageDigest java.security.MessageDigest}
+
+             :imports
+             {'Throwable 'java.lang.Throwable}
+
              :namespaces
              (merge (let [ns-name 'com.phronemophobic.grease.membrane
                           fns (sci/create-ns ns-name nil)]
@@ -616,6 +598,9 @@
                     (scify/ns->ns-map 'clojure.data.json)
                     (scify/ns->ns-map 'clojure.stacktrace)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.utils)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.webview)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.whisper)
                     (scify/ns->ns-map 'com.phronemophobic.grease.component)
                     (let [ns-map (scify/ns->ns-map 'com.phronemophobic.objcjure)
                           sci-ns-var (-> ns-map
@@ -645,7 +630,7 @@
                     (scify/ns->ns-map 'babashka.fs)
                     (scify/ns->ns-map 'babashka.nrepl.server)
                     (scify/ns->ns-map 'sci.ctx-store)
-                    
+
                     (scify/ns->ns-map 'honey.sql)
                     (scify/ns->ns-map 'honey.sql.protocols)
                     (scify/ns->ns-map 'honey.sql.helpers)
@@ -653,9 +638,9 @@
                     (scify/ns->ns-map 'clojure.zip)
 
                     ;; extras
-                    { 'clojure.core.async babashka.impl.clojure.core.async/async-namespace
+                    {'clojure.core.async babashka.impl.clojure.core.async/async-namespace
                      'clojure.core.async.impl.protocols babashka.impl.clojure.core.async/async-protocols-namespace
-                     
+
 
                      'org.httpkit.client babashka.impl.httpkit-client/httpkit-client-namespace
                      'org.httpkit.sni-client babashka.impl.httpkit-client/sni-client-namespace
@@ -668,14 +653,13 @@
                      'next.jdbc babashka.impl.jdbc/njdbc-namespace
                      'next.jdbc.sql babashka.impl.jdbc/next-sql-namespace
                      'next.jdbc.result-set babashka.impl.jdbc/result-set-namespace
-                     
+
                      ;; 'hiccup.core babashka.impl.hiccup/hiccup-namespace
                      ;; 'hiccup2.core babashka.impl.hiccup/hiccup2-namespace
                      ;; 'hiccup.util babashka.impl.hiccup/hiccup-util-namespace
                      ;; 'hiccup.compiler babashka.impl.hiccup/hiccup-compiler-namespace
 
-                     'clojure.instant babashka.impl.clojure.instant/instant-namespace
-                     }
+                     'clojure.instant babashka.impl.clojure.instant/instant-namespace}
 
                     (let [ns-name 'clojure.main
                           fns (sci/create-ns ns-name nil)]
@@ -733,17 +717,15 @@
 
 (comment
   (def server (babashka.nrepl.server/start-server! @sci-ctx {:host "0.0.0.0" :port 23456
-                                                            :debug true
+                                                             :debug true
                                                             ;; :xform server-xform
-                                                            #_#_ :xform
-                                                             (comp babashka.nrepl.impl.middleware/wrap-read-msg
-                                                                  babashka.nrepl.impl.server/wrap-process-message)}))
+                                                             #_#_:xform
+                                                               (comp babashka.nrepl.impl.middleware/wrap-read-msg
+                                                                     babashka.nrepl.impl.server/wrap-process-message)}))
   (.close (:socket server))
 
   (require '[membrane.java2d :as backend])
-  (backend/run #(deref debug-view))
-
-  ,)
+  (backend/run #(deref debug-view)))
 
 
 (defn with-background [body]
@@ -753,7 +735,7 @@
                           w h)
      body]))
 
- 
+
 (defn clj_init []
   (let [scripts-dir (fs/file  (documents-dir)
                               "scripts")]
@@ -846,7 +828,7 @@
 
 (defn clj_insert_text [ptr]
   (let [s (dt-ffi/c->string ptr)]
-    (try 
+    (try
       (ui/key-press @main-view s)
       (catch Exception e
         (prn e)))))
@@ -884,8 +866,7 @@
     #'clj_insert_text {:rettype :void
                        :argtypes [['s :pointer]]}}
 
-   'com.phronemophobic.grease.membrane.interface nil)
-  )
+   'com.phronemophobic.grease.membrane.interface nil))
 
 (when *compile-files*
   (compile-interface-class))

@@ -3,8 +3,7 @@
              :as objc]
             [babashka.fs :as fs]
             [tech.v3.datatype.ffi :as dt-ffi]
-            [clojure.java.io :as io])
-  )
+            [clojure.java.io :as io]))
 
 (set! *warn-on-reflection* true)
 
@@ -15,17 +14,14 @@
       (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
                ;; (int 14) ;; application support
                (int 9) ;; documents
-               (int 1)
-               ]
+               (int 1)]
               :objectAtIndex 0]
-             fileSystemRepresentation]))))) 
+             fileSystemRepresentation])))))
 
 
 
-(defn append-form [ns form]
-  )
-(defn append-file [contents]
-  )
+(defn append-form [ns form])
+(defn append-file [contents])
 
 (defn append-nrepl-op [op]
   (case (:op op)

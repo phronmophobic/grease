@@ -8,7 +8,7 @@
              :refer [defui defeffect]]
             [babashka.fs :as fs]
             [clojure.java.io :as io]
-            [tech.v3.datatype.ffi :as dt-ffi ]
+            [tech.v3.datatype.ffi :as dt-ffi]
             [membrane.ui :as ui]
             [clojure.data.xml :as xml]
             [clojure.string :as str]
@@ -47,10 +47,9 @@
     (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
              ;; (int 14) ;; application support
              (int 9) ;; documents
-             (int 1)
-             ]
+             (int 1)]
             :objectAtIndex 0]
-           fileSystemRepresentation])))) 
+           fileSystemRepresentation]))))
 
 (def scripts-dir
   (doto (fs/file  (documents-dir)
@@ -177,17 +176,15 @@
          rect-width (+ text-width padding)
          rect-height (+ text-height padding)
          border-radius 3]
-     [
-      (ui/with-style ::ui/style-stroke
-        [
-         (ui/with-color [0.76 0.76 0.76 1]
+     [(ui/with-style ::ui/style-stroke
+        [(ui/with-color [0.76 0.76 0.76 1]
            (ui/rounded-rectangle (+ 0.5 rect-width) (+ 0.5 rect-height) border-radius))
          (ui/with-color [0.85 0.85 0.85]
            (ui/rounded-rectangle rect-width rect-height border-radius))])
 
       (ui/translate (/ padding 2)
-                 (- (/ padding 2) 2)
-                 lbl)])))
+                    (- (/ padding 2) 2)
+                    lbl)])))
 
 
 (defui file-editor [{:keys [file buf last-updated]}]
@@ -269,7 +266,7 @@
                   (fn []
                     [[::create-file {:dir dir
                                      :$last-update $last-update}]])})
-     (let [relative-path (str/join 
+     (let [relative-path (str/join
                           " / "
                           (cons
                            "."
@@ -286,22 +283,22 @@
       {:scroll-bounds [scrollview-width 500]
        :extra (get extra [::scroll dir])
        :$body nil
-       :body(let [files (sort-by
-                         (fn [f]
-                           (str/lower-case (fs/file-name f)))
-                         (fs/list-dir dir))]
-              (apply
-               ui/vertical-layout
-               (when-not (fs/same-file? dir scripts-dir)
-                 (ui/on
-                  :mouse-down
-                  (fn [_]
-                    [[::select-file {:file (fs/parent dir)}]])
-                  (ui/bordered
-                   20
-                   (ui/label ".."))))
-               (for [f files]
-                 (file-row f scrollview-width))))}))))
+       :body (let [files (sort-by
+                          (fn [f]
+                            (str/lower-case (fs/file-name f)))
+                          (fs/list-dir dir))]
+               (apply
+                ui/vertical-layout
+                (when-not (fs/same-file? dir scripts-dir)
+                  (ui/on
+                   :mouse-down
+                   (fn [_]
+                     [[::select-file {:file (fs/parent dir)}]])
+                   (ui/bordered
+                    20
+                    (ui/label ".."))))
+                (for [f files]
+                  (file-row f scrollview-width))))}))))
 
 (defui file-viewer [{:keys [dir selected-file buffers nrepl-server last-updated]}]
   (ui/translate
@@ -431,11 +428,13 @@
   (dispatch! ::stop-nrepl-server)
   (let [host (.getHostAddress (ios/get-local-address))
         port 22345
+        address (str host ":" port)
         sci-ctx (ios/get-sci-ctx)
         server (babashka.nrepl.server/start-server!
                 sci-ctx
                 {:host host :port port
                  :xform ios/server-xform})]
+    (ios/copy-to-clipboard! address)
     (swap! app-state assoc :nrepl-server server))
 
   nil)
@@ -483,6 +482,5 @@
                      (compare-and-set! app-state old new)))]
     (repaint!)
     {:repaint! repaint!}))
-
 
 

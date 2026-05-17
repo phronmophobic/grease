@@ -5,7 +5,7 @@
              :refer [defui defeffect]]
             [babashka.fs :as fs]
             [clojure.java.io :as io]
-            [tech.v3.datatype.ffi :as dt-ffi ]
+            [tech.v3.datatype.ffi :as dt-ffi]
             [com.phronemophobic.clj-libffi :as ffi]
             [membrane.ui :as ui]
             [tech.v3.datatype.struct :as dt-struct]
@@ -16,7 +16,7 @@
 
 (defn oprn [o]
   (println
-   (objc/nsstring->str 
+   (objc/nsstring->str
     (objc
      [o :description]))))
 
@@ -35,7 +35,7 @@
 ;; self.healthStore = [[HKHealthStore alloc] init];
 
 (defn lookup-nsstring-symbol [s]
-  (let [symbol  (ffi/dlsym (ffi/long->pointer (long -2 ))
+  (let [symbol  (ffi/dlsym (ffi/long->pointer (long -2))
                            (dt-ffi/string->c s))
         ;; indirect once
         ptr (ffi/long->pointer
@@ -50,11 +50,10 @@
   (let [symbol (ffi/dlsym (ffi/long->pointer (long -2))
                           (dt-ffi/string->c s))]
     (native-buffer/read-long
-              (native-buffer/wrap-address
-               (.address symbol)
-               8
-               nil))
-    ))
+     (native-buffer/wrap-address
+      (.address symbol)
+      8
+      nil))))
 
 (defmacro defcon-str [nm]
   `(def ~nm (lookup-nsstring-symbol ~(str nm))))
@@ -72,7 +71,7 @@
 (defn request-authorization []
 
   ;; NSSet *readTypes = [NSSet setWithObject:[HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount]];
-   
+
   ;; [self.healthStore requestAuthorizationToShareTypes:nil readTypes:readTypes completion:^(BOOL success, NSError * _Nullable error) {
   ;;     if (success) {
   ;;         [self fetchLatestStepCount];
@@ -88,8 +87,7 @@
            (fn ^void [^byte success err]
              (println success err)
              (deliver p (not (zero? success))))])
-    @p)
-  )
+    @p))
 
 (println "available? " (objc ^byte [HKHealthStore isHealthDataAvailable]))
 
@@ -101,7 +99,7 @@
 
 ;;     HKQuantityType *stepCountType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
         step-count-type (objc [HKQuantityType :quantityTypeForIdentifier @HKQuantityTypeIdentifierStepCount])
-    
+
 ;;     // Get the start of today
 ;;     NSCalendar *calendar = [NSCalendar currentCalendar];
         calendar (objc [NSCalendar :currentCalendar])
@@ -109,7 +107,7 @@
         now (objc [NSDate :date])
 ;;     NSDate *startOfDay = [calendar startOfDayForDate:now];
         start-of-day (objc [calendar :startOfDayForDate now])
-    
+
 ;;     // Create a predicate to filter the query
 ;;     NSPredicate *predicate = [HKQuery predicateForSamplesWithStartDate:startOfDay endDate:now options:HKQueryOptionStrictStartDate];
         predicate (objc
@@ -129,7 +127,7 @@
 ;;                 double stepCount = [quantity doubleValueForUnit:countUnit];
 ;;                 totalSteps += stepCount;
 ;;             }
-            
+
 ;;             dispatch_async(dispatch_get_main_queue(), ^{
 ;;                 NSLog(@"Total steps for today: %.0f", totalSteps);
 ;;             });
@@ -158,18 +156,15 @@
                                        0
                                        (range (objc ^long [results :count])))]
                                   (deliver resultsp total-steps))))])
-        
-    
+
+
 ;;     [self.healthStore executeQuery:sampleQuery];
 ;; }
-        
-
-]
+        ]
     (objc [~(health-store) :executeQuery sample-query])
-    @resultsp)
-  )
+    @resultsp))
 
-   
+
 (defeffect ::update-steps [{:keys [$steps]}]
 
   (dispatch! :set $steps "...")
@@ -197,10 +192,9 @@
 (def app (membrane.component/make-app #'steps-ui app-state))
 
 (defn observer-query []
-  (let [
-    ;; HKQuantityType *stepCountType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+  (let [    ;; HKQuantityType *stepCountType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
         step-count-type (objc [HKQuantityType :quantityTypeForIdentifier @HKQuantityTypeIdentifierStepCount])
-    
+
     ;; // Set up an observer query
         observer-query (objc [[HKObserverQuery :alloc]
                               :initWithSampleType:predicate:updateHandler

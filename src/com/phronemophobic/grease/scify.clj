@@ -56,9 +56,8 @@
                                            vals
                                            (map :name)))
                                 :ns sci-ns-var}
-                               @var)
-                     ]
-                 
+                               @var)]
+
                  (assoc ns-map var-name
                         (sci/new-var (symbol var-name) var-val
                                      (assoc (meta var)

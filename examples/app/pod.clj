@@ -15,7 +15,7 @@
             [com.phronemophobic.objcjure :refer [objc describe]
              :as objc]
             [com.phronemophobic.grease.component :as gcomp]
-            [clojure.core.async :as async ]
+            [clojure.core.async :as async]
             [clojure.data.json :as json]
             [clojure.data.xml :as xml]
             [clojure.string :as str]
@@ -86,11 +86,11 @@
  :greatest-ignore-nulls
  (fn [_ params]
    (let [[sql] (honey.sql/format-expr (into [:greatest]
-                                        params))]
+                                            params))]
      [(str sql " IGNORE NULLS")])))
 
 (defn lookup-nsstring-symbol [s]
-  (let [symbol  (ffi/dlsym (ffi/long->pointer (long -2 ))
+  (let [symbol  (ffi/dlsym (ffi/long->pointer (long -2))
                            (dt-ffi/string->c s))
 
         ;; indirect once
@@ -222,8 +222,7 @@
     (objc [[[[NSFileManager defaultManager] :URLsForDirectory:inDomains
              ;; (int 14) ;; application support
              9 ;; documents
-             1
-             ]
+             1]
             :objectAtIndex 0]
            fileSystemRepresentation]))))
 
@@ -254,7 +253,7 @@
 
 (defn oprn [o]
   (println
-   (objc/nsstring->str 
+   (objc/nsstring->str
     (objc
      [o :description]))))
 
@@ -362,7 +361,7 @@
   "Downloads the rss feed from `url` and returns a list of parsed episodes."
   [url]
   (let [zrss (with-open [is (io/input-stream (io/as-url url))
-                        rdr (io/reader is)]
+                         rdr (io/reader is)]
                (let [xml (xml/parse rdr)
                      zip (z/xml-zip xml)]
                  ;; `xml/parse` returns a lazy data structure
@@ -403,7 +402,7 @@
 
                 (-> {:create-table [:episode :if-not-exists]
                      :with-columns
-                     [[:description [:VARCHAR 1024] ]
+                     [[:description [:VARCHAR 1024]]
                       [:episodeUrl [:VARCHAR 1024]]
                       [:imageUrl [:VARCHAR 1024]]
                       [:guid [:VARCHAR 255]]
@@ -422,7 +421,7 @@
                      [[:episodeGuid [:varchar 255]]
                       [:timestamp :double-precision]
                       [:last-played :timestamp]
-                      
+
                       [[:primary-key :episodeGuid]]
                       [[:foreign-key :episodeGuid]
                        [:references :episode :guid]]]}
@@ -520,35 +519,33 @@
 
 (defn latest-episodes []
   (with-open [conn (jdbc/get-connection db)]
-   (let [search-text (:search-text @pod-state)
-         query {:select [:episode/*
-                         :queue/last_played
-                         :queue/TIMESTAMP]
-                :from [:episode]
-                :left-join [:queue [:and
-                                    [:= :queue/episodeGuid :episode/guid]]]
-                :order-by [[[:greatest-ignore-nulls :queue/last_played :episode/pubDate]
-                              :desc]]
-                :limit 50}
-         query (if (seq search-text)
-                 (assoc query :where [:like [:lower :episode/TRACKNAME] (str "%" search-text "%")])
-                 query)]
-     (with-open [conn (jdbc/get-connection db)]
-       (jdbc/execute! conn (sql/format query))))))
+    (let [search-text (:search-text @pod-state)
+          query {:select [:episode/*
+                          :queue/last_played
+                          :queue/TIMESTAMP]
+                 :from [:episode]
+                 :left-join [:queue [:and
+                                     [:= :queue/episodeGuid :episode/guid]]]
+                 :order-by [[[:greatest-ignore-nulls :queue/last_played :episode/pubDate]
+                             :desc]]
+                 :limit 50}
+          query (if (seq search-text)
+                  (assoc query :where [:like [:lower :episode/TRACKNAME] (str "%" search-text "%")])
+                  query)]
+      (with-open [conn (jdbc/get-connection db)]
+        (jdbc/execute! conn (sql/format query))))))
 
 
 
 (comment
   (def podcasts (search-podcasts "defn"))
   (def episodes (get-episodes 1114899563))
-  (add-podcast! (first podcasts) )
+  (add-podcast! (first podcasts))
 
   (fs/list-dir scripts-dir)
   (fs/delete (fs/file scripts-dir
                       "pod-db.mv.db"))
-  (init-db)
-
-  ,)
+  (init-db))
 
 
 ;; To simplify threading, we serialize all operations
@@ -564,9 +561,7 @@
        (defn ~op-name ~bindings
          (async/put! player-ch {:op ~op
                                 :f ~op-impl-name
-                                :args ~bindings}))
-       ))
-  )
+                                :args ~bindings})))))
 
 (defonce running? (atom false))
 (defonce player-thread
@@ -579,12 +574,11 @@
             (apply (:f msg) (:args msg))
             (catch Exception e
               (log [:error e])))
-          
+
           (recur)))
       (finally
         (reset! running? false)))
-    (log :quitting))
-  ,)
+    (log :quitting)))
 
 
 ;; Operations for working with AVPlayer
@@ -622,7 +616,7 @@
                                                      "duration" (int duration-seconds)}])))
 
                  duration-seconds)
-               
+
                MPNowPlayingInfoPropertyDefaultPlaybackRate
                1.25
 
@@ -666,7 +660,7 @@
   (swap! pod-state assoc :playing? true)
 
   (when-not (:player-observer @pod-state)
-    (let [           observer
+    (let [observer
           (objc/arc!
            ;; - (id)addPeriodicTimeObserverForInterval:(CMTime)interval 
            ;;                                  queue:(dispatch_queue_t)queue 
@@ -710,8 +704,7 @@
                            (double (/ tv tt))
                            0.0)]
     (.put current-time :value (+ tv (long (* interval tt))))
-    (seek-to-time-impl player current-time))
-  )
+    (seek-to-time-impl player current-time)))
 
 (defop skip-backward [interval]
   (let [player (get-player)
@@ -735,7 +728,7 @@
                    f))
         (on-status "done!")
         (catch Exception e
-          (on-status(str "failed: " e))
+          (on-status (str "failed: " e))
           (throw e))))))
 
 (defop delete-episode [episode on-status]
@@ -750,17 +743,17 @@
     (log [:load-episode change?])
     (when change?
       (let [_ (download-episode episode on-status)
-            
+
             pod-url (path->nsurl
                      (str (episode-file episode))
                      false)
-            
+
             asset (objc [AVURLAsset :URLAssetWithURL:options pod-url
                          @{@AVURLAssetPreferPreciseDurationAndTimingKey
                            [NSNumber :numberWithBool ~(byte 1)]}])
 
             player (get-player)
-            player-item (objc/arc! (objc [AVPlayerItem :playerItemWithAsset asset] ))]
+            player-item (objc/arc! (objc [AVPlayerItem :playerItemWithAsset asset]))]
         (swap! pod-state assoc :playing-episode episode)
         (objc [player :replaceCurrentItemWithPlayerItem player-item])
         (let [{:EPISODE/keys [GUID]} episode
@@ -777,7 +770,7 @@
 
 (defn configure-audio []
   (let [p (promise)]
-    
+
     (not (zero?
           (objc ^long [[AVAudioSession sharedInstance] :setCategory:mode:routeSharingPolicy:options:error
                        @"AVAudioSessionCategoryPlayback"
@@ -786,11 +779,11 @@
                        ~(long 0)
                        nil])))
     (objc ^void
-          [[AVAudioSession :sharedInstance]
-           :activateWithOptions:completionHandler
-           ~(long 0)
-           (fn ^void [^byte activated error]
-             (deliver p (not (zero? activated))))])
+     [[AVAudioSession :sharedInstance]
+      :activateWithOptions:completionHandler
+      ~(long 0)
+      (fn ^void [^byte activated error]
+        (deliver p (not (zero? activated))))])
     @p))
 
 (defn configure-controls
@@ -816,7 +809,7 @@
           (log :changePlaybackPositionCommand
                position)
           (seek-to-time (get-player) (cm-time-interval position)))
-        
+
         MPRemoteCommandHandlerStatusCommandFailed)])
     (objc
      [[commandCenter :stopCommand]
@@ -869,19 +862,19 @@
       (delay
         (init-db)
         (configure-audio)
-        
+
         (let [player (objc/arc!
                       (objc [[[AVPlayer :alloc] :init] :autorelease]))]
           (objc ^void [player :setDefaultRate ~(float 1.25)])
-          
+
           (swap! pod-state assoc
                  :view :main
                  :player player)
           (configure-controls player))
 
         (handler ::refresh-episodes {}))]
- (defop init []
-   @__init))
+  (defop init []
+    @__init))
 
 ;; UI
 
@@ -933,7 +926,7 @@
       (pos? hours) (format
                     "%d:%02d:%02d" (long hours) (long minutes) (long seconds))
       (pos? minutes) (format
-                    "%02d:%02d"  (long minutes) (long seconds))
+                      "%02d:%02d"  (long minutes) (long seconds))
       :else (format
              "%02ds" (long seconds)))))
 (defn format-millis [millis]
@@ -981,134 +974,133 @@
                                  (format-seconds duration)))
                                (when-let [ts (:QUEUE/TIMESTAMP episode)]
                                  (progress-bar (/ ts duration)
-                                               200 10))
-                               ))))))})))
+                                               200 10))))))))})))
 
 
 
 (membrane.component/defui
- episode-view
- [{:as this, :keys [status width height episode]}]
- (clojure.core/let
-  [width-128062 width
-   
-   height-128063 height
-   
-   G__128064
-   (membrane.ui/translate
-    (clojure.core/+ 0 9.23828125)
-    (clojure.core/+ 0 10.1484375)
-    (com.phronemophobic.membrandt/button
-     {:on-click (fn [] [[:pod/back]]), :text "<back"}))
-   G__128065
-   (membrane.ui/translate
-    (clojure.core/+ 0 10.27734375)
-    (clojure.core/+ 0 59.81640625)
-    (membrane.skia.paragraph/paragraph
-     (:EPISODE/TRACKNAME episode)
-     width
-     {:paragraph-style/text-style
-      {:text-style/font-size 14,
-       :text-style/height 1.5714285714285714,
-       :text-style/height-override true,
-       :text-style/color [0.0 0.0 0.0 0.88]}}))
-   G__128066
-   (membrane.ui/translate
-    (clojure.core/+ width-128062 -55.59375)
-    (clojure.core/+ height-128063 -41.7265625)
-    (com.phronemophobic.membrandt/button
-     {:on-click (fn [] [[:pod/skip-forward]]), :text ">>"}))
-   G__128069
-   (membrane.ui/translate
-    (clojure.core/+ (membrane.ui/origin-x G__128065) 2.6875)
-    (clojure.core/+
-     (clojure.core/+
-      (membrane.ui/origin-y G__128065)
-      (membrane.ui/height G__128065))
-     6.44140625)
-    (membrane.skia.paragraph/paragraph
-     (str (:EPISODE/PUBDATE episode))
-     width
-     {:paragraph-style/text-style
-      {:text-style/font-size 14,
-       :text-style/height 1.5714285714285714,
-       :text-style/height-override true,
-       :text-style/color [0.0 0.0 0.0 0.88]}}))
+  episode-view
+  [{:as this, :keys [status width height episode]}]
+  (clojure.core/let
+   [width-128062 width
 
-   downloaded? (fs/exists? (episode-file episode))
-   G__128067
-   (membrane.ui/translate
-    (clojure.core/+ (membrane.ui/origin-x G__128069) -1.69921875)
-    (clojure.core/+
+    height-128063 height
+
+    G__128064
+    (membrane.ui/translate
+     (clojure.core/+ 0 9.23828125)
+     (clojure.core/+ 0 10.1484375)
+     (com.phronemophobic.membrandt/button
+      {:on-click (fn [] [[:pod/back]]), :text "<back"}))
+    G__128065
+    (membrane.ui/translate
+     (clojure.core/+ 0 10.27734375)
+     (clojure.core/+ 0 59.81640625)
+     (membrane.skia.paragraph/paragraph
+      (:EPISODE/TRACKNAME episode)
+      width
+      {:paragraph-style/text-style
+       {:text-style/font-size 14,
+        :text-style/height 1.5714285714285714,
+        :text-style/height-override true,
+        :text-style/color [0.0 0.0 0.0 0.88]}}))
+    G__128066
+    (membrane.ui/translate
+     (clojure.core/+ width-128062 -55.59375)
+     (clojure.core/+ height-128063 -41.7265625)
+     (com.phronemophobic.membrandt/button
+      {:on-click (fn [] [[:pod/skip-forward]]), :text ">>"}))
+    G__128069
+    (membrane.ui/translate
+     (clojure.core/+ (membrane.ui/origin-x G__128065) 2.6875)
      (clojure.core/+
-      (membrane.ui/origin-y G__128069)
-      (membrane.ui/height G__128069))
-     8.15625)
-    (com.phronemophobic.membrandt/button
-     {:on-click (fn []
-                  (if downloaded?
-                    [[::delete-episode {:episode episode :$status $status}]]
-                    [[::download-episode {:episode episode
-                                          :$status $status}]])),
-      :text
-      (if downloaded?
-        "Delete"
-        "Download")}))
-   G__128068
-   (membrane.ui/translate
-    (clojure.core/+ (membrane.ui/origin-x G__128067) 4.99609375)
-    (clojure.core/+
+      (clojure.core/+
+       (membrane.ui/origin-y G__128065)
+       (membrane.ui/height G__128065))
+      6.44140625)
+     (membrane.skia.paragraph/paragraph
+      (str (:EPISODE/PUBDATE episode))
+      width
+      {:paragraph-style/text-style
+       {:text-style/font-size 14,
+        :text-style/height 1.5714285714285714,
+        :text-style/height-override true,
+        :text-style/color [0.0 0.0 0.0 0.88]}}))
+
+    downloaded? (fs/exists? (episode-file episode))
+    G__128067
+    (membrane.ui/translate
+     (clojure.core/+ (membrane.ui/origin-x G__128069) -1.69921875)
      (clojure.core/+
-      (membrane.ui/origin-y G__128067)
-      (membrane.ui/height G__128067))
-     10.484375)
-    (membrane.skia.paragraph/paragraph
-     (:EPISODE/DESCRIPTION episode)
-     width
-     {:paragraph-style/text-style
-      {:text-style/font-size 14,
-       :text-style/height 1.5714285714285714,
-       :text-style/height-override true,
-       :text-style/color [0.0 0.0 0.0 0.88]}}))
-   G__128072
-   (membrane.ui/translate
-    (clojure.core/+ 0 10.25)
-    (clojure.core/+ height-128063 -40.3515625)
-    (com.phronemophobic.membrandt/button
-     {:on-click (fn [] [[:pod/skip-backward]]), :text "<<"}))
-   G__128070
-   (membrane.ui/translate
-    (clojure.core/+ (membrane.ui/origin-x G__128072) 4.7578125)
-    (clojure.core/+ (membrane.ui/origin-y G__128072) -36.3984375)
-    (membrane.skia.paragraph/paragraph
-     (str status)
-     nil
-     {:paragraph-style/text-style
-      {:text-style/font-size 14,
-       :text-style/height 1.5714285714285714,
-       :text-style/height-override true,
-       :text-style/color [0.0 0.0 0.0 0.88]}}))
-   G__128071
-   (membrane.ui/translate
-    (clojure.core/+ (membrane.ui/origin-x G__128066) -69.734375)
-    (clojure.core/+ (membrane.ui/origin-y G__128066) -0.94140625)
-    (com.phronemophobic.membrandt/button
-     {:on-click
-      (fn
-       []
-        (prn "hi")
-        [[:pod/load-episode {:episode episode, :$status $status}]
-         [:pod/toggle]]),
-      :text "Play"}))]
-  [G__128072
-   G__128066
-   G__128071
-   G__128064
-   G__128065
-   G__128070
-   G__128069
-   G__128067
-   G__128068]))
+      (clojure.core/+
+       (membrane.ui/origin-y G__128069)
+       (membrane.ui/height G__128069))
+      8.15625)
+     (com.phronemophobic.membrandt/button
+      {:on-click (fn []
+                   (if downloaded?
+                     [[::delete-episode {:episode episode :$status $status}]]
+                     [[::download-episode {:episode episode
+                                           :$status $status}]])),
+       :text
+       (if downloaded?
+         "Delete"
+         "Download")}))
+    G__128068
+    (membrane.ui/translate
+     (clojure.core/+ (membrane.ui/origin-x G__128067) 4.99609375)
+     (clojure.core/+
+      (clojure.core/+
+       (membrane.ui/origin-y G__128067)
+       (membrane.ui/height G__128067))
+      10.484375)
+     (membrane.skia.paragraph/paragraph
+      (:EPISODE/DESCRIPTION episode)
+      width
+      {:paragraph-style/text-style
+       {:text-style/font-size 14,
+        :text-style/height 1.5714285714285714,
+        :text-style/height-override true,
+        :text-style/color [0.0 0.0 0.0 0.88]}}))
+    G__128072
+    (membrane.ui/translate
+     (clojure.core/+ 0 10.25)
+     (clojure.core/+ height-128063 -40.3515625)
+     (com.phronemophobic.membrandt/button
+      {:on-click (fn [] [[:pod/skip-backward]]), :text "<<"}))
+    G__128070
+    (membrane.ui/translate
+     (clojure.core/+ (membrane.ui/origin-x G__128072) 4.7578125)
+     (clojure.core/+ (membrane.ui/origin-y G__128072) -36.3984375)
+     (membrane.skia.paragraph/paragraph
+      (str status)
+      nil
+      {:paragraph-style/text-style
+       {:text-style/font-size 14,
+        :text-style/height 1.5714285714285714,
+        :text-style/height-override true,
+        :text-style/color [0.0 0.0 0.0 0.88]}}))
+    G__128071
+    (membrane.ui/translate
+     (clojure.core/+ (membrane.ui/origin-x G__128066) -69.734375)
+     (clojure.core/+ (membrane.ui/origin-y G__128066) -0.94140625)
+     (com.phronemophobic.membrandt/button
+      {:on-click
+       (fn
+         []
+         (prn "hi")
+         [[:pod/load-episode {:episode episode, :$status $status}]
+          [:pod/toggle]]),
+       :text "Play"}))]
+    [G__128072
+     G__128066
+     G__128071
+     G__128064
+     G__128065
+     G__128070
+     G__128069
+     G__128067
+     G__128068]))
 
 (defeffect ::search-podcasts [{:keys [$podcasts
                                       query]}]
@@ -1218,7 +1210,7 @@
   (init)
   (let [{:keys [repaint!]}
         (app/show! {:on-close (fn []
-                               (log ::closing)
+                                (log ::closing)
                                 (swap! pod-state dissoc :repaint!))
                     :view-fn app})]
     (swap! pod-state assoc :repaint! repaint!)))
@@ -1248,5 +1240,4 @@
      (fs/path scripts-dir
               "backup-04-14-2026.zip")))
   (fs/list-dir (documents-dir))
-  (jdbc/execute! db [(str "BACKUP TO '" backup-path "'")])
-  ,)
+  (jdbc/execute! db [(str "BACKUP TO '" backup-path "'")]))

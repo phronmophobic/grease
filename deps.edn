@@ -1,14 +1,13 @@
 {:paths ["src"
          ;; "classes" "generated_classes" "library/classes"
-]
+         ]
  :deps {org.clojure/clojure {:mvn/version "1.12.4"}
         com.phronemophobic/scify {:mvn/version "1.0"}
         org.clojure/data.json {:mvn/version "2.5.2"}
         cnuernber/dtype-next {:mvn/version "11.018"}
 
-        net.java.dev.jna/jna           {:mvn/version "5.18.1"}
-        }
- 
+        net.java.dev.jna/jna           {:mvn/version "5.18.1"}}
+
 
  :aliases
  {:test {:extra-paths ["test"]
@@ -29,24 +28,18 @@
                            "third_party/babashka/feature-httpkit-server/"
                            "third_party/babashka/feature-xml/"
                            "third_party/babashka/feature-jdbc/"
-                           "third_party/babashka/src"
-                           ]
+                           "third_party/babashka/src"]
              :extra-deps
              {com.phronemophobic/membrane {;; :mvn/version "0.15.0-beta-SNAPSHOT"
                                            ;; :local/root "../membrane"
                                            :git/sha "93835080c35b86409e6a9ef416ef0e3eae353ac6"
-                                           :git/url "https://github.com/phronmophobic/membrane.git"
-                                           }
-              
-              com.phronemophobic.membrane/skialib-macosx-aarch64 {:mvn/version "RELEASE"
-                                                                  ;; :local/root "csource/macos-aarch64"
-                                                                  }
+                                           :git/url "https://github.com/phronmophobic/membrane.git"}
+
               com.phronemophobic/membrandt {;; :local/root "../membrandt"
                                             :git/url "https://github.com/phronmophobic/membrandt/"
                                             :git/sha "d573684248138065a4ebae2b7f43170d75735c4a"}
               babashka/babashka.nrepl { ;;:mvn/version "0.0.7"
-                                       :local/root "third_party/babashka/babashka.nrepl"
-                                       }
+                                       :local/root "third_party/babashka/babashka.nrepl"}
               org.clojure/data.xml {:mvn/version "0.2.0-alpha11"}
               com.h2database/h2 {:mvn/version "2.4.240"}
               seancorfield/next.jdbc {:mvn/version "1.2.659"}
@@ -76,5 +69,4 @@
                                            }
               com.phronemophobic/clong {;; :git/sha "945d9a71c6436938b3bdf11de2e7bf1f1c4c978c"
                                         ;; :local/root "../clong"
-                                        :mvn/version "1.4.4"
-                                        }}}}}
+                                        :mvn/version "1.4.4"}}}}}

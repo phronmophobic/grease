@@ -228,6 +228,11 @@
   "allPublicFields" : true,
   "allPublicConstructors" : true
 }, {
+  "name" : "java.io.FileOutputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
   "name" : "java.io.FileNotFoundException",
   "allPublicMethods" : true,
   "allPublicFields" : true,
@@ -239,6 +244,16 @@
   "allPublicConstructors" : true
 }, {
   "name" : "java.io.FilenameFilter",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FilterInputStream",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "java.io.FilterOutputStream",
   "allPublicMethods" : true,
   "allPublicFields" : true,
   "allPublicConstructors" : true
@@ -544,6 +559,11 @@
   "allPublicConstructors" : true
 }, {
   "name" : "java.net.HttpURLConnection",
+  "allPublicMethods" : true,
+  "allPublicFields" : true,
+  "allPublicConstructors" : true
+}, {
+  "name" : "sun.net.www.protocol.http.HttpURLConnection$HttpInputStream",
   "allPublicMethods" : true,
   "allPublicFields" : true,
   "allPublicConstructors" : true
