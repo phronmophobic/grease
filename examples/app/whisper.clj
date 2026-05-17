@@ -7,6 +7,7 @@
             [com.phronemophobic.grease.ios.webview :as webview]
             [com.phronemophobic.grease.ios.whisper :as whisper])
   (:import [java.net URL]
+           [java.lang InterruptedException]
            [java.util.zip ZipInputStream]))
 
 (def whisper-model "small.en-q5_1")

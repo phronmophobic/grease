@@ -556,6 +556,7 @@
               'java.lang.System System
               'java.lang.Long Long
               'java.lang.Throwable Throwable
+              'java.lang.InterruptedException InterruptedException
               'java.util.Date java.util.Date
               'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
