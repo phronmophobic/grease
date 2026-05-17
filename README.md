@@ -41,7 +41,7 @@ git submodule update --init --recursive
 brew install autoconf
 ```
 
-4. Build static JDK
+4. Build static JDK and prep libffi
 
 ```sh
 ./scripts/setup
