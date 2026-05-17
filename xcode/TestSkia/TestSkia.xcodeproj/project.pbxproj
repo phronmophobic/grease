@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -59,11 +59,11 @@
 		3ACBC1B92CACB17F00DBAAFF /* app.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3ACBC1B82CACB17F00DBAAFF /* app.clj */; };
 		3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D8A2F918B15003FEE4E /* libjvm.a */; };
 		3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D902F918B1C003FEE4E /* libjava.a */; };
+		A10000012F9A000000000005 /* GreaseBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000002 /* GreaseBridge.m */; };
+		A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000004 /* GreaseWebOverlayController.m */; };
 		A20000012F9B000000000003 /* GreaseWhisper.mm in Sources */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000002 /* GreaseWhisper.mm */; };
 		A20000012F9B000000000005 /* whisper.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000004 /* whisper.xcframework */; };
 		A20000012F9B000000000006 /* whisper.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A20000012F9B000000000004 /* whisper.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A10000012F9A000000000005 /* GreaseBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000002 /* GreaseBridge.m */; };
-		A10000012F9A000000000006 /* GreaseWebOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A10000012F9A000000000004 /* GreaseWebOverlayController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,6 +204,7 @@
 		3A9C44112F904353004700E3 /* libwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebp.a; sourceTree = "<group>"; };
 		3A9C44122F904353004700E3 /* libzlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzlib.a; sourceTree = "<group>"; };
 		3AA59F742C964CAE000CF11F /* TestSkia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestSkia.entitlements; sourceTree = "<group>"; };
+		3AB92AB52FBA295400596977 /* whisper.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = whisper.xcframework; path = ../../third_party/whisper/whisper.xcframework; sourceTree = "<group>"; };
 		3AC2B3F52C964A1E003AA1A5 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		3AC80E7D27F7FFAA006D165F /* bb.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = bb.o; path = ../../library/build/out/bb.o; sourceTree = "<group>"; };
 		3ACBC1B82CACB17F00DBAAFF /* app.clj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app.clj; path = ../../examples/app/app.clj; sourceTree = "<group>"; };
@@ -288,6 +289,7 @@
 		3A75F27B267445BB0015D82C = {
 			isa = PBXGroup;
 			children = (
+				3AB92AB52FBA295400596977 /* whisper.xcframework */,
 				3AFA8D8B2F918B1C003FEE4E /* svm.openjdk.xcodeproj */,
 				3AFA8D852F918B15003FEE4E /* svm.graal.xcodeproj */,
 				3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */,
@@ -621,6 +623,10 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../third_party/whisper\"",
+				);
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -630,10 +636,6 @@
 					"$(inherited)",
 					"TARGET_OS_IOS=1",
 					"SK_METAL=1",
-				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../third_party/whisper\"",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -717,6 +719,10 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../third_party/whisper\"",
+				);
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -724,10 +730,6 @@
 					"$(inherited)",
 					"TARGET_OS_IOS=1",
 					"SK_METAL=1",
-				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../third_party/whisper\"",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
