@@ -12,6 +12,7 @@
 		3A110A522676B06200C5D250 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A512676B06200C5D250 /* MetalKit.framework */; };
 		3A110A542676B0BD00C5D250 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A110A532676B0BD00C5D250 /* ModelIO.framework */; };
 		3A1A88DA26A79B420005E9C7 /* gol.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3A1A88D926A79B410005E9C7 /* gol.clj */; };
+		3A1C6E812FBA24C100CA4BD9 /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1C6E782FBA249300CA4BD9 /* libffi.a */; };
 		3A43FED52C8E31E4008D67EB /* libskparagraph.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED02C8E31E4008D67EB /* libskparagraph.a */; };
 		3A43FED62C8E31E4008D67EB /* libskresources.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED12C8E31E4008D67EB /* libskresources.a */; };
 		3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED22C8E31E4008D67EB /* libskshaper.a */; };
@@ -56,41 +57,40 @@
 		3AC59C93269A422B00E9D1B8 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A75F2D42675C7FA0015D82C /* CoreServices.framework */; };
 		3AC80E7E27F7FFAA006D165F /* bb.o in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC80E7D27F7FFAA006D165F /* bb.o */; };
 		3ACBC1B92CACB17F00DBAAFF /* app.clj in Resources */ = {isa = PBXBuildFile; fileRef = 3ACBC1B82CACB17F00DBAAFF /* app.clj */; };
-		3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A16A6E42F9016B4005BFF24 /* libffi.a */; };
 		3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D8A2F918B15003FEE4E /* libjvm.a */; };
 		3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA8D902F918B1C003FEE4E /* libjava.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A16A6E32F9016B4005BFF24 /* PBXContainerItemProxy */ = {
+		3A1C6E772FBA249300CA4BD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB13B1661849DF1E0010F42D;
 			remoteInfo = "libffi-iOS";
 		};
-		3A16A6E52F9016B4005BFF24 /* PBXContainerItemProxy */ = {
+		3A1C6E792FBA249300CA4BD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FDB52FC51F6144FA00AA92E6;
 			remoteInfo = "libffi-tvOS";
 		};
-		3A16A6E72F9016B4005BFF24 /* PBXContainerItemProxy */ = {
+		3A1C6E7B2FBA249300CA4BD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB13B1911849DF510010F42D;
 			remoteInfo = "libffi-Mac";
 		};
-		3A16A6E92F9016B4005BFF24 /* PBXContainerItemProxy */ = {
+		3A1C6E7D2FBA249300CA4BD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = FDDB2F621F5D846400EF414E;
 			remoteInfo = "libffi-static-Mac";
 		};
-		3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */ = {
+		3A1C6E7F2FBA24B400CA4BD9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 			proxyType = 1;
@@ -133,7 +133,7 @@
 		3A110A4F2676A38A00C5D250 /* MembraneView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MembraneView.mm; sourceTree = "<group>"; };
 		3A110A512676B06200C5D250 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A110A532676B0BD00C5D250 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
-		3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libffi.xcodeproj; path = "../../third_party/libffi-3.4.6/libffi.xcodeproj"; sourceTree = "<group>"; };
+		3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libffi.xcodeproj; path = "../../third_party/libffi-3.4.8/libffi.xcodeproj"; sourceTree = "<group>"; };
 		3A1A88D926A79B410005E9C7 /* gol.clj */ = {isa = PBXFileReference; lastKnownFileType = text; name = gol.clj; path = ../../examples/gol/gol.clj; sourceTree = "<group>"; };
 		3A43FED02C8E31E4008D67EB /* libskparagraph.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskparagraph.a; sourceTree = "<group>"; };
 		3A43FED12C8E31E4008D67EB /* libskresources.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskresources.a; sourceTree = "<group>"; };
@@ -199,9 +199,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A1C6E812FBA24C100CA4BD9 /* libffi.a in Frameworks */,
 				3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */,
 				3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */,
-				3AE5DE492F9016EA0036E72E /* libffi.a in Frameworks */,
 				3AC2B3F92C964A1E003AA1A5 /* HealthKit.framework in Frameworks */,
 				3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */,
 				3A7759A826A646A20014EA55 /* SwiftUI.framework in Frameworks */,
@@ -247,13 +247,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3A16A6DD2F9016B4005BFF24 /* Products */ = {
+		3A1C6E712FBA249300CA4BD9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A16A6E42F9016B4005BFF24 /* libffi.a */,
-				3A16A6E62F9016B4005BFF24 /* libffi.a */,
-				3A16A6E82F9016B4005BFF24 /* ffi.dylib */,
-				3A16A6EA2F9016B4005BFF24 /* libffi.a */,
+				3A1C6E782FBA249300CA4BD9 /* libffi.a */,
+				3A1C6E7A2FBA249300CA4BD9 /* libffi.a */,
+				3A1C6E7C2FBA249300CA4BD9 /* ffi.dylib */,
+				3A1C6E7E2FBA249300CA4BD9 /* libffi.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -382,9 +382,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				3A1C6E802FBA24B400CA4BD9 /* PBXTargetDependency */,
 				3AFA8D942F918B41003FEE4E /* PBXTargetDependency */,
 				3AFA8D922F918B3D003FEE4E /* PBXTargetDependency */,
-				3AE5DE442F9016DE0036E72E /* PBXTargetDependency */,
 			);
 			name = LearnLisp;
 			productName = TestSkia;
@@ -417,7 +417,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 3A16A6DD2F9016B4005BFF24 /* Products */;
+					ProductGroup = 3A1C6E712FBA249300CA4BD9 /* Products */;
 					ProjectRef = 3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */;
 				},
 				{
@@ -437,32 +437,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3A16A6E42F9016B4005BFF24 /* libffi.a */ = {
+		3A1C6E782FBA249300CA4BD9 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libffi.a;
-			remoteRef = 3A16A6E32F9016B4005BFF24 /* PBXContainerItemProxy */;
+			remoteRef = 3A1C6E772FBA249300CA4BD9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A16A6E62F9016B4005BFF24 /* libffi.a */ = {
+		3A1C6E7A2FBA249300CA4BD9 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libffi.a;
-			remoteRef = 3A16A6E52F9016B4005BFF24 /* PBXContainerItemProxy */;
+			remoteRef = 3A1C6E792FBA249300CA4BD9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A16A6E82F9016B4005BFF24 /* ffi.dylib */ = {
+		3A1C6E7C2FBA249300CA4BD9 /* ffi.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
 			path = ffi.dylib;
-			remoteRef = 3A16A6E72F9016B4005BFF24 /* PBXContainerItemProxy */;
+			remoteRef = 3A1C6E7B2FBA249300CA4BD9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3A16A6EA2F9016B4005BFF24 /* libffi.a */ = {
+		3A1C6E7E2FBA249300CA4BD9 /* libffi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
 			path = libffi.a;
-			remoteRef = 3A16A6E92F9016B4005BFF24 /* PBXContainerItemProxy */;
+			remoteRef = 3A1C6E7D2FBA249300CA4BD9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3AFA8D8A2F918B15003FEE4E /* libjvm.a */ = {
@@ -512,10 +512,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3AE5DE442F9016DE0036E72E /* PBXTargetDependency */ = {
+		3A1C6E802FBA24B400CA4BD9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "libffi-iOS";
-			targetProxy = 3AE5DE432F9016DE0036E72E /* PBXContainerItemProxy */;
+			targetProxy = 3A1C6E7F2FBA24B400CA4BD9 /* PBXContainerItemProxy */;
 		};
 		3AFA8D922F918B3D003FEE4E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
