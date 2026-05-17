@@ -104,12 +104,11 @@
     return NO;
   }
 
-  NSURL *url = [self.class normalizedURLFromString:urlString];
+  NSURL *url = [NSURL URLWithString:urlString];
   if (!url) {
     return NO;
   }
-
-  self.initialURLString = url.absoluteString;
+  self.initialURLString = urlString;
 
   if (self.webView) {
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
