@@ -390,6 +390,9 @@ render(0);
     handle))
 
 
+(defn -main []
+  (future (open-web-dictation-example!)))
+
 (comment
   (ensure-whisper-model!)
   (ensure-whisper-model-async!)
