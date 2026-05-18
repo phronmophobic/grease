@@ -4,7 +4,7 @@
             [com.phronemophobic.grease.ios :as ios]
             [com.phronemophobic.grease.ios.webview :as webview]
             [com.phronemophobic.objcjure :refer [objc describe]
-              :as objc]
+             :as objc]
             [tech.v3.datatype.ffi :as dt-ffi]))
 
 (defn documents-dir []
@@ -31,10 +31,10 @@
   "<html><body style=\"background-color:red\">Hello World</body></html>")
 
 (defn -main [& args]
-  (fs/write-bytes (fs/file 
+  (fs/write-bytes (fs/file
                    html-dir
                    "test.html")
                   (.getBytes html))
-  (webview/open! {:url (io/as-url (fs/file 
+  (webview/open! {:url (io/as-url (fs/file
                                    html-dir
                                    "test.html"))}))
