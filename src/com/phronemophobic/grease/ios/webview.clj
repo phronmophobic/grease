@@ -145,6 +145,19 @@
   (zero? (long (on-main
                 (objc ^byte [controller :isClosed])))))
 
+(def ^:private content-inset-adjustment-behaviors
+  {:automatic 0
+   :scrollable-axes 1
+   :never 2
+   :always 3})
+
+(defn- content-inset-adjustment-behavior-value [behavior]
+  (when behavior
+    (if-let [value (get content-inset-adjustment-behaviors behavior)]
+      value
+      (throw (ex-info "webview/open! :content-inset-adjustment-behavior must be one of :automatic, :scrollable-axes, :never, or :always."
+                      {:value behavior})))))
+
 (defn- ensure-open! [handle op]
   (let [controller (handle-controller handle)]
     (when-not (controller-open? controller)
@@ -161,12 +174,18 @@
   "Opens a full-screen web view and returns an opaque webview handle.
 
   Accepts a map with `:url`, optional recursive `:functions`, and optional
-  `:safe-area?`.
+  `:safe-area?` and `:content-inset-adjustment-behavior`.
 
   When `:safe-area?` is true, the WKWebView is pinned to its container view's
-  safeAreaLayoutGuide instead of the full container bounds."
-  [{:keys [url functions safe-area?] :as args}]
+  safeAreaLayoutGuide instead of the full container bounds.
+
+  When `:content-inset-adjustment-behavior` is provided, it sets the native
+  WKWebView scroll view's contentInsetAdjustmentBehavior. Accepted values are
+  `:automatic`, `:scrollable-axes`, `:never`, and `:always`."
+  [{:keys [url functions safe-area? content-inset-adjustment-behavior] :as args}]
   (let [url (url-string url :open!)
+        inset-adjustment-behavior (content-inset-adjustment-behavior-value
+                                   content-inset-adjustment-behavior)
         {:keys [tree registry]} (normalize-functions (or functions {}))
         native-tree (utils/native-dictionary tree)
         handler (bridge-handler registry)
@@ -178,6 +197,10 @@
                                             handler])
                           _ (objc ^void [controller :setWebViewUsesSafeAreaLayoutGuide
                                          ~(byte (if safe-area? 1 0))])
+                          _ (when inset-adjustment-behavior
+                              (objc ^void [controller
+                                           :setWebViewContentInsetAdjustmentBehavior
+                                           ~(long inset-adjustment-behavior)]))
                           loaded? (objc ^byte [controller :loadURLString
                                                ~(objc/str->nsstring url)])]
                       (when (zero? (long loaded?))

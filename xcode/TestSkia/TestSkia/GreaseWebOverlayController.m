@@ -29,6 +29,7 @@
     _initialURLString = [urlString copy];
     _functionTree = [functionTree copy] ?: @{};
     _functionHandler = [handler copy];
+    _webViewContentInsetAdjustmentBehavior = -1;
   }
   return self;
 }
@@ -56,10 +57,18 @@
 
   [self.view addSubview:self.webView];
 
-  if (self.webViewUsesSafeAreaLayoutGuide) {
-    if (@available(iOS 11.0, *)) {
+  if (@available(iOS 11.0, *)) {
+    if (self.webViewContentInsetAdjustmentBehavior >= 0) {
+      self.webView.scrollView.contentInsetAdjustmentBehavior =
+          (UIScrollViewContentInsetAdjustmentBehavior)self.webViewContentInsetAdjustmentBehavior;
+    } else if (self.webViewUsesSafeAreaLayoutGuide) {
       self.webView.scrollView.contentInsetAdjustmentBehavior =
           UIScrollViewContentInsetAdjustmentNever;
+    }
+  }
+
+  if (self.webViewUsesSafeAreaLayoutGuide) {
+    if (@available(iOS 11.0, *)) {
       [self pinWebViewToLayoutItem:self.view.safeAreaLayoutGuide];
     } else {
       [self pinWebViewToLayoutItem:self.view];
