@@ -11,6 +11,8 @@
 @property (nonatomic, copy) NSDictionary *functionTree;
 @property (nonatomic, copy, nullable) GreaseBridgeFunctionHandler functionHandler;
 
+- (void)pinWebViewToLayoutItem:(id)layoutItem;
+
 @end
 
 @implementation GreaseWebOverlayController
@@ -53,16 +55,31 @@
   self.webView.translatesAutoresizingMaskIntoConstraints = NO;
 
   [self.view addSubview:self.webView];
-  [NSLayoutConstraint activateConstraints:@[
-    [self.webView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-    [self.webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-    [self.webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-    [self.webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
-  ]];
+
+  if (self.webViewUsesSafeAreaLayoutGuide) {
+    if (@available(iOS 11.0, *)) {
+      self.webView.scrollView.contentInsetAdjustmentBehavior =
+          UIScrollViewContentInsetAdjustmentNever;
+      [self pinWebViewToLayoutItem:self.view.safeAreaLayoutGuide];
+    } else {
+      [self pinWebViewToLayoutItem:self.view];
+    }
+  } else {
+    [self pinWebViewToLayoutItem:self.view];
+  }
 
   if (self.initialURLString.length > 0) {
     [self loadURLString:self.initialURLString];
   }
+}
+
+- (void)pinWebViewToLayoutItem:(id)layoutItem {
+  [NSLayoutConstraint activateConstraints:@[
+    [self.webView.topAnchor constraintEqualToAnchor:[layoutItem topAnchor]],
+    [self.webView.leadingAnchor constraintEqualToAnchor:[layoutItem leadingAnchor]],
+    [self.webView.trailingAnchor constraintEqualToAnchor:[layoutItem trailingAnchor]],
+    [self.webView.bottomAnchor constraintEqualToAnchor:[layoutItem bottomAnchor]]
+  ]];
 }
 
 - (void)dealloc {

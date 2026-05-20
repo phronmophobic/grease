@@ -160,8 +160,12 @@
 (defn open!
   "Opens a full-screen web view and returns an opaque webview handle.
 
-  Accepts a map with `:url` and optional recursive `:functions`."
-  [{:keys [url functions] :as args}]
+  Accepts a map with `:url`, optional recursive `:functions`, and optional
+  `:safe-area?`.
+
+  When `:safe-area?` is true, the WKWebView is pinned to its container view's
+  safeAreaLayoutGuide instead of the full container bounds."
+  [{:keys [url functions safe-area?] :as args}]
   (let [url (url-string url :open!)
         {:keys [tree registry]} (normalize-functions (or functions {}))
         native-tree (utils/native-dictionary tree)
@@ -172,6 +176,8 @@
                                             ~(objc/str->nsstring url)
                                             native-tree
                                             handler])
+                          _ (objc ^void [controller :setWebViewUsesSafeAreaLayoutGuide
+                                         ~(byte (if safe-area? 1 0))])
                           loaded? (objc ^byte [controller :loadURLString
                                                ~(objc/str->nsstring url)])]
                       (when (zero? (long loaded?))
