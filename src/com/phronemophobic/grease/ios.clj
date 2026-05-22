@@ -12,10 +12,13 @@
             [babashka.nrepl.server.middleware :as middleware]
             clojure.data.json
             [sci.core :as sci]
+            [sci.ctx-store :as sci.ctx-store]
             [sci.addons :as addons]
 
             clojure.zip
             clojure.instant
+            clojure.edn
+            clojure.string
 
             honey.sql
             honey.sql.protocols
@@ -23,6 +26,7 @@
 
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.ios.utils :as ios-utils]
+            com.phronemophobic.grease.ios.deep-link
             com.phronemophobic.grease.ios.webview
             com.phronemophobic.grease.ios.whisper
             [com.phronemophobic.grease.replog :as replog]
@@ -558,6 +562,8 @@
               'java.lang.Throwable Throwable
               'java.lang.InterruptedException InterruptedException
               'java.util.Date java.util.Date
+              'java.net.URI java.net.URI
+              'java.net.URLDecoder java.net.URLDecoder
               'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
               'java.net.InetAddress java.net.InetAddress
@@ -597,9 +603,12 @@
                     (scify/ns->ns-map 'membrane.ios)
                     (scify/ns->ns-map 'clojure.java.io)
                     (scify/ns->ns-map 'clojure.data.json)
+                    (scify/ns->ns-map 'clojure.edn)
+                    (scify/ns->ns-map 'clojure.string)
                     (scify/ns->ns-map 'clojure.stacktrace)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios.utils)
+                    (scify/ns->ns-map 'com.phronemophobic.grease.ios.deep-link)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios.webview)
                     (scify/ns->ns-map 'com.phronemophobic.grease.ios.whisper)
                     (scify/ns->ns-map 'com.phronemophobic.grease.component)
@@ -670,6 +679,7 @@
 (let [current-ns-name (ns-name *ns*)]
   (defn new-sci-ctx []
     (let [sci-ctx (sci/init opts)]
+      (sci.ctx-store/reset-ctx! sci-ctx)
       (sci/alter-var-root sci/out (constantly *out*))
       (sci/alter-var-root sci/err (constantly *err*))
       (alter-var-root
@@ -736,13 +746,100 @@
                           w h)
      body]))
 
+(defn ensure-scripts-dir! []
+  (let [dir (scripts-dir)]
+    (when-not (fs/exists? dir)
+      (fs/create-dirs dir))
+    dir))
+
+(defn init-script-path []
+  (fs/file (ensure-scripts-dir!)
+           "init.clj"))
+
+(defn init-script-template-path []
+  (let [bundle-path (fs/file (bundle-dir)
+                             "init.clj")
+        repo-path (fs/file "examples"
+                           "app"
+                           "init.clj")]
+    (if (fs/exists? bundle-path)
+      bundle-path
+      repo-path)))
+
+(defn ensure-init-script! []
+  (let [path (init-script-path)]
+    (when-not (fs/exists? path)
+      (spit path (slurp (init-script-template-path))))
+    path))
+
+(defn with-sci-context [f]
+  (sci.ctx-store/reset-ctx! @sci-ctx)
+  (sci/with-bindings {sci/ns @sci/ns}
+    (f)))
+
+(defn eval-init-script! []
+  (with-sci-context
+    (fn []
+      (let [path (ensure-init-script!)]
+        (try
+          (sci/eval-string* @sci-ctx (slurp path))
+          (catch Throwable e
+            (prn e)))
+        path))))
+
+(defn init-deep-link-handlers []
+  (with-sci-context
+    (fn []
+      (or (sci/eval-string*
+           @sci-ctx
+           "(when-let [v (resolve 'init/deep-link-handlers)] @v)")
+          {}))))
+
+(defn deep-link-handler-fn [handler]
+  (let [handler (if (instance? clojure.lang.IDeref handler)
+                  @handler
+                  handler)]
+    (when-not (ifn? handler)
+      (throw (ex-info "Deep-link handler must be a function or var."
+                      {:handler handler})))
+    handler))
+
+(defn handle-deep-link! [url]
+  (let [url (str url)
+        _ (eval-init-script!)
+        handlers (init-deep-link-handlers)]
+    (when-not (map? handlers)
+      (throw (ex-info "init/deep-link-handlers must be a map."
+                      {:handlers handlers})))
+    (reduce-kv
+     (fn [result prefix handler]
+       (let [prefix (str prefix)]
+         (if (.startsWith url prefix)
+           (try
+             (let [handler-fn (deep-link-handler-fn handler)]
+               (with-sci-context
+                 (fn []
+                   (if-let [init-ns (sci/find-ns @sci-ctx 'init)]
+                     (sci/with-bindings {sci/ns init-ns}
+                       (handler-fn url))
+                     (handler-fn url)))))
+             (update result :invoked conj prefix)
+             (catch Throwable e
+               (prn e)
+               (update result :errors conj
+                       {:prefix prefix
+                        :message (or (ex-message e)
+                                     (str e))})))
+           result)))
+     {:url url
+      :invoked []
+      :errors []}
+     handlers)))
+
 
 (defn clj_init []
-  (let [scripts-dir (fs/file  (documents-dir)
-                              "scripts")]
-    (when (not (fs/exists? scripts-dir))
-      (fs/create-dirs scripts-dir))
-
+  (let [scripts-dir (ensure-scripts-dir!)]
+    (ensure-init-script!)
     ;; copy gol example
     (let [gol-bundle-path (fs/file (bundle-dir)
                                    "gol.clj")
@@ -840,6 +937,18 @@
     (catch Exception e
       (prn e))))
 
+(defn clj_handle_deep_link [ptr]
+  (let [url (dt-ffi/c->string ptr)]
+    (try
+      (let [{:keys [invoked errors]} (handle-deep-link! url)]
+        (if (and (seq invoked)
+                 (empty? errors))
+          1
+          0))
+      (catch Throwable e
+        (prn e)
+        0))))
+
 
 (defn -main [& args])
 
@@ -865,7 +974,9 @@
                                       ['y :float64]]}
     #'clj_delete_backward {:rettype :void}
     #'clj_insert_text {:rettype :void
-                       :argtypes [['s :pointer]]}}
+                       :argtypes [['s :pointer]]}
+    #'clj_handle_deep_link {:rettype :int32
+                            :argtypes [['url :pointer]]}}
 
    'com.phronemophobic.grease.membrane.interface nil))
 

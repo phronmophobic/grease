@@ -12,3 +12,13 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @end
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void GreaseRegisterDeepLinkIsolate(void *isolate);
+
+#ifdef __cplusplus
+}
+#endif

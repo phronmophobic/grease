@@ -6,6 +6,7 @@
 //
 
 #import "GameViewController.h"
+#import "AppDelegate.h"
 #import "MembraneView.h"
 #import "Renderer.h"
 #import "bb.h"
@@ -54,6 +55,7 @@
     graal_attach_thread(isolate, &thread);
     clj_init(thread);
     graal_detach_thread(thread);
+    GreaseRegisterDeepLinkIsolate(isolate);
     initialized = YES;
   }
 }

@@ -6,6 +6,51 @@
 //
 
 #import "AppDelegate.h"
+#import "bb.h"
+
+int clj_handle_deep_link(graal_isolatethread_t *thread, void *url);
+
+static graal_isolate_t *GreaseDeepLinkIsolate = NULL;
+
+static NSMutableArray<NSString *> *GreasePendingDeepLinkURLs(void) {
+  static NSMutableArray<NSString *> *pendingURLs;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    pendingURLs = [NSMutableArray array];
+  });
+  return pendingURLs;
+}
+
+static void GreaseHandleDeepLinkURLString(NSString *urlString) {
+  if (urlString.length == 0) {
+    return;
+  }
+
+  if (!GreaseDeepLinkIsolate) {
+    [GreasePendingDeepLinkURLs() addObject:[urlString copy]];
+    return;
+  }
+
+  graal_isolatethread_t *thread;
+  graal_attach_thread(GreaseDeepLinkIsolate, &thread);
+  int handled = clj_handle_deep_link(thread, (void *)urlString.UTF8String);
+  graal_detach_thread(thread);
+
+  if (!handled) {
+    NSLog(@"Grease failed to handle deep link: %@", urlString);
+  }
+}
+
+void GreaseRegisterDeepLinkIsolate(void *isolate) {
+  GreaseDeepLinkIsolate = (graal_isolate_t *)isolate;
+
+  NSArray<NSString *> *pendingURLs = [GreasePendingDeepLinkURLs() copy];
+  [GreasePendingDeepLinkURLs() removeAllObjects];
+
+  for (NSString *urlString in pendingURLs) {
+    GreaseHandleDeepLinkURLString(urlString);
+  }
+}
 
 @interface AppDelegate ()
 
@@ -15,7 +60,17 @@
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  // Override point for customization after application launch.
+  NSURL *launchURL = launchOptions[UIApplicationLaunchOptionsURLKey];
+  if ([launchURL isKindOfClass:NSURL.class]) {
+    GreaseHandleDeepLinkURLString(launchURL.absoluteString);
+  }
+  return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+  GreaseHandleDeepLinkURLString(url.absoluteString);
   return YES;
 }
 
