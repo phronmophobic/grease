@@ -12,13 +12,13 @@
             [babashka.nrepl.server.middleware :as middleware]
             clojure.data.json
             [sci.core :as sci]
-            [sci.ctx-store :as sci.ctx-store]
+            sci.ctx-store
             [sci.addons :as addons]
 
             clojure.zip
             clojure.instant
             clojure.edn
-            clojure.string
+            [clojure.string :as str]
 
             honey.sql
             honey.sql.protocols
@@ -766,34 +766,21 @@
       bundle-path
       repo-path)))
 
-(defn ensure-init-script! []
-  (let [path (init-script-path)]
-    (when-not (fs/exists? path)
-      (spit path (slurp (init-script-template-path))))
-    path))
-
-(defn with-sci-context [f]
-  (sci.ctx-store/reset-ctx! @sci-ctx)
-  (sci/with-bindings {sci/ns @sci/ns}
-    (f)))
-
 (defn eval-init-script! []
-  (with-sci-context
-    (fn []
-      (let [path (ensure-init-script!)]
-        (try
-          (sci/eval-string* @sci-ctx (slurp path))
-          (catch Throwable e
-            (prn e)))
-        path))))
+  (let [init-script-path (fs/file (scripts-dir)
+                                  "init.clj")]
+    (when (fs/exists? init-script-path)
+      (try
+        (sci/eval-string* @sci-ctx (slurp init-script-path))
+        (catch Throwable e
+          (prn e))))
+    nil))
 
 (defn init-deep-link-handlers []
-  (with-sci-context
-    (fn []
-      (or (sci/eval-string*
-           @sci-ctx
-           "(when-let [v (resolve 'init/deep-link-handlers)] @v)")
-          {}))))
+  (or (sci/eval-string*
+       @sci-ctx
+       "(when-let [v (resolve 'init/deep-link-handlers)] @v)")
+      {}))
 
 (defn deep-link-handler-fn [handler]
   (let [handler (if (instance? clojure.lang.IDeref handler)
@@ -814,15 +801,13 @@
     (reduce-kv
      (fn [result prefix handler]
        (let [prefix (str prefix)]
-         (if (.startsWith url prefix)
+         (if (str/starts-with? url prefix)
            (try
              (let [handler-fn (deep-link-handler-fn handler)]
-               (with-sci-context
-                 (fn []
-                   (if-let [init-ns (sci/find-ns @sci-ctx 'init)]
-                     (sci/with-bindings {sci/ns init-ns}
-                       (handler-fn url))
-                     (handler-fn url)))))
+               (if-let [init-ns (sci/find-ns @sci-ctx 'init)]
+                 (sci/with-bindings {sci/ns init-ns}
+                   (handler-fn url))
+                 (handler-fn url)))
              (update result :invoked conj prefix)
              (catch Throwable e
                (prn e)
@@ -838,31 +823,29 @@
 
 
 (defn clj_init []
-  (let [scripts-dir (ensure-scripts-dir!)]
-    (ensure-init-script!)
-    ;; copy gol example
-    (let [gol-bundle-path (fs/file (bundle-dir)
-                                   "gol.clj")
-          gol-script-path (fs/file scripts-dir
-                                   "gol.clj")]
-      (when (not (fs/exists? gol-script-path))
-        (fs/copy gol-bundle-path
-                 gol-script-path)))
+  ;; copy gol example
+  (let [gol-bundle-path (fs/file (bundle-dir)
+                                 "gol.clj")
+        gol-script-path (fs/file (scripts-dir)
+                                 "gol.clj")]
+    (when (not (fs/exists? gol-script-path))
+      (fs/copy gol-bundle-path
+               gol-script-path)))
 
-    (let [app-bundle-path (fs/file (bundle-dir)
-                                   "app.clj")
-          app-script-path (fs/file scripts-dir
-                                   "app.clj")
-          app-path (if (fs/exists? app-script-path)
-                     app-script-path
-                     app-bundle-path)]
-      (when (fs/exists? app-path)
-        (try
-          (sci/eval-string* @sci-ctx (slurp app-path))
-          (catch Exception e
-            (prn e)))))
+  (let [app-bundle-path (fs/file (bundle-dir)
+                                 "app.clj")
+        app-script-path (fs/file (scripts-dir)
+                                 "app.clj")
+        app-path (if (fs/exists? app-script-path)
+                   app-script-path
+                   app-bundle-path)]
+    (when (fs/exists? app-path)
+      (try
+        (sci/eval-string* @sci-ctx (slurp app-path))
+        (catch Exception e
+          (prn e)))))
 
-    (setup-nrepl-logging!))
+  (setup-nrepl-logging!)
 
   #_(let [local-address (get-local-address)
           host-address (when local-address

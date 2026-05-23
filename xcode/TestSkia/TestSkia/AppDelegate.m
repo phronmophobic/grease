@@ -8,8 +8,6 @@
 #import "AppDelegate.h"
 #import "bb.h"
 
-int clj_handle_deep_link(graal_isolatethread_t *thread, void *url);
-
 static graal_isolate_t *GreaseDeepLinkIsolate = NULL;
 
 static NSMutableArray<NSString *> *GreasePendingDeepLinkURLs(void) {
