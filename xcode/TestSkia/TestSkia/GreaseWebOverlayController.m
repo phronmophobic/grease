@@ -55,6 +55,14 @@
   self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
   self.webView.translatesAutoresizingMaskIntoConstraints = NO;
 
+  if (@available(iOS 16.4, *)) {
+    if (self.webViewInspectable) {
+      self.webView.inspectable = YES;
+    }
+  } else {
+    // Fallback on earlier versions
+  }
+
   [self.view addSubview:self.webView];
 
   if (@available(iOS 11.0, *)) {

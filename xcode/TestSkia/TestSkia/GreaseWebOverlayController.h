@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) WKWebView *webView;
 @property (nonatomic, assign) BOOL webViewUsesSafeAreaLayoutGuide;
 @property (nonatomic, assign) NSInteger webViewContentInsetAdjustmentBehavior;
+@property (nonatomic, assign) BOOL webViewInspectable;
 
 - (instancetype)initWithURLString:(NSString *)urlString;
 - (instancetype)initWithURLString:(NSString *)urlString

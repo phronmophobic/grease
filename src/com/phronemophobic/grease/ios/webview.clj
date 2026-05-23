@@ -174,15 +174,19 @@
   "Opens a full-screen web view and returns an opaque webview handle.
 
   Accepts a map with `:url`, optional recursive `:functions`, and optional
-  `:safe-area?` and `:content-inset-adjustment-behavior`.
+  `:safe-area?`, `:inspectable?`, and `:content-inset-adjustment-behavior`.
 
   When `:safe-area?` is true, the WKWebView is pinned to its container view's
   safeAreaLayoutGuide instead of the full container bounds.
 
+  When `:inspectable?` is true, the WKWebView will allow Safari Web Inspector 
+  access to inspect the view’s content. Then, select your view in Safari’s Develop
+  menu for either your computer or an attached device to inspect it.
+
   When `:content-inset-adjustment-behavior` is provided, it sets the native
   WKWebView scroll view's contentInsetAdjustmentBehavior. Accepted values are
   `:automatic`, `:scrollable-axes`, `:never`, and `:always`."
-  [{:keys [url functions safe-area? content-inset-adjustment-behavior] :as args}]
+  [{:keys [url functions safe-area? inspectable? content-inset-adjustment-behavior] :as args}]
   (let [url (url-string url :open!)
         inset-adjustment-behavior (content-inset-adjustment-behavior-value
                                    content-inset-adjustment-behavior)
@@ -197,6 +201,8 @@
                                             handler])
                           _ (objc ^void [controller :setWebViewUsesSafeAreaLayoutGuide
                                          ~(byte (if safe-area? 1 0))])
+                          _ (objc ^void [controller :setWebViewInspectable
+                                         ~(byte (if inspectable? 1 0))])
                           _ (when inset-adjustment-behavior
                               (objc ^void [controller
                                            :setWebViewContentInsetAdjustmentBehavior

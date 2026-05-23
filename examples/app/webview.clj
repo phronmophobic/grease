@@ -5,6 +5,7 @@
 
   (def h
     (webview/open! {:url "https://google.com"
+                    :inspectable? true
                     :functions {"echo" identity
                                 "math" {"add" +}}}))
 
