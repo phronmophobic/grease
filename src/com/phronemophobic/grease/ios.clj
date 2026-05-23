@@ -553,9 +553,24 @@
   '[[clojure.repl :refer [dir doc]]])
 
 
+(defn load-fn [{:keys [namespace]}]
+  (let [ns-parts (-> namespace
+                     name
+                     (str/split #"\."))
+        path-parts (concat
+                    (butlast ns-parts)
+                    [(str (last ns-parts) ".clj")])
+        filename (str/join "/" path-parts)
+        f (apply fs/file (scripts-dir) path-parts)]
+    (when (fs/exists? f)
+      (let [source (slurp f)]
+        {:file filename
+         :source source}))))
 
 (def opts (addons/future
-            {:classes
+            {:load-fn load-fn
+
+             :classes
              {:allow :all
               'java.lang.System System
               'java.lang.Long Long
