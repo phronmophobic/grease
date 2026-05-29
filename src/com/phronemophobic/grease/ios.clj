@@ -335,14 +335,14 @@
                        (filter (fn [interface]
                                  (.startsWith (.getName ^NetworkInterface interface)
                                               "en")))
-                       (map
+                       (keep
                         (fn [interface]
-                          (let [ip4 (->> (.getInetAddresses ^NetworkInterface interface)
-                                         enumeration-seq
-                                         (some (fn [inet]
-                                                 (when (= 4 (count
-                                                             (.getAddress ^InetAddress inet)))
-                                                   inet))))]
+                          (when-let [ip4 (->> (.getInetAddresses ^NetworkInterface interface)
+                                              enumeration-seq
+                                              (some (fn [inet]
+                                                      (when (= 4 (count
+                                                                  (.getAddress ^InetAddress inet)))
+                                                        inet))))]
                             (.getHostAddress ^InetAddress ip4)))))]
     addresses))
 
