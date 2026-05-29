@@ -46,6 +46,12 @@
 
               com.github.seancorfield/honeysql {:mvn/version "2.7.1368"}
 
+              com.taoensso/tempel {:mvn/version "1.1.0"}
+              com.taoensso/nippy {:mvn/version "3.6.2"}
+
+              org.replikativ/datahike {:mvn/version "0.8.1695"}
+              org.replikativ/konserve {:mvn/version "0.9.347"}
+
               ;; latest version fails to compile
               ;; needed for extras?
               ;; babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"

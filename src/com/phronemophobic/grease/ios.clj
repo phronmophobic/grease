@@ -24,6 +24,12 @@
             honey.sql.protocols
             honey.sql.helpers
 
+            taoensso.tempel
+            taoensso.nippy
+
+            datahike.api
+            konserve.core
+
             [com.phronemophobic.scify :as scify]
             [com.phronemophobic.grease.ios.utils :as ios-utils]
             com.phronemophobic.grease.ios.deep-link
@@ -582,6 +588,11 @@
               'clojure.lang.IDeref clojure.lang.IDeref
               'java.net.URL java.net.URL
               'java.net.InetAddress java.net.InetAddress
+              'java.net.NetworkInterface java.net.NetworkInterface
+              'java.io.InputStream java.io.InputStream
+              'java.io.OutputStream java.io.OutputStream
+              'java.io.DataInputStream java.io.DataInputStream
+              'java.io.DataOutputStream java.io.DataOutputStream
               'java.io.ByteArrayInputStream java.io.ByteArrayInputStream
               'java.io.PushbackReader java.io.PushbackReader
               'java.time.ZonedDateTime java.time.ZonedDateTime
@@ -590,7 +601,17 @@
               'java.util.function.Function java.util.function.Function
               'java.util.zip.ZipInputStream java.util.zip.ZipInputStream
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
-              'java.security.MessageDigest java.security.MessageDigest}
+              'java.security.MessageDigest java.security.MessageDigest
+
+
+              'java.io.BufferedReader java.io.BufferedReader
+              'java.net.InetSocketAddress java.net.InetSocketAddress
+              'java.net.Socket java.net.Socket
+              'java.net.ServerSocket java.net.ServerSocket
+              'java.net.StandardSocketOptions java.net.StandardSocketOptions
+              'java.nio.ByteBuffer java.nio.ByteBuffer
+              'java.nio.channels.ServerSocketChannel java.nio.channels.ServerSocketChannel
+              'java.nio.charset.StandardCharsets java.nio.charset.StandardCharsets}
 
              :imports
              {'Throwable 'java.lang.Throwable}
@@ -655,6 +676,12 @@
                     (scify/ns->ns-map 'babashka.fs)
                     (scify/ns->ns-map 'babashka.nrepl.server)
                     (scify/ns->ns-map 'sci.ctx-store)
+
+                    (scify/ns->ns-map 'taoensso.tempel)
+                    (scify/ns->ns-map 'taoensso.nippy)
+
+                    (scify/ns->ns-map 'datahike.api)
+                    (scify/ns->ns-map 'konserve.core)
 
                     (scify/ns->ns-map 'honey.sql)
                     (scify/ns->ns-map 'honey.sql.protocols)
