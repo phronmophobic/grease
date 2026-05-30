@@ -12,7 +12,7 @@ PROJECT_DIR="$DIR/.."
 # automerge
 pushd third_party/automerge-js-automerge-3.2.6/rust
 
-cross -vv build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
+CROSS_NO_WARNINGS=0 cross -vv build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
 
 popd
 
