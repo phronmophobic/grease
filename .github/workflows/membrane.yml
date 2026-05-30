@@ -19,9 +19,9 @@ jobs:
 
       - name: Setup
         run: |
-          brew install -y autoconf
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-          brew install -y cmake node cmocka
+          brew install autoconf
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          brew install cmake node cmocka
           cargo install wasm-bindgen-cli wasm-opt cargo-deny
           rustup toolchain install nightly
           rustup component add rust-src --toolchain nightly
