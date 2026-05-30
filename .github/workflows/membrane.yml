@@ -25,6 +25,7 @@ jobs:
           cargo install wasm-bindgen-cli wasm-opt cargo-deny
           rustup toolchain install nightly
           rustup component add rust-src --toolchain nightly
+          rustup target add aarch64-apple-ios
           cargo install cross --git https://github.com/cross-rs/cross
           scripts/setup
 
