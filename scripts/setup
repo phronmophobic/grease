@@ -44,6 +44,6 @@ popd
 # automerge
 pushd third_party/automerge-js-automerge-3.2.6/rust
 
-cross build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
+cross -vv build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
 
 popd
