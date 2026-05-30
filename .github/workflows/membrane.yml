@@ -20,6 +20,12 @@ jobs:
       - name: Setup
         run: |
           brew install autoconf
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          brew install cmake node cmocka
+          cargo install wasm-bindgen-cli wasm-opt cargo-deny
+          rustup toolchain install nightly
+          rustup component add rust-src --toolchain nightly
+          cargo install cross --git https://github.com/cross-rs/cross
           scripts/setup
 
       - name: Setup Clojure

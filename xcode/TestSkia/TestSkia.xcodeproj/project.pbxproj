@@ -18,6 +18,7 @@
 		3A43FED72C8E31E5008D67EB /* libskshaper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED22C8E31E4008D67EB /* libskshaper.a */; };
 		3A43FED82C8E31E5008D67EB /* libskunicode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED32C8E31E4008D67EB /* libskunicode.a */; };
 		3A43FED92C8E31E5008D67EB /* libsvg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43FED42C8E31E4008D67EB /* libsvg.a */; };
+		3A63C21D2FCB8A1B00BAE471 /* libautomerge_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A17A3402FCB895E000A74E4 /* libautomerge_core.a */; };
 		3A6C99A626B0FC73000479D4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6C99A526B0FC73000479D4 /* CoreFoundation.framework */; };
 		3A75F289267445BC0015D82C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F288267445BC0015D82C /* AppDelegate.m */; };
 		3A75F28C267445BC0015D82C /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3A75F28B267445BC0015D82C /* Renderer.mm */; };
@@ -154,6 +155,7 @@
 		3A110A512676B06200C5D250 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A110A532676B0BD00C5D250 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 		3A16A6DC2F9016B4005BFF24 /* libffi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libffi.xcodeproj; path = "../../third_party/libffi-3.4.8/libffi.xcodeproj"; sourceTree = "<group>"; };
+		3A17A3402FCB895E000A74E4 /* libautomerge_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libautomerge_core.a; path = "../../third_party/automerge-js-automerge-3.2.6/rust/target/aarch64-apple-ios/release/libautomerge_core.a"; sourceTree = "<group>"; };
 		3A1A88D926A79B410005E9C7 /* gol.clj */ = {isa = PBXFileReference; lastKnownFileType = text; name = gol.clj; path = ../../examples/gol/gol.clj; sourceTree = "<group>"; };
 		3A43FED02C8E31E4008D67EB /* libskparagraph.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskparagraph.a; sourceTree = "<group>"; };
 		3A43FED12C8E31E4008D67EB /* libskresources.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libskresources.a; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A63C21D2FCB8A1B00BAE471 /* libautomerge_core.a in Frameworks */,
 				3A1C6E812FBA24C100CA4BD9 /* libffi.a in Frameworks */,
 				3AFA8D962F918B4B003FEE4E /* libjava.a in Frameworks */,
 				3AFA8D952F918B49003FEE4E /* libjvm.a in Frameworks */,
@@ -344,6 +347,7 @@
 		3A75F2A72674696C0015D82C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A17A3402FCB895E000A74E4 /* libautomerge_core.a */,
 				3A9C44102F904353004700E3 /* libskunicode_core.a */,
 				3A9C440F2F904353004700E3 /* libskunicode_icu.a */,
 				3A9C440E2F904353004700E3 /* libwebp_sse41.a */,
@@ -654,6 +658,7 @@
 					"$(PROJECT_DIR)/TestSkia",
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/../../library/build/out\"",
+					"\"$(SRCROOT)/../../third_party/automerge-js-automerge-3.2.6/rust/target/aarch64-apple-ios/release\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -748,6 +753,7 @@
 					"$(PROJECT_DIR)/TestSkia",
 					"$(PROJECT_DIR)",
 					"\"$(SRCROOT)/../../library/build/out\"",
+					"\"$(SRCROOT)/../../third_party/automerge-js-automerge-3.2.6/rust/target/aarch64-apple-ios/release\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

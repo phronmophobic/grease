@@ -23,6 +23,15 @@ if ! [ -d libffi-3.4.8 ]; then
     rm libffi-3.4.8.tar.gz
 
 fi
+
+if ! [ -d automerge-js-automerge-3.2.6 ]; then
+    curl -O -sL "https://github.com/automerge/automerge/archive/refs/tags/js/automerge-3.2.6.tar.gz"
+    tar xzf automerge-3.2.6.tar.gz
+    rm automerge-3.2.6.tar.gz
+
+fi
+
+
 WHISPER_VERSION="${WHISPER_VERSION:-1.8.4}"
 WHISPER_DIR="whisper"
 WHISPER_FRAMEWORK="$WHISPER_DIR/whisper.xcframework"
