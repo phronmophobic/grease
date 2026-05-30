@@ -14,6 +14,7 @@ pushd third_party/automerge-js-automerge-3.2.6/rust
 
 # export CROSS_NO_WARNINGS=0
 # CROSS_NO_WARNINGS=0 cross build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
+rustup target add aarch64-apple-ios
 cargo build --manifest-path automerge-c/Cargo.toml -r --target aarch64-apple-ios
 
 popd
