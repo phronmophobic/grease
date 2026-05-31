@@ -41,6 +41,10 @@
              :refer [objc]]
             com.phronemophobic.clj-libffi.callback
             [com.phronemophobic.clj-libffi :as ffi]
+            com.phronemophobic.automerge
+            com.phronemophobic.tcp-pipe
+            com.phronemophobic.autosync.key
+            com.phronemophobic.autosync.client
 
             [tech.v3.datatype.ffi :as dt-ffi]
             [tech.v3.datatype :as dtype]
@@ -602,7 +606,7 @@
               'java.util.zip.ZipInputStream java.util.zip.ZipInputStream
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
               'java.security.MessageDigest java.security.MessageDigest
-
+              'java.io.EOFException java.io.EOFException
 
               'java.io.BufferedReader java.io.BufferedReader
               'java.net.InetSocketAddress java.net.InetSocketAddress
@@ -671,7 +675,11 @@
 
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi)
                     (scify/ns->ns-map 'com.phronemophobic.clj-libffi.callback)
-                    (scify/ns->ns-map 'babashka.fs)
+
+                    (scify/ns->ns-map 'com.phronemophobic.automerge)
+                    (scify/ns->ns-map 'com.phronemophobic.autosync.key)
+                    (scify/ns->ns-map 'com.phronemophobic.autosync.client)
+                    (scify/ns->ns-map 'com.phronemophobic.tcp-pipe)
 
                     (scify/ns->ns-map 'babashka.fs)
                     (scify/ns->ns-map 'babashka.nrepl.server)

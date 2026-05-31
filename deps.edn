@@ -46,6 +46,12 @@
 
               com.github.seancorfield/honeysql {:mvn/version "2.7.1368"}
 
+              com.phronemophobic/automerge-clj {:git/url "https://github.com/phronmophobic/automerge-clj.git"
+                                                :git/sha "f223344dab7027ba3edd2cf674804c1930d47c7e"}
+              com.phronemophobic/autosync {:git/url "https://github.com/phronmophobic/autosync.git"
+                                           :git/sha "8c5d9c2a42968ae38ca8336582b13cc8e4ce2dc0"}
+              com.phronemophobic/tcp-pipe {:git/url "https://github.com/phronmophobic/tcp-pipe.git"
+                                           :git/sha "d55ed520e94669c135136a01a567a469f4924aab"}
               com.taoensso/tempel {:mvn/version "1.1.0"}
               com.taoensso/nippy {:mvn/version "3.6.2"}
 
