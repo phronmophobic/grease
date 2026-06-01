@@ -59,6 +59,9 @@
               org.replikativ/datahike {:mvn/version "0.8.1695"}
               org.replikativ/konserve {:mvn/version "0.9.347"}
 
+              ;; newer versions don't work with our version in babashka
+              org.clojure/core.async {:mvn/version "1.6.681"}
+
               ;; latest version fails to compile
               ;; needed for extras?
               ;; babashka/babashka { ;; :sha "7e65ec2fa8e663c2ba9a74a3d6280c4cb0e9b274"
