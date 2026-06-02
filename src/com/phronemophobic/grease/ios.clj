@@ -607,6 +607,7 @@
               'java.time.format.DateTimeFormatter java.time.format.DateTimeFormatter
               'java.security.MessageDigest java.security.MessageDigest
               'java.io.EOFException java.io.EOFException
+              'java.util.UUID java.util.UUID
 
               'java.io.BufferedReader java.io.BufferedReader
               'java.net.InetSocketAddress java.net.InetSocketAddress
