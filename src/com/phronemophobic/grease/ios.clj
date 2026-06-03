@@ -608,6 +608,7 @@
               'java.security.MessageDigest java.security.MessageDigest
               'java.io.EOFException java.io.EOFException
               'java.util.UUID java.util.UUID
+              'java.time.Instant java.time.Instant
 
               'java.io.BufferedReader java.io.BufferedReader
               'java.net.InetSocketAddress java.net.InetSocketAddress
