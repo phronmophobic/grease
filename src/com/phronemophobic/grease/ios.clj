@@ -230,9 +230,9 @@
                          (objc
                           (fn ^void [action]
                             (let [textField (objc
-                                             [[alertController :textFields] :firstObject])
-                                  inputText (objc [textField :text])]
-                              (on-ok inputText))))
+                                             [[alertController :textFields] :firstObject])]
+                              (when-let [inputText (objc [textField :text])]
+                                (on-ok (objc/nsstring->str inputText))))))
                          (ffi/long->pointer 0))])
            _ (do
                (objc [alertController :addAction cancelAction])
