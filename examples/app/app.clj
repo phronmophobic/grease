@@ -445,6 +445,7 @@
            (fn [k ref old new]
              (when (not= (-> old :app :view-fn)
                          (-> new :app :view-fn))
+               (ios/hide-keyboard)
                (when-let [on-close (-> old :app :on-close)]
                  (try
                    (on-close)
